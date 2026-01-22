@@ -22,7 +22,7 @@
                     <i class="fa-solid fa-list-check"></i> Lists
                 </button>
                 <button class="btn-glass" onclick="openModal('bulk-modal')">
-                    <i class="fa-solid fa-file-csv"></i> Import
+                    <i class="fa-solid fa-table-list"></i> Bulk Upload
                 </button>
                 <button class="btn-primary-action" onclick="copyConfig()">
                     <i class="fa-solid fa-floppy-disk"></i> Save
@@ -36,7 +36,6 @@
     </nav>
 
     <div class="dashboard-container">
-        
         <header class="toolbar">
             <div class="filter-wrapper">
                 <label>Filter List</label>
@@ -114,8 +113,7 @@
                 <p>No organizations found matching your filters.</p>
             </div>
         </main>
-        
-        <div class="footer-note">MasterLink Pro v2.1 &bull; Duplicate Resolution System</div>
+        <div class="footer-note">MasterLink Pro v2.2 &bull; Grid Uploader</div>
     </div>
 
     <div id="login-modal" class="modal hidden">
@@ -145,71 +143,57 @@
                     <input type="text" id="edit-name" class="input-lg" placeholder="e.g. AMTZ Ltd">
                 </div>
                 <div class="grid-2">
-                    <div class="form-group">
-                        <label>Lists</label>
-                        <div id="check-lists" class="check-container"></div>
-                    </div>
-                    <div class="form-group">
-                        <label>Categories</label>
-                        <div id="check-cats" class="check-container"></div>
-                    </div>
+                    <div class="form-group"><label>Lists</label><div id="check-lists" class="check-container"></div></div>
+                    <div class="form-group"><label>Categories</label><div id="check-cats" class="check-container"></div></div>
                 </div>
                 <div class="divider">Social Presence</div>
                 <div class="social-grid">
-                    <div class="social-item">
-                        <label><i class="fa-brands fa-twitter text-twitter"></i> Twitter Handle</label>
-                        <input type="text" id="tag-twitter" class="input-std" placeholder="@handle">
-                    </div>
-                    <div class="social-item">
-                        <label><i class="fa-brands fa-instagram text-insta"></i> Instagram Handle</label>
-                        <input type="text" id="tag-instagram" class="input-std" placeholder="@handle">
-                    </div>
-                    <div class="social-item span-2">
-                        <label><i class="fa-brands fa-linkedin text-linkedin"></i> LinkedIn</label>
-                        <div class="input-group">
-                            <input type="text" id="tag-linkedin-val" class="input-std" placeholder="Display Name">
-                            <input type="text" id="tag-linkedin-link" class="input-std" placeholder="Full Profile URL">
-                        </div>
-                    </div>
-                    <div class="social-item span-2">
-                        <label><i class="fa-brands fa-facebook text-facebook"></i> Facebook</label>
-                        <div class="input-group">
-                            <input type="text" id="tag-facebook-val" class="input-std" placeholder="Page Name">
-                            <input type="text" id="tag-facebook-link" class="input-std" placeholder="Full Page URL">
-                        </div>
-                    </div>
-                    <div class="social-item span-2">
-                        <label><i class="fa-solid fa-globe text-web"></i> Website</label>
-                        <div class="input-group">
-                            <input type="text" id="tag-website-val" class="input-std" placeholder="Display Text">
-                            <input type="text" id="tag-website-link" class="input-std" placeholder="https://...">
-                        </div>
-                    </div>
+                    <div class="social-item"><label><i class="fa-brands fa-twitter text-twitter"></i> Twitter</label><input type="text" id="tag-twitter" class="input-std"></div>
+                    <div class="social-item"><label><i class="fa-brands fa-instagram text-insta"></i> Instagram</label><input type="text" id="tag-instagram" class="input-std"></div>
+                    <div class="social-item span-2"><label><i class="fa-brands fa-linkedin text-linkedin"></i> LinkedIn</label><div class="input-group"><input type="text" id="tag-linkedin-val" class="input-std" placeholder="Name"><input type="text" id="tag-linkedin-link" class="input-std" placeholder="URL"></div></div>
+                    <div class="social-item span-2"><label><i class="fa-brands fa-facebook text-facebook"></i> Facebook</label><div class="input-group"><input type="text" id="tag-facebook-val" class="input-std" placeholder="Name"><input type="text" id="tag-facebook-link" class="input-std" placeholder="URL"></div></div>
+                    <div class="social-item span-2"><label><i class="fa-solid fa-globe text-web"></i> Website</label><div class="input-group"><input type="text" id="tag-website-val" class="input-std" placeholder="Text"><input type="text" id="tag-website-link" class="input-std" placeholder="URL"></div></div>
                 </div>
             </div>
             <div class="modal-foot">
-                <button class="btn-text danger" onclick="deleteOrg()">Delete Org</button>
+                <button class="btn-text danger" onclick="deleteOrg()">Delete</button>
                 <button class="btn-primary" onclick="saveOrg()">Save Changes</button>
             </div>
         </div>
     </div>
 
     <div id="bulk-modal" class="modal hidden">
-        <div class="modal-card">
+        <div class="modal-card x-large">
             <div class="modal-head">
-                <h3>Bulk Upload</h3>
+                <h3>Bulk Upload Grid</h3>
                 <button class="close-btn" onclick="closeModal('bulk-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="hint-text">Format: <code>Name | Twitter | LinkedIn Link | Facebook Link | Instagram | Website Link</code></p>
                 <div class="grid-2 bg-light p-10 mb-15">
-                    <div><label>Assign List:</label><select id="bulk-list" class="input-std"></select></div>
-                    <div><label>Assign Category:</label><select id="bulk-cat" class="input-std"></select></div>
+                    <div><label>Assign to List:</label><select id="bulk-list" class="input-std"></select></div>
+                    <div><label>Assign to Category:</label><select id="bulk-cat" class="input-std"></select></div>
                 </div>
-                <textarea id="bulk-input" rows="8" class="input-area" placeholder="Paste data here..."></textarea>
+
+                <div class="bulk-table-container">
+                    <table class="bulk-grid-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 200px;">Org Name *</th>
+                                <th>Twitter (@)</th>
+                                <th>LinkedIn (URL)</th>
+                                <th>Facebook (URL)</th>
+                                <th>Instagram (@)</th>
+                                <th>Website (URL)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bulk-tbody">
+                            </tbody>
+                    </table>
+                </div>
+                <button class="btn-secondary mt-15" onclick="addBulkRows(5)">+ Add 5 More Rows</button>
             </div>
             <div class="modal-foot">
-                <button class="btn-primary full" onclick="analyzeBulkUpload()">Analyze Data</button>
+                <button class="btn-primary full" onclick="analyzeBulkUpload()">Analyze & Import</button>
             </div>
         </div>
     </div>
@@ -217,19 +201,15 @@
     <div id="conflict-modal" class="modal hidden">
         <div class="modal-card large">
             <div class="modal-head">
-                <h3><i class="fa-solid fa-triangle-exclamation text-warn"></i> Duplicate Conflicts Detected</h3>
+                <h3><i class="fa-solid fa-triangle-exclamation text-warn"></i> Conflicts Detected</h3>
                 <span class="badge-count" id="conflict-count">0</span>
             </div>
             <div class="modal-body">
-                <p class="hint-text">The following organizations already exist. Choose how to handle the new data.</p>
-                
                 <div class="conflict-header">
                     <button class="btn-text" onclick="resolveAll('ignore')">Ignore All</button>
                     <button class="btn-primary-action btn-sm" onclick="resolveAll('overwrite')">Overwrite All</button>
                 </div>
-
-                <div id="conflict-list" class="conflict-container">
-                    </div>
+                <div id="conflict-list" class="conflict-container"></div>
             </div>
             <div class="modal-foot">
                 <button class="btn-text" onclick="closeModal('conflict-modal')">Cancel All</button>
@@ -239,27 +219,10 @@
 
     <div id="meta-modal" class="modal hidden">
         <div class="modal-card">
-            <div class="modal-head">
-                <h3>Lists & Categories</h3>
-                <button class="close-btn" onclick="closeModal('meta-modal')">&times;</button>
-            </div>
+            <div class="modal-head"><h3>Lists & Categories</h3><button class="close-btn" onclick="closeModal('meta-modal')">&times;</button></div>
             <div class="modal-body">
-                <div class="meta-section">
-                    <h4>Lists</h4>
-                    <div class="input-group">
-                        <input type="text" id="new-list" class="input-std" placeholder="New List Name">
-                        <button class="btn-secondary" onclick="addMeta('lists', 'new-list')">Add</button>
-                    </div>
-                    <ul id="list-manager-ul" class="meta-list"></ul>
-                </div>
-                <div class="meta-section mt-15">
-                    <h4>Categories</h4>
-                    <div class="input-group">
-                        <input type="text" id="new-cat" class="input-std" placeholder="New Category Name">
-                        <button class="btn-secondary" onclick="addMeta('cats', 'new-cat')">Add</button>
-                    </div>
-                    <ul id="cat-manager-ul" class="meta-list"></ul>
-                </div>
+                <div class="meta-section"><h4>Lists</h4><div class="input-group"><input type="text" id="new-list" class="input-std" placeholder="New Name"><button class="btn-secondary" onclick="addMeta('lists','new-list')">Add</button></div><ul id="list-manager-ul" class="meta-list"></ul></div>
+                <div class="meta-section mt-15"><h4>Categories</h4><div class="input-group"><input type="text" id="new-cat" class="input-std" placeholder="New Name"><button class="btn-secondary" onclick="addMeta('cats','new-cat')">Add</button></div><ul id="cat-manager-ul" class="meta-list"></ul></div>
             </div>
         </div>
     </div>
