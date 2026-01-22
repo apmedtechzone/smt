@@ -3,194 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MasterLink CMS</title>
+    <title>MasterLink Pro</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <nav>
-        <div class="brand">
-            <i class="fa-solid fa-layer-group"></i> MasterLink
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="logo-text">MasterLink <span>Pro</span></div>
         </div>
-        <div class="nav-actions">
-            <div id="admin-panel" class="hidden">
-                <span class="badge">Admin Active</span>
-                <button class="btn-sec" onclick="openModal('manage-meta-modal')"><i class="fa-solid fa-list"></i> Lists</button>
-                <button class="btn-save" onclick="copyConfig()"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-                <button class="btn-danger" onclick="logout()"><i class="fa-solid fa-power-off"></i></button>
+        <div class="nav-right">
+            <div id="admin-panel" class="hidden fade-in">
+                <span class="status-badge"><i class="fa-solid fa-shield-halved"></i> Admin</span>
+                <button class="btn-glass" onclick="openModal('meta-modal')">
+                    <i class="fa-solid fa-list-check"></i> Lists
+                </button>
+                <button class="btn-glass" onclick="openModal('bulk-modal')">
+                    <i class="fa-solid fa-file-csv"></i> Import
+                </button>
+                <button class="btn-primary-action" onclick="copyConfig()">
+                    <i class="fa-solid fa-floppy-disk"></i> Save
+                </button>
+                <button class="btn-icon-only" onclick="logout()" title="Logout">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
             </div>
-            <button id="login-trigger" class="btn-primary" onclick="openModal('login-modal')">Login</button>
+            <button id="login-trigger" class="btn-primary" onclick="openModal('login-modal')">Admin Login</button>
         </div>
     </nav>
 
-    <header class="toolbar">
-        <div class="filter-group">
-            <label><i class="fa-solid fa-filter"></i> List</label>
-            <select id="filter-list" onchange="renderTable()"></select>
-        </div>
-        <div class="filter-group">
-            <label><i class="fa-solid fa-folder-open"></i> Category</label>
-            <select id="filter-cat" onchange="renderTable()"></select>
-        </div>
-        <div class="search-group">
-            <label><i class="fa-solid fa-magnifying-glass"></i> Search</label>
-            <input type="text" id="search-bar" placeholder="Search organizations..." onkeyup="renderTable()">
-        </div>
-        <div class="action-group">
-            <button id="add-btn" class="btn-add hidden" onclick="openOrgModal()">
-                <i class="fa-solid fa-plus"></i> New Org
-            </button>
-        </div>
-    </header>
+    <div class="dashboard-container">
+        
+        <header class="toolbar">
+            <div class="filter-wrapper">
+                <label>Filter List</label>
+                <div class="select-box">
+                    <i class="fa-solid fa-filter"></i>
+                    <select id="filter-list" onchange="renderTable()"></select>
+                </div>
+            </div>
+            <div class="filter-wrapper">
+                <label>Filter Category</label>
+                <div class="select-box">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <select id="filter-cat" onchange="renderTable()"></select>
+                </div>
+            </div>
+            <div class="search-wrapper">
+                <label>Search Directory</label>
+                <div class="input-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="search-bar" placeholder="Name, @handle, website..." onkeyup="renderTable()">
+                </div>
+            </div>
+            <div class="action-wrapper hidden" id="add-org-wrapper">
+                <label>&nbsp;</label>
+                <button class="btn-add" onclick="openOrgModal()">
+                    <i class="fa-solid fa-plus"></i> Add Org
+                </button>
+            </div>
+        </header>
 
-    <main>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="col-name">Organization</th>
-                        
-                        <th class="col-social">
-                            <div class="th-head">
-                                <span><i class="fa-brands fa-twitter"></i> Twitter</span>
-                                <button class="copy-icon" onclick="copyColumn('twitter')" title="Copy Column"><i class="fa-regular fa-copy"></i></button>
-                            </div>
-                        </th>
-                        <th class="col-social">
-                            <div class="th-head">
-                                <span><i class="fa-brands fa-linkedin"></i> LinkedIn</span>
-                                <button class="copy-icon" onclick="copyColumn('linkedin')" title="Copy Column"><i class="fa-regular fa-copy"></i></button>
-                            </div>
-                        </th>
-                        <th class="col-social">
-                            <div class="th-head">
-                                <span><i class="fa-brands fa-facebook"></i> Facebook</span>
-                                <button class="copy-icon" onclick="copyColumn('facebook')" title="Copy Column"><i class="fa-regular fa-copy"></i></button>
-                            </div>
-                        </th>
-                        <th class="col-social">
-                            <div class="th-head">
-                                <span><i class="fa-brands fa-instagram"></i> Instagram</span>
-                                <button class="copy-icon" onclick="copyColumn('instagram')" title="Copy Column"><i class="fa-regular fa-copy"></i></button>
-                            </div>
-                        </th>
-                        <th class="col-social">
-                            <div class="th-head">
-                                <span><i class="fa-solid fa-globe"></i> Website</span>
-                                <button class="copy-icon" onclick="copyColumn('website')" title="Copy Column"><i class="fa-regular fa-copy"></i></button>
-                            </div>
-                        </th>
-                        
-                        <th class="col-action hidden">Edit</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    </tbody>
-            </table>
-        </div>
-        <div id="no-results" class="empty-state hidden">No organizations found matching filters.</div>
-    </main>
+        <main class="table-card">
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="col-fixed-name">Organization</th>
+                            <th>
+                                <div class="th-content">
+                                    <span><i class="fa-brands fa-twitter text-twitter"></i> Twitter</span>
+                                    <button class="copy-mini" onclick="copyColumn('twitter')"><i class="fa-regular fa-copy"></i></button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th-content">
+                                    <span><i class="fa-brands fa-linkedin text-linkedin"></i> LinkedIn</span>
+                                    <button class="copy-mini" onclick="copyColumn('linkedin')"><i class="fa-regular fa-copy"></i></button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th-content">
+                                    <span><i class="fa-brands fa-facebook text-facebook"></i> Facebook</span>
+                                    <button class="copy-mini" onclick="copyColumn('facebook')"><i class="fa-regular fa-copy"></i></button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th-content">
+                                    <span><i class="fa-brands fa-instagram text-insta"></i> Instagram</span>
+                                    <button class="copy-mini" onclick="copyColumn('instagram')"><i class="fa-regular fa-copy"></i></button>
+                                </div>
+                            </th>
+                            <th>
+                                <div class="th-content">
+                                    <span><i class="fa-solid fa-globe text-web"></i> Website</span>
+                                    <button class="copy-mini" onclick="copyColumn('website')"><i class="fa-regular fa-copy"></i></button>
+                                </div>
+                            </th>
+                            <th class="col-action hidden">Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+            <div id="empty-state" class="empty-state hidden">
+                <i class="fa-solid fa-magnifying-glass-minus"></i>
+                <p>No organizations found matching your filters.</p>
+            </div>
+        </main>
+        
+        <div class="footer-note">MasterLink Pro v2.1 &bull; Duplicate Resolution System</div>
+    </div>
 
     <div id="login-modal" class="modal hidden">
-        <div class="modal-content small">
-            <h3>Admin Login</h3>
-            <input type="email" id="login-email" placeholder="Email">
-            <input type="password" id="login-pass" placeholder="Password">
-            <button class="btn-primary full" onclick="login()">Login</button>
-            <button class="btn-text full" onclick="closeModal('login-modal')">Cancel</button>
+        <div class="modal-card small">
+            <div class="modal-head">
+                <h3>Admin Access</h3>
+                <button class="close-btn" onclick="closeModal('login-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="email" id="login-email" class="input-std" placeholder="Email">
+                <input type="password" id="login-pass" class="input-std" placeholder="Password">
+                <button class="btn-primary full" onclick="login()">Authenticate</button>
+            </div>
         </div>
     </div>
 
     <div id="org-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-card">
+            <div class="modal-head">
                 <h3>Organization Details</h3>
-                <span class="close-x" onclick="closeModal('org-modal')">&times;</span>
+                <button class="close-btn" onclick="closeModal('org-modal')">&times;</button>
             </div>
-            
-            <input type="hidden" id="edit-id">
-            
-            <div class="form-section">
-                <label>Organization Name</label>
-                <input type="text" id="edit-name" class="input-lg" placeholder="e.g. AMTZ Ltd">
-            </div>
-
-            <div class="form-row">
-                <div class="half">
-                    <label>Appears in Lists (Multi-select)</label>
-                    <div id="check-lists" class="checkbox-group"></div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label>Organization Name</label>
+                    <input type="text" id="edit-name" class="input-lg" placeholder="e.g. AMTZ Ltd">
                 </div>
-                <div class="half">
-                    <label>Appears in Categories (Multi-select)</label>
-                    <div id="check-cats" class="checkbox-group"></div>
-                </div>
-            </div>
-
-            <div class="divider"><span>Social Tags & Links</span></div>
-
-            <div class="tags-grid">
-                <div class="tag-box">
-                    <label><i class="fa-brands fa-twitter"></i> Twitter</label>
-                    <input type="text" id="tag-twitter" placeholder="@handle">
-                </div>
-                <div class="tag-box">
-                    <label><i class="fa-brands fa-instagram"></i> Instagram</label>
-                    <input type="text" id="tag-instagram" placeholder="@handle">
-                </div>
-                <div class="tag-box wide">
-                    <label><i class="fa-brands fa-linkedin"></i> LinkedIn</label>
-                    <div class="input-pair">
-                        <input type="text" id="tag-linkedin-val" placeholder="Display Name">
-                        <input type="text" id="tag-linkedin-link" placeholder="Full Profile URL">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Lists</label>
+                        <div id="check-lists" class="check-container"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Categories</label>
+                        <div id="check-cats" class="check-container"></div>
                     </div>
                 </div>
-                <div class="tag-box wide">
-                    <label><i class="fa-brands fa-facebook"></i> Facebook</label>
-                    <div class="input-pair">
-                        <input type="text" id="tag-facebook-val" placeholder="Page Name">
-                        <input type="text" id="tag-facebook-link" placeholder="Full Page URL">
+                <div class="divider">Social Presence</div>
+                <div class="social-grid">
+                    <div class="social-item">
+                        <label><i class="fa-brands fa-twitter text-twitter"></i> Twitter Handle</label>
+                        <input type="text" id="tag-twitter" class="input-std" placeholder="@handle">
                     </div>
-                </div>
-                <div class="tag-box wide">
-                    <label><i class="fa-solid fa-globe"></i> Website</label>
-                    <div class="input-pair">
-                        <input type="text" id="tag-website-val" placeholder="Display Text (e.g. Visit)">
-                        <input type="text" id="tag-website-link" placeholder="https://...">
+                    <div class="social-item">
+                        <label><i class="fa-brands fa-instagram text-insta"></i> Instagram Handle</label>
+                        <input type="text" id="tag-instagram" class="input-std" placeholder="@handle">
+                    </div>
+                    <div class="social-item span-2">
+                        <label><i class="fa-brands fa-linkedin text-linkedin"></i> LinkedIn</label>
+                        <div class="input-group">
+                            <input type="text" id="tag-linkedin-val" class="input-std" placeholder="Display Name">
+                            <input type="text" id="tag-linkedin-link" class="input-std" placeholder="Full Profile URL">
+                        </div>
+                    </div>
+                    <div class="social-item span-2">
+                        <label><i class="fa-brands fa-facebook text-facebook"></i> Facebook</label>
+                        <div class="input-group">
+                            <input type="text" id="tag-facebook-val" class="input-std" placeholder="Page Name">
+                            <input type="text" id="tag-facebook-link" class="input-std" placeholder="Full Page URL">
+                        </div>
+                    </div>
+                    <div class="social-item span-2">
+                        <label><i class="fa-solid fa-globe text-web"></i> Website</label>
+                        <div class="input-group">
+                            <input type="text" id="tag-website-val" class="input-std" placeholder="Display Text">
+                            <input type="text" id="tag-website-link" class="input-std" placeholder="https://...">
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="modal-footer">
-                <button class="btn-danger left" onclick="deleteOrg()">Delete</button>
+            <div class="modal-foot">
+                <button class="btn-text danger" onclick="deleteOrg()">Delete Org</button>
                 <button class="btn-primary" onclick="saveOrg()">Save Changes</button>
             </div>
         </div>
     </div>
 
-    <div id="manage-meta-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3>Manage Lists & Categories</h3>
-            
-            <div class="meta-section">
-                <h4>Lists</h4>
-                <div class="input-group">
-                    <input type="text" id="new-list" placeholder="New List Name">
-                    <button class="btn-sec" onclick="addMeta('lists', 'new-list')">Add</button>
-                </div>
-                <ul id="list-manager-ul" class="meta-list"></ul>
+    <div id="bulk-modal" class="modal hidden">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3>Bulk Upload</h3>
+                <button class="close-btn" onclick="closeModal('bulk-modal')">&times;</button>
             </div>
+            <div class="modal-body">
+                <p class="hint-text">Format: <code>Name | Twitter | LinkedIn Link | Facebook Link | Instagram | Website Link</code></p>
+                <div class="grid-2 bg-light p-10 mb-15">
+                    <div><label>Assign List:</label><select id="bulk-list" class="input-std"></select></div>
+                    <div><label>Assign Category:</label><select id="bulk-cat" class="input-std"></select></div>
+                </div>
+                <textarea id="bulk-input" rows="8" class="input-area" placeholder="Paste data here..."></textarea>
+            </div>
+            <div class="modal-foot">
+                <button class="btn-primary full" onclick="analyzeBulkUpload()">Analyze Data</button>
+            </div>
+        </div>
+    </div>
 
-            <div class="meta-section">
-                <h4>Categories</h4>
-                <div class="input-group">
-                    <input type="text" id="new-cat" placeholder="New Category Name">
-                    <button class="btn-sec" onclick="addMeta('cats', 'new-cat')">Add</button>
-                </div>
-                <ul id="cat-manager-ul" class="meta-list"></ul>
+    <div id="conflict-modal" class="modal hidden">
+        <div class="modal-card large">
+            <div class="modal-head">
+                <h3><i class="fa-solid fa-triangle-exclamation text-warn"></i> Duplicate Conflicts Detected</h3>
+                <span class="badge-count" id="conflict-count">0</span>
             </div>
-            
-            <button class="btn-text full" onclick="closeModal('manage-meta-modal')">Close</button>
+            <div class="modal-body">
+                <p class="hint-text">The following organizations already exist. Choose how to handle the new data.</p>
+                
+                <div class="conflict-header">
+                    <button class="btn-text" onclick="resolveAll('ignore')">Ignore All</button>
+                    <button class="btn-primary-action btn-sm" onclick="resolveAll('overwrite')">Overwrite All</button>
+                </div>
+
+                <div id="conflict-list" class="conflict-container">
+                    </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn-text" onclick="closeModal('conflict-modal')">Cancel All</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="meta-modal" class="modal hidden">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3>Lists & Categories</h3>
+                <button class="close-btn" onclick="closeModal('meta-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="meta-section">
+                    <h4>Lists</h4>
+                    <div class="input-group">
+                        <input type="text" id="new-list" class="input-std" placeholder="New List Name">
+                        <button class="btn-secondary" onclick="addMeta('lists', 'new-list')">Add</button>
+                    </div>
+                    <ul id="list-manager-ul" class="meta-list"></ul>
+                </div>
+                <div class="meta-section mt-15">
+                    <h4>Categories</h4>
+                    <div class="input-group">
+                        <input type="text" id="new-cat" class="input-std" placeholder="New Category Name">
+                        <button class="btn-secondary" onclick="addMeta('cats', 'new-cat')">Add</button>
+                    </div>
+                    <ul id="cat-manager-ul" class="meta-list"></ul>
+                </div>
+            </div>
         </div>
     </div>
 
