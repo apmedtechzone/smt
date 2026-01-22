@@ -55,7 +55,7 @@
                 <label>Search Directory</label>
                 <div class="input-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="search-bar" placeholder="Name, @handle, website..." onkeyup="renderTable()">
+                    <input type="text" id="search-bar" placeholder="Name, @tag, website..." onkeyup="renderTable()">
                 </div>
             </div>
             <div class="action-wrapper hidden" id="add-org-wrapper">
@@ -113,7 +113,7 @@
                 <p>No organizations found matching your filters.</p>
             </div>
         </main>
-        <div class="footer-note">AMTZ Tags Pro v2.8 &bull; Grid Controls</div>
+        <div class="footer-note">AMTZ Tags Pro v2.9 &bull; Smart Lists & Auto-@</div>
     </div>
 
     <div id="login-modal" class="modal hidden">
@@ -139,8 +139,8 @@
                 </div>
                 <div class="divider">Social Presence</div>
                 <div class="social-grid">
-                    <div class="social-item"><label><i class="fa-brands fa-twitter text-twitter"></i> Twitter</label><input type="text" id="tag-twitter" class="input-std"></div>
-                    <div class="social-item"><label><i class="fa-brands fa-instagram text-insta"></i> Instagram</label><input type="text" id="tag-instagram" class="input-std"></div>
+                    <div class="social-item"><label><i class="fa-brands fa-twitter text-twitter"></i> Twitter</label><input type="text" id="tag-twitter" class="input-std" placeholder="e.g. amtz"></div>
+                    <div class="social-item"><label><i class="fa-brands fa-instagram text-insta"></i> Instagram</label><input type="text" id="tag-instagram" class="input-std" placeholder="e.g. amtz"></div>
                     <div class="social-item span-2"><label><i class="fa-brands fa-linkedin text-linkedin"></i> LinkedIn</label><div class="input-group"><input type="text" id="tag-linkedin-val" class="input-std" placeholder="Display Tag (@)"><input type="text" id="tag-linkedin-link" class="input-std" placeholder="Full Link URL"></div></div>
                     <div class="social-item span-2"><label><i class="fa-brands fa-facebook text-facebook"></i> Facebook</label><div class="input-group"><input type="text" id="tag-facebook-val" class="input-std" placeholder="Display Tag (@)"><input type="text" id="tag-facebook-link" class="input-std" placeholder="Full Link URL"></div></div>
                     <div class="social-item span-2"><label><i class="fa-solid fa-globe text-web"></i> Website</label><div class="input-group"><input type="text" id="tag-website-val" class="input-std" placeholder="Display Text"><input type="text" id="tag-website-link" class="input-std" placeholder="Full Link URL"></div></div>
@@ -175,7 +175,7 @@
                         <tbody id="bulk-tbody"></tbody>
                     </table>
                 </div>
-                <p class="small-text mt-5 text-muted">* <strong>Note:</strong> Tags without '@' will be ignored.</p>
+                <p class="small-text mt-5 text-muted">* <strong>Note:</strong> In Bulk Upload, tags without '@' are ignored.</p>
                 <button class="btn-secondary mt-15" onclick="addBulkRows(5)">+ Add 5 More Rows</button>
             </div>
             <div class="modal-foot">
@@ -189,7 +189,7 @@
         <div class="modal-card large">
             <div class="modal-head"><h3><i class="fa-solid fa-triangle-exclamation text-warn"></i> Conflicts Detected</h3><span class="badge-count" id="conflict-count">0</span></div>
             <div class="modal-body">
-                <div class="conflict-header"><button class="btn-text" onclick="resolveAll('ignore')">Ignore All</button><button class="btn-primary-action btn-sm" onclick="resolveAll('overwrite')">Overwrite All</button></div>
+                <div class="conflict-header"><button class="btn-text" onclick="resolveAll('ignore')">Ignore Data (Keep List)</button><button class="btn-primary-action btn-sm" onclick="resolveAll('overwrite')">Overwrite All</button></div>
                 <div id="conflict-list" class="conflict-container"></div>
             </div>
             <div class="modal-foot"><button class="btn-text" onclick="closeModal('conflict-modal')">Cancel All</button></div>
