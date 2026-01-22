@@ -273,6 +273,13 @@ function validateTag(val) {
     return (val.startsWith('@')) ? val : '';
 }
 
+// HELPER: Auto-Fix Tags for Single Entry
+function ensureHandle(val) {
+    val = val.trim();
+    if (!val) return '';
+    return val.startsWith('@') ? val : '@' + val;
+}
+
 function analyzeBulkUpload() {
     const rows = document.querySelectorAll('.bulk-row');
     const targetList = document.getElementById('bulk-list').value;
@@ -320,26 +327,35 @@ function analyzeBulkUpload() {
 function renderConflicts() {
     document.getElementById('conflict-list').innerHTML = pendingConflicts.map(i => `
         <div class="conflict-item" id="conf-${i.id}">
-            <div class="conflict-info"><h4>${i.existingRef.name}</h4><p>Found in DB. Merging lists.</p></div>
-            <div class="conflict-actions"><button class="btn-secondary" onclick="resolveConflict(${i.id},'ignore')">Ignore</button><button class="btn-overwrite" onclick="resolveConflict(${i.id},'overwrite')">Overwrite</button></div>
+            <div class="conflict-info"><h4>${i.existingRef.name}</h4><p>Found in DB.</p></div>
+            <div class="conflict-actions"><button class="btn-secondary" onclick="resolveConflict(${i.id},'ignore')">Ignore (Keep Old)</button><button class="btn-overwrite" onclick="resolveConflict(${i.id},'overwrite')">Overwrite (Update)</button></div>
         </div>`).join('');
 }
 function resolveConflict(id, action) {
     const idx = pendingConflicts.findIndex(c=>c.id===id);
     if(idx===-1) return;
     const item = pendingConflicts[idx];
+    const org = item.existingRef; // LIVE ref
+
+    // MERGE LISTS (Happens for BOTH actions)
+    item.newData.listIds.forEach(l => { if(!org.listIds.includes(l)) org.listIds.push(l); });
+    item.newData.catIds.forEach(c => { if(!org.catIds.includes(c)) org.catIds.push(c); });
+
     if(action==='overwrite') {
-        const o = item.existingRef;
-        item.newData.listIds.forEach(l=>{if(!o.listIds.includes(l))o.listIds.push(l)});
         const t = item.newData.tags;
-        if(t.twitter) o.tags.twitter = t.twitter;
-        if(t.instagram) o.tags.instagram = t.instagram;
-        if(t.linkedin.val) o.tags.linkedin.val = t.linkedin.val;
-        if(t.linkedin.link) o.tags.linkedin.link = t.linkedin.link;
-        if(t.facebook.val) o.tags.facebook.val = t.facebook.val;
-        if(t.facebook.link) o.tags.facebook.link = t.facebook.link;
-        if(t.website.link) o.tags.website.link = t.website.link;
+        if(t.twitter) org.tags.twitter = t.twitter;
+        if(t.instagram) org.tags.instagram = t.instagram;
+        
+        if(t.linkedin.val) org.tags.linkedin.val = t.linkedin.val;
+        if(t.linkedin.link) org.tags.linkedin.link = t.linkedin.link;
+        
+        if(t.facebook.val) org.tags.facebook.val = t.facebook.val;
+        if(t.facebook.link) org.tags.facebook.link = t.facebook.link;
+        
+        if(t.website.link) org.tags.website.link = t.website.link;
     }
+    // If ignore, we did the list merge above, so we just close.
+
     pendingConflicts.splice(idx,1);
     document.getElementById(`conf-${id}`).remove();
     document.getElementById('conflict-count').innerText = pendingConflicts.length;
@@ -358,7 +374,24 @@ function copyConfig(){ saveDataLocally(); }
 function openOrgModal(){editingId=null; document.getElementById('edit-name').value=''; ['twitter','instagram'].forEach(k=>document.getElementById(`tag-${k}`).value=''); ['linkedin','facebook','website'].forEach(k=>{document.getElementById(`tag-${k}-val`).value='';document.getElementById(`tag-${k}-link`).value=''}); renderCheckboxes(['master'],[]); openModal('org-modal');}
 function editOrg(id){editingId=id; const o=db.orgs.find(i=>i.id===id); document.getElementById('edit-name').value=o.name; document.getElementById('tag-twitter').value=o.tags.twitter||''; document.getElementById('tag-instagram').value=o.tags.instagram||''; ['linkedin','facebook','website'].forEach(k=>{const t=o.tags[k]||{}; document.getElementById(`tag-${k}-val`).value=t.val||''; document.getElementById(`tag-${k}-link`).value=t.link||''}); renderCheckboxes(o.listIds,o.catIds); openModal('org-modal');}
 function renderCheckboxes(sl, sc){ const b=(d,s,id)=>document.getElementById(id).innerHTML=d.map(i=>`<label class="check-item ${i.id==='master'?'disabled':''}"><input type="checkbox" value="${i.id}" ${s.includes(i.id)||i.id==='master'?'checked':''} ${i.id==='master'?'disabled':''}> ${i.name}</label>`).join(''); b(db.lists,sl,'check-lists'); b(db.cats,sc,'check-cats'); }
-function saveOrg(){ const n=document.getElementById('edit-name').value; if(!n)return alert('Name?'); const l=Array.from(document.querySelectorAll('#check-lists input:checked')).map(c=>c.value); if(!l.includes('master'))l.push('master'); const c=Array.from(document.querySelectorAll('#check-cats input:checked')).map(x=>x.value); const tags={twitter:document.getElementById('tag-twitter').value.trim(), instagram:document.getElementById('tag-instagram').value.trim(), linkedin:{val:document.getElementById('tag-linkedin-val').value.trim(), link:document.getElementById('tag-linkedin-link').value.trim()}, facebook:{val:document.getElementById('tag-facebook-val').value.trim(), link:document.getElementById('tag-facebook-link').value.trim()}, website:{val:document.getElementById('tag-website-val').value.trim(), link:document.getElementById('tag-website-link').value.trim()}}; if(editingId){const o=db.orgs.find(x=>x.id===editingId); o.name=n; o.listIds=l; o.catIds=c; o.tags=tags;}else{db.orgs.push({id:Date.now(), name:n, listIds:l, catIds:c, tags:tags});} renderTable(); closeModal('org-modal'); saveDataLocally(); }
+
+// UPDATED SAVE ORG (Auto-@)
+function saveOrg(){ 
+    const n=document.getElementById('edit-name').value; if(!n)return alert('Name?'); 
+    const l=Array.from(document.querySelectorAll('#check-lists input:checked')).map(c=>c.value); if(!l.includes('master'))l.push('master'); 
+    const c=Array.from(document.querySelectorAll('#check-cats input:checked')).map(x=>x.value); 
+    const tags={
+        twitter: ensureHandle(document.getElementById('tag-twitter').value), 
+        instagram: ensureHandle(document.getElementById('tag-instagram').value), 
+        linkedin:{val:document.getElementById('tag-linkedin-val').value.trim(), link:document.getElementById('tag-linkedin-link').value.trim()}, 
+        facebook:{val:document.getElementById('tag-facebook-val').value.trim(), link:document.getElementById('tag-facebook-link').value.trim()}, 
+        website:{val:document.getElementById('tag-website-val').value.trim(), link:document.getElementById('tag-website-link').value.trim()}
+    }; 
+    if(editingId){const o=db.orgs.find(x=>x.id===editingId); o.name=n; o.listIds=l; o.catIds=c; o.tags=tags;}
+    else{db.orgs.push({id:Date.now(), name:n, listIds:l, catIds:c, tags:tags});} 
+    renderTable(); closeModal('org-modal'); saveDataLocally(); 
+}
+
 function deleteOrg(){if(editingId && confirm('Delete?')){db.orgs=db.orgs.filter(o=>o.id!==editingId); renderTable(); closeModal('org-modal'); saveDataLocally();}}
 function addMeta(t,i){const n=document.getElementById(i).value; if(n){db[t].push({id:Date.now().toString(),name:n}); document.getElementById(i).value=''; renderMetaList(); initDropdowns(); saveDataLocally();}}
 
