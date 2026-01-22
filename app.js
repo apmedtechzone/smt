@@ -33,8 +33,8 @@ function initDropdowns() {
     };
     populate('filter-list', db.lists, 'All Lists');
     populate('filter-cat', db.cats, 'All Categories');
+    // Bulk cat removed. Bulk List below.
     populate('bulk-list', db.lists, null);
-    populate('bulk-cat', db.cats, null);
 }
 
 // --- RENDER ---
@@ -104,9 +104,12 @@ function addBulkRows(count) {
 function analyzeBulkUpload() {
     const rows = document.querySelectorAll('.bulk-row');
     const targetList = document.getElementById('bulk-list').value;
-    const targetCat = document.getElementById('bulk-cat').value;
     let created = 0;
     pendingConflicts = [];
+
+    // --- LOGIC: Always include Master List ---
+    const targetListIds = ['master'];
+    if(targetList !== 'master') targetListIds.push(targetList);
 
     rows.forEach((row, idx) => {
         const inputs = row.querySelectorAll('input');
@@ -115,8 +118,8 @@ function analyzeBulkUpload() {
 
         const newDat = {
             name: name,
-            listIds: ['master', targetList],
-            catIds: [targetCat],
+            listIds: targetListIds, // Used the computed list above
+            catIds: [], // Empty categories by default (Removed Assigning)
             tags: {
                 twitter: inputs[1].value.trim(),
                 linkedin: { val: inputs[2].value.trim()?"Profile":"", link: inputs[2].value.trim() },
@@ -133,7 +136,7 @@ function analyzeBulkUpload() {
 
     closeModal('bulk-modal');
     if(pendingConflicts.length > 0) { renderConflicts(); document.getElementById('conflict-count').innerText=pendingConflicts.length; openModal('conflict-modal'); }
-    else { alert(`Created: ${created} organizations.`); renderTable(); initBulkRows(10); } // reset grid
+    else { alert(`Created: ${created} organizations.`); renderTable(); initBulkRows(10); } 
 }
 
 // --- CONFLICTS ---
@@ -142,7 +145,7 @@ function renderConflicts() {
         <div class="conflict-item" id="conf-${i.id}">
             <div class="conflict-info">
                 <h4>${i.existingRef.name}</h4>
-                <p>Found in DB. Merging into List/Cat.</p>
+                <p>Found in DB. Merging into List.</p>
             </div>
             <div class="conflict-actions">
                 <button class="btn-secondary" onclick="resolveConflict(${i.id},'ignore')">Ignore</button>
@@ -156,8 +159,9 @@ function resolveConflict(id, action) {
     const item = pendingConflicts[idx];
     if(action==='overwrite') {
         const o = item.existingRef;
+        // Merge Lists (Logic handles master + target)
         item.newData.listIds.forEach(l=>{if(!o.listIds.includes(l))o.listIds.push(l)});
-        item.newData.catIds.forEach(c=>{if(!o.catIds.includes(c))o.catIds.push(c)});
+        // Don't touch categories as bulk upload has none
         const t = item.newData.tags;
         if(t.twitter) o.tags.twitter = t.twitter;
         if(t.instagram) o.tags.instagram = t.instagram;
