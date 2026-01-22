@@ -113,7 +113,7 @@
                 <p>No organizations found matching your filters.</p>
             </div>
         </main>
-        <div class="footer-note">AMTZ Tags Pro v2.4 &bull; Populate Manager</div>
+        <div class="footer-note">AMTZ Tags Pro v2.5 &bull; Populate Manager</div>
     </div>
 
     <div id="login-modal" class="modal hidden">
@@ -141,92 +141,4 @@
                 <div class="social-grid">
                     <div class="social-item"><label><i class="fa-brands fa-twitter text-twitter"></i> Twitter</label><input type="text" id="tag-twitter" class="input-std"></div>
                     <div class="social-item"><label><i class="fa-brands fa-instagram text-insta"></i> Instagram</label><input type="text" id="tag-instagram" class="input-std"></div>
-                    <div class="social-item span-2"><label><i class="fa-brands fa-linkedin text-linkedin"></i> LinkedIn</label><div class="input-group"><input type="text" id="tag-linkedin-val" class="input-std" placeholder="Name"><input type="text" id="tag-linkedin-link" class="input-std" placeholder="URL"></div></div>
-                    <div class="social-item span-2"><label><i class="fa-brands fa-facebook text-facebook"></i> Facebook</label><div class="input-group"><input type="text" id="tag-facebook-val" class="input-std" placeholder="Name"><input type="text" id="tag-facebook-link" class="input-std" placeholder="URL"></div></div>
-                    <div class="social-item span-2"><label><i class="fa-solid fa-globe text-web"></i> Website</label><div class="input-group"><input type="text" id="tag-website-val" class="input-std" placeholder="Text"><input type="text" id="tag-website-link" class="input-std" placeholder="URL"></div></div>
-                </div>
-            </div>
-            <div class="modal-foot"><button class="btn-text danger" onclick="deleteOrg()">Delete</button><button class="btn-primary" onclick="saveOrg()">Save Changes</button></div>
-        </div>
-    </div>
-
-    <div id="bulk-modal" class="modal hidden">
-        <div class="modal-card x-large">
-            <div class="modal-head"><h3>Bulk Upload Grid</h3><button class="close-btn" onclick="closeModal('bulk-modal')">&times;</button></div>
-            <div class="modal-body">
-                <div class="bg-light p-10 mb-15">
-                    <label><strong>Assign to List:</strong> (Master List is always included)</label>
-                    <select id="bulk-list" class="input-std mt-5"></select>
-                </div>
-                <div class="bulk-table-container">
-                    <table class="bulk-grid-table">
-                        <thead><tr><th style="width: 200px;">Org Name *</th><th>Twitter (@)</th><th>LinkedIn (URL)</th><th>Facebook (URL)</th><th>Instagram (@)</th><th>Website (URL)</th></tr></thead>
-                        <tbody id="bulk-tbody"></tbody>
-                    </table>
-                </div>
-                <button class="btn-secondary mt-15" onclick="addBulkRows(5)">+ Add 5 More Rows</button>
-            </div>
-            <div class="modal-foot"><button class="btn-primary full" onclick="analyzeBulkUpload()">Analyze & Import</button></div>
-        </div>
-    </div>
-
-    <div id="conflict-modal" class="modal hidden">
-        <div class="modal-card large">
-            <div class="modal-head"><h3><i class="fa-solid fa-triangle-exclamation text-warn"></i> Conflicts Detected</h3><span class="badge-count" id="conflict-count">0</span></div>
-            <div class="modal-body">
-                <div class="conflict-header"><button class="btn-text" onclick="resolveAll('ignore')">Ignore All</button><button class="btn-primary-action btn-sm" onclick="resolveAll('overwrite')">Overwrite All</button></div>
-                <div id="conflict-list" class="conflict-container"></div>
-            </div>
-            <div class="modal-foot"><button class="btn-text" onclick="closeModal('conflict-modal')">Cancel All</button></div>
-        </div>
-    </div>
-
-    <div id="meta-modal" class="modal hidden">
-        <div class="modal-card large">
-            <div class="modal-head"><h3>Lists & Categories</h3><button class="close-btn" onclick="closeModal('meta-modal')">&times;</button></div>
-            <div class="modal-body">
-                <div class="meta-section"><h4>Lists</h4><div class="input-group"><input type="text" id="new-list" class="input-std" placeholder="New Name"><button class="btn-secondary" onclick="addMeta('lists','new-list')">Add</button></div><ul id="list-manager-ul" class="meta-list"></ul></div>
-                <div class="meta-section mt-15"><h4>Categories</h4><div class="input-group"><input type="text" id="new-cat" class="input-std" placeholder="New Name"><button class="btn-secondary" onclick="addMeta('cats','new-cat')">Add</button></div><ul id="cat-manager-ul" class="meta-list"></ul></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="populate-modal" class="modal hidden">
-        <div class="modal-card">
-            <div class="modal-head">
-                <h3>Add Orgs to: <span id="target-name" class="text-primary"></span></h3>
-                <button class="close-btn" onclick="closeModal('populate-modal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                
-                <div class="populate-option">
-                    <h4>Option 1: New Bulk Upload</h4>
-                    <p class="small-text">Paste Excel data directly into this list.</p>
-                    <button class="btn-secondary full" onclick="triggerBulkForTarget()">Open Bulk Uploader for this List</button>
-                </div>
-
-                <div class="divider">OR</div>
-
-                <div class="populate-option">
-                    <h4>Option 2: Select Existing Orgs</h4>
-                    <p class="small-text">Filter from your database and check the box to add.</p>
-                    
-                    <div class="grid-2">
-                        <div><label>Source List</label><select id="pop-src-list" class="input-std" onchange="renderPopulateList()"></select></div>
-                        <div><label>Source Category</label><select id="pop-src-cat" class="input-std" onchange="renderPopulateList()"></select></div>
-                    </div>
-
-                    <div class="check-container mt-15" id="populate-check-list" style="height: 250px; max-height: 250px;">
-                        </div>
-                </div>
-
-            </div>
-            <div class="modal-foot">
-                <button class="btn-primary full" onclick="savePopulateSelection()">Add Selected Orgs</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="app.js"></script>
-</body>
-</html>
+                    <div class="social-item span-2"><label><i class="fa-brands fa-linkedin text-linkedin"></i> LinkedIn</label><div class="input-group"><input type="text" id="tag-linkedin-val" class="input-std" placeholder="Name"><input type="text" id="tag-linkedin-link"
