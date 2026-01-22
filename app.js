@@ -24,7 +24,7 @@ let db = JSON.parse(localStorage.getItem('amtz_db')) || defaultDB;
 let isAdmin = false;
 let editingId = null;
 let pendingConflicts = []; 
-let targetType = null; // 'lists' or 'cats'
+let targetType = null;
 let targetId = null; 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -100,7 +100,10 @@ function renderTable() {
 function renderLink(d, t) {
     if(!d) return '<span class="empty-cell">&minus;</span>';
     if(typeof d === 'string') return d ? `<a href="${t==='twitter'?'https://x.com/':'https://instagram.com/'}${d.replace('@','')}" target="_blank" class="tag-link"><i class="fa-brands fa-${t}"></i> ${d}</a>` : '<span class="empty-cell">&minus;</span>';
-    return d.val ? `<a href="${d.link||'#'}" target="_blank" class="tag-link"><i class="${t==='website'?'fa-solid fa-globe':'fa-brands fa-'+t}"></i> ${d.val}</a>` : '<span class="empty-cell">&minus;</span>';
+    // For FB/LinkedIn/Web: use 'val' as Text and 'link' as HREF
+    if(d.val && d.link) return `<a href="${d.link}" target="_blank" class="tag-link"><i class="${t==='website'?'fa-solid fa-globe':'fa-brands fa-'+t}"></i> ${d.val}</a>`;
+    if(d.val) return `<span class="tag-link" style="cursor:default; color:#555;"><i class="${t==='website'?'fa-solid fa-globe':'fa-brands fa-'+t}"></i> ${d.val}</span>`;
+    return '<span class="empty-cell">&minus;</span>';
 }
 
 // ==========================================
@@ -161,8 +164,10 @@ function addBulkRows(count) {
         <tr class="bulk-row">
             <td><input type="text" class="input-cell" name="name" placeholder="Name"></td>
             <td><input type="text" class="input-cell" name="twitter" placeholder="@handle"></td>
-            <td><input type="text" class="input-cell" name="linkedin" placeholder="Full Link"></td>
-            <td><input type="text" class="input-cell" name="facebook" placeholder="Full Link"></td>
+            <td><input type="text" class="input-cell" name="li_tag" placeholder="Tag Name"></td>
+            <td><input type="text" class="input-cell" name="li_link" placeholder="Profile URL"></td>
+            <td><input type="text" class="input-cell" name="fb_tag" placeholder="Tag Name"></td>
+            <td><input type="text" class="input-cell" name="fb_link" placeholder="Page URL"></td>
             <td><input type="text" class="input-cell" name="instagram" placeholder="@handle"></td>
             <td><input type="text" class="input-cell" name="website" placeholder="Full Link"></td>
         </tr>`;
@@ -206,6 +211,7 @@ function analyzeBulkUpload() {
 
     rows.forEach((row, idx) => {
         const inputs = row.querySelectorAll('input');
+        // Inputs: 0=Name, 1=Twitter, 2=LiTag, 3=LiLink, 4=FbTag, 5=FbLink, 6=Insta, 7=Web
         const name = inputs[0].value.trim();
         if(!name) return;
         const newDat = {
@@ -214,10 +220,10 @@ function analyzeBulkUpload() {
             catIds: [],
             tags: {
                 twitter: inputs[1].value.trim(),
-                linkedin: { val: inputs[2].value.trim()?"Profile":"", link: inputs[2].value.trim() },
-                facebook: { val: inputs[3].value.trim()?"Page":"", link: inputs[3].value.trim() },
-                instagram: inputs[4].value.trim(),
-                website: { val: inputs[5].value.trim()?"Visit":"", link: inputs[5].value.trim() }
+                linkedin: { val: inputs[2].value.trim() || (inputs[3].value.trim()?"Profile":""), link: inputs[3].value.trim() },
+                facebook: { val: inputs[4].value.trim() || (inputs[5].value.trim()?"Page":""), link: inputs[5].value.trim() },
+                instagram: inputs[6].value.trim(),
+                website: { val: "Visit Site", link: inputs[7].value.trim() } // Website is usually just link
             }
         };
         const existing = db.orgs.find(o => o.name.toLowerCase() === name.toLowerCase());
@@ -245,6 +251,8 @@ function resolveConflict(id, action) {
         const t = item.newData.tags;
         if(t.twitter) o.tags.twitter = t.twitter;
         if(t.instagram) o.tags.instagram = t.instagram;
+        
+        // Update complex tags if new data provided
         if(t.linkedin.link) o.tags.linkedin = t.linkedin;
         if(t.facebook.link) o.tags.facebook = t.facebook;
         if(t.website.link) o.tags.website = t.website;
@@ -271,7 +279,6 @@ function saveOrg(){ const n=document.getElementById('edit-name').value; if(!n)re
 function deleteOrg(){if(editingId && confirm('Delete?')){db.orgs=db.orgs.filter(o=>o.id!==editingId); renderTable(); closeModal('org-modal'); saveDataLocally();}}
 function addMeta(t,i){const n=document.getElementById(i).value; if(n){db[t].push({id:Date.now().toString(),name:n}); document.getElementById(i).value=''; renderMetaList(); initDropdowns(); saveDataLocally();}}
 
-// UPDATED: RENDER META LIST with BUTTON
 function renderMetaList(){
     const render = (data, elementId, type) => {
         document.getElementById(elementId).innerHTML = data.filter(x => x.id !== 'master').map(item => `
@@ -279,7 +286,7 @@ function renderMetaList(){
                 <span style="font-weight:600;">${item.name}</span>
                 <div>
                     <button class="btn-tiny" onclick="openPopulateModal('${type}', '${item.id}', '${item.name}')">
-                        <i class="fa-solid fa-user-plus"></i> Add Orgs
+                        <i class="fa-solid fa-user-plus"></i> Add
                     </button>
                     <button class="close-btn" style="font-size:1rem; margin-left:10px;" onclick="removeMeta('${type}','${item.id}')">&times;</button>
                 </div>
