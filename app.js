@@ -26,6 +26,7 @@ let editingId = null;
 let pendingConflicts = []; 
 let targetType = null; 
 let targetId = null; 
+let searchTimer = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     initDropdowns();
@@ -33,6 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTable();
     checkAdminStatus();
     document.getElementById('bulk-tbody').addEventListener('paste', handleGridPaste);
+    
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+        if(e.key === "Escape") {
+            document.querySelectorAll('.modal').forEach(m => closeModal(m.id));
+        }
+    });
 });
 
 function initDropdowns() {
@@ -51,23 +59,84 @@ function initDropdowns() {
 }
 
 // ==========================================
-// 3. RENDER ENGINE & UTILS
+// 3. UTILITIES & TOASTS
 // ==========================================
 function saveDataLocally() {
     localStorage.setItem('amtz_db', JSON.stringify(db));
-    alert("Saved Locally.");
+    showToast("Changes saved locally!", "success");
     const codeToPaste = `const defaultDB = ${JSON.stringify(db, null, 4)};\n\nlet db = JSON.parse(localStorage.getItem('amtz_db')) || defaultDB;`;
     navigator.clipboard.writeText(codeToPaste);
 }
 
+function showToast(msg, type = "success") {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'circle-exclamation'}"></i> ${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+function debouncedRender() {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(renderTable, 300);
+}
+
+function exportToCSV() {
+    // Get current filtered data
+    const listId = document.getElementById('filter-list').value;
+    const catId = document.getElementById('filter-cat').value;
+    const search = document.getElementById('search-bar').value.toLowerCase().split(' ').filter(s=>s);
+    
+    const visibleOrgs = db.orgs.filter(org => {
+        if (listId!=='all' && !org.listIds.includes(listId)) return false;
+        if (catId!=='all' && !org.catIds.includes(catId)) return false;
+        if (search.length > 0) {
+            let txt = org.name.toLowerCase();
+            return search.every(term => txt.includes(term));
+        }
+        return true;
+    });
+
+    let csvContent = "data:text/csv;charset=utf-8,Name,Twitter,LinkedIn,Facebook,Instagram,Website\n";
+    
+    visibleOrgs.forEach(org => {
+        const row = [
+            `"${org.name}"`,
+            org.tags.twitter || "",
+            org.tags.linkedin.link || "",
+            org.tags.facebook.link || "",
+            org.tags.instagram || "",
+            org.tags.website.link || ""
+        ].join(",");
+        csvContent += row + "\n";
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "amtz_data_export.csv");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    showToast("Export downloaded!");
+}
+
+// ==========================================
+// 4. RENDER ENGINE
+// ==========================================
 function renderTable() {
     const listId = document.getElementById('filter-list').value;
     const catId = document.getElementById('filter-cat').value;
     const search = document.getElementById('search-bar').value.toLowerCase().split(' ').filter(s=>s);
     const tbody = document.getElementById('table-body');
     const empty = document.getElementById('empty-state');
-    tbody.innerHTML = '';
+    
+    // Update Stats Bar
+    const total = db.orgs.length;
+    let filtered = 0;
 
+    // Filter
     const results = db.orgs.filter(org => {
         if (listId!=='all' && !org.listIds.includes(listId)) return false;
         if (catId!=='all' && !org.catIds.includes(catId)) return false;
@@ -82,11 +151,20 @@ function renderTable() {
         return true;
     });
 
-    if (results.length === 0) { empty.classList.remove('hidden'); return; }
+    filtered = results.length;
+    document.getElementById('stats-count').innerText = `${filtered} Organizations`;
+    document.getElementById('stats-filter').innerText = (listId === 'all' && catId === 'all' && search.length === 0) ? `Total Database: ${total}` : `Filtered from ${total}`;
+
+    // Render
+    if (results.length === 0) { 
+        tbody.innerHTML = ''; 
+        empty.classList.remove('hidden'); 
+        return; 
+    }
     empty.classList.add('hidden');
 
-    results.forEach(org => {
-        tbody.innerHTML += `<tr>
+    tbody.innerHTML = results.map(org => `
+        <tr>
             <td class="col-fixed-name">${org.name}</td>
             <td>${renderLink(org.tags.twitter, 'twitter')}</td>
             <td>${renderLink(org.tags.linkedin, 'linkedin')}</td>
@@ -94,17 +172,25 @@ function renderTable() {
             <td>${renderLink(org.tags.instagram, 'instagram')}</td>
             <td>${renderLink(org.tags.website, 'website')}</td>
             <td class="col-action ${isAdmin?'':'hidden'}"><button class="btn-primary-action btn-sm" onclick="editOrg(${org.id})">Edit</button></td>
-        </tr>`;
-    });
+        </tr>
+    `).join('');
 }
+
 function renderLink(d, t) {
     if(!d) return '<span class="empty-cell">&minus;</span>';
     if(typeof d === 'string') return d ? `<a href="${t==='twitter'?'https://x.com/':'https://instagram.com/'}${d.replace('@','')}" target="_blank" class="tag-link"><i class="fa-brands fa-${t}"></i> ${d}</a>` : '<span class="empty-cell">&minus;</span>';
     return d.val ? `<a href="${d.link||'#'}" target="_blank" class="tag-link"><i class="${t==='website'?'fa-solid fa-globe':'fa-brands fa-'+t}"></i> ${d.val}</a>` : '<span class="empty-cell">&minus;</span>';
 }
 
+function resetFilters() {
+    document.getElementById('filter-list').value = 'all';
+    document.getElementById('filter-cat').value = 'all';
+    document.getElementById('search-bar').value = '';
+    renderTable();
+}
+
 // ==========================================
-// 4. POPULATE MANAGER & EDIT LISTS
+// 5. POPULATE & EDIT MODALS
 // ==========================================
 function openPopulateModal(type, id, name) {
     targetType = type; targetId = id;
@@ -129,7 +215,7 @@ function renderPopulateList() {
 function savePopulateSelection() {
     const checkboxes = document.querySelectorAll('#populate-check-list input:checked');
     const idsToAdd = Array.from(checkboxes).map(cb => parseFloat(cb.value));
-    if (idsToAdd.length === 0) return alert("None selected.");
+    if (idsToAdd.length === 0) return showToast("None selected", "error");
     let count = 0;
     db.orgs.forEach(org => {
         if (idsToAdd.includes(org.id)) {
@@ -137,24 +223,16 @@ function savePopulateSelection() {
             else if (targetType === 'cats' && !org.catIds.includes(targetId)) { org.catIds.push(targetId); count++; }
         }
     });
-    closeModal('populate-modal'); renderTable(); saveDataLocally(); alert(`Added ${count} organizations.`);
+    closeModal('populate-modal'); renderTable(); saveDataLocally(); 
 }
-
-// --- FIX: Close Background Modals ---
 function triggerBulkForTarget() {
     closeModal('populate-modal');
-    closeModal('meta-modal'); // <--- THIS LINE FIXES THE ISSUE
-    
-    if (targetType === 'lists') { 
-        document.getElementById('bulk-list').value = targetId; 
-    } else { 
-        document.getElementById('bulk-list').value = 'master'; 
-        alert("Bulk upload adds to Lists. Will add to Master List first."); 
-    }
+    closeModal('meta-modal');
+    if (targetType === 'lists') { document.getElementById('bulk-list').value = targetId; } 
+    else { document.getElementById('bulk-list').value = 'master'; showToast("Bulk upload adds to Lists. Adding to Master first.", "error"); }
     openModal('bulk-modal');
 }
 
-// --- EDIT LISTS ---
 function openEditListModal(type, id, name) {
     targetType = type; targetId = id;
     document.getElementById('edit-meta-type-label').innerText = (type === 'lists' ? 'List' : 'Category');
@@ -167,26 +245,26 @@ function openEditListModal(type, id, name) {
 }
 function saveRenamedMeta() {
     const newName = document.getElementById('rename-input').value.trim();
-    if (!newName) return alert("Name cannot be empty.");
+    if (!newName) return showToast("Name required", "error");
     const item = db[targetType].find(x => x.id === targetId);
-    if (item) { item.name = newName; saveDataLocally(); renderMetaList(); initDropdowns(); closeModal('edit-meta-modal'); alert("Renamed successfully."); }
+    if (item) { item.name = newName; saveDataLocally(); renderMetaList(); initDropdowns(); closeModal('edit-meta-modal'); }
 }
 function removeSelectedFromMeta() {
     const checkboxes = document.querySelectorAll('#edit-meta-list-container input:checked');
     const idsToRemove = Array.from(checkboxes).map(cb => parseFloat(cb.value));
-    if (idsToRemove.length === 0) return alert("No items selected.");
-    if (!confirm(`Remove ${idsToRemove.length} organizations from this list?`)) return;
+    if (idsToRemove.length === 0) return showToast("No items selected", "error");
+    if (!confirm(`Remove ${idsToRemove.length} organizations?`)) return;
     db.orgs.forEach(org => {
         if (idsToRemove.includes(org.id)) {
             if (targetType === 'lists') org.listIds = org.listIds.filter(id => id !== targetId);
             else org.catIds = org.catIds.filter(id => id !== targetId);
         }
     });
-    saveDataLocally(); renderTable(); closeModal('edit-meta-modal'); alert("Removed successfully.");
+    saveDataLocally(); renderTable(); closeModal('edit-meta-modal');
 }
 
 // ==========================================
-// 5. BULK UPLOAD
+// 6. BULK UPLOAD
 // ==========================================
 function initBulkRows(count) {
     const tbody = document.getElementById('bulk-tbody');
@@ -237,18 +315,10 @@ function handleGridPaste(e) {
         });
     });
 }
-function resetBulkGrid() {
-    if(confirm("Discard all changes in grid?")) { initBulkRows(20); }
-}
-function validateTag(val) {
-    val = val.trim();
-    return (val.startsWith('@')) ? val : '';
-}
-function ensureHandle(val) {
-    val = val.trim();
-    if (!val) return '';
-    return val.startsWith('@') ? val : '@' + val;
-}
+function resetBulkGrid() { if(confirm("Discard all changes?")) initBulkRows(20); }
+function validateTag(val) { return val.trim().startsWith('@') ? val.trim() : ''; }
+function ensureHandle(val) { val = val.trim(); if (!val) return ''; return val.startsWith('@') ? val : '@' + val; }
+
 function analyzeBulkUpload() {
     const rows = document.querySelectorAll('.bulk-row');
     const targetList = document.getElementById('bulk-list').value;
@@ -279,13 +349,13 @@ function analyzeBulkUpload() {
     });
     closeModal('bulk-modal');
     if(pendingConflicts.length > 0) { renderConflicts(); document.getElementById('conflict-count').innerText=pendingConflicts.length; openModal('conflict-modal'); }
-    else { alert(`Created: ${created} organizations.`); renderTable(); initBulkRows(20); saveDataLocally(); }
+    else { showToast(`Imported ${created} organizations`); renderTable(); initBulkRows(20); saveDataLocally(); }
 }
 function renderConflicts() {
     document.getElementById('conflict-list').innerHTML = pendingConflicts.map(i => `
         <div class="conflict-item" id="conf-${i.id}">
             <div class="conflict-info"><h4>${i.existingRef.name}</h4><p>Found in DB.</p></div>
-            <div class="conflict-actions"><button class="btn-secondary" onclick="resolveConflict(${i.id},'ignore')">Ignore (Keep Old)</button><button class="btn-overwrite" onclick="resolveConflict(${i.id},'overwrite')">Overwrite (Update)</button></div>
+            <div class="conflict-actions"><button class="btn-secondary" onclick="resolveConflict(${i.id},'ignore')">Ignore</button><button class="btn-overwrite" onclick="resolveConflict(${i.id},'overwrite')">Overwrite</button></div>
         </div>`).join('');
 }
 function resolveConflict(id, action) {
@@ -293,8 +363,6 @@ function resolveConflict(id, action) {
     if(idx===-1) return;
     const item = pendingConflicts[idx];
     const org = item.existingRef; 
-
-    // MERGE LISTS (Happens for BOTH actions)
     item.newData.listIds.forEach(l => { if(!org.listIds.includes(l)) org.listIds.push(l); });
     item.newData.catIds.forEach(c => { if(!org.catIds.includes(c)) org.catIds.push(c); });
 
@@ -311,14 +379,14 @@ function resolveConflict(id, action) {
     pendingConflicts.splice(idx,1);
     document.getElementById(`conf-${id}`).remove();
     document.getElementById('conflict-count').innerText = pendingConflicts.length;
-    if(pendingConflicts.length===0) { closeModal('conflict-modal'); renderTable(); alert("Resolved."); saveDataLocally(); }
+    if(pendingConflicts.length===0) { closeModal('conflict-modal'); renderTable(); showToast("Conflicts resolved"); saveDataLocally(); }
 }
 function resolveAll(act) { [...pendingConflicts].forEach(c=>resolveConflict(c.id,act)); }
 
 // ==========================================
-// 6. ADMIN & META MANAGER
+// 7. ADMIN & AUTH
 // ==========================================
-function login() { if(document.getElementById('login-email').value==='saragadamteja.k@amtz.in' && document.getElementById('login-pass').value==='9989'){ isAdmin=true; localStorage.setItem('amtz_admin', 'true'); updateUIForAdmin(); closeModal('login-modal'); } else alert('Invalid'); }
+function login() { if(document.getElementById('login-email').value==='saragadamteja.k@amtz.in' && document.getElementById('login-pass').value==='9989'){ isAdmin=true; localStorage.setItem('amtz_admin', 'true'); updateUIForAdmin(); closeModal('login-modal'); showToast("Logged in successfully"); } else showToast("Invalid Credentials", "error"); }
 function checkAdminStatus() { if(localStorage.getItem('amtz_admin') === 'true') { isAdmin = true; updateUIForAdmin(); } }
 function updateUIForAdmin() { document.getElementById('admin-panel').classList.remove('hidden'); document.getElementById('login-trigger').classList.add('hidden'); document.getElementById('add-org-wrapper').classList.remove('hidden'); document.querySelectorAll('.col-action').forEach(el=>el.classList.remove('hidden')); }
 function logout(){ localStorage.removeItem('amtz_admin'); location.reload(); }
@@ -327,7 +395,7 @@ function openOrgModal(){editingId=null; document.getElementById('edit-name').val
 function editOrg(id){editingId=id; const o=db.orgs.find(i=>i.id===id); document.getElementById('edit-name').value=o.name; document.getElementById('tag-twitter').value=o.tags.twitter||''; document.getElementById('tag-instagram').value=o.tags.instagram||''; ['linkedin','facebook','website'].forEach(k=>{const t=o.tags[k]||{}; document.getElementById(`tag-${k}-val`).value=t.val||''; document.getElementById(`tag-${k}-link`).value=t.link||''}); renderCheckboxes(o.listIds,o.catIds); openModal('org-modal');}
 function renderCheckboxes(sl, sc){ const b=(d,s,id)=>document.getElementById(id).innerHTML=d.map(i=>`<label class="check-item ${i.id==='master'?'disabled':''}"><input type="checkbox" value="${i.id}" ${s.includes(i.id)||i.id==='master'?'checked':''} ${i.id==='master'?'disabled':''}> ${i.name}</label>`).join(''); b(db.lists,sl,'check-lists'); b(db.cats,sc,'check-cats'); }
 function saveOrg(){ 
-    const n=document.getElementById('edit-name').value; if(!n)return alert('Name?'); 
+    const n=document.getElementById('edit-name').value; if(!n)return showToast("Name required", "error");
     const l=Array.from(document.querySelectorAll('#check-lists input:checked')).map(c=>c.value); if(!l.includes('master'))l.push('master'); 
     const c=Array.from(document.querySelectorAll('#check-cats input:checked')).map(x=>x.value); 
     const tags={
@@ -358,6 +426,6 @@ function renderMetaList(){
     render(db.lists, 'list-manager-ul', 'lists'); render(db.cats, 'cat-manager-ul', 'cats');
 }
 function removeMeta(t,id){db[t]=db[t].filter(i=>i.id!==id); renderMetaList(); initDropdowns(); saveDataLocally();}
-function copyColumn(t){const l=document.getElementById('filter-list').value, c=document.getElementById('filter-cat').value; const v=db.orgs.filter(o=>(l==='all'||o.listIds.includes(l))&&(c==='all'||o.catIds.includes(c))).map(o=>{const x=o.tags[t]; return (typeof x==='string')?x:(x?.val||"")}).filter(k=>k); navigator.clipboard.writeText(v.join('\n'));}
+function copyColumn(t){const l=document.getElementById('filter-list').value, c=document.getElementById('filter-cat').value; const v=db.orgs.filter(o=>(l==='all'||o.listIds.includes(l))&&(c==='all'||o.catIds.includes(c))).map(o=>{const x=o.tags[t]; return (typeof x==='string')?x:(x?.val||"")}).filter(k=>k); navigator.clipboard.writeText(v.join('\n')); showToast(`Copied ${v.length} tags`);}
 function openModal(id){document.getElementById(id).classList.remove('hidden'); if(id==='meta-modal')renderMetaList();}
 function closeModal(id){document.getElementById(id).classList.add('hidden');}
