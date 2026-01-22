@@ -55,7 +55,7 @@
                 <label>Search Directory</label>
                 <div class="input-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="search-bar" placeholder="Name, @tag, website..." onkeyup="renderTable()">
+                    <input type="text" id="search-bar" placeholder="Name, @handle, website..." onkeyup="renderTable()">
                 </div>
             </div>
             <div class="action-wrapper hidden" id="add-org-wrapper">
@@ -113,7 +113,7 @@
                 <p>No organizations found matching your filters.</p>
             </div>
         </main>
-        <div class="footer-note">AMTZ Tags Pro v2.6 &bull; Strict Tag Validation</div>
+        <div class="footer-note">AMTZ Tags Pro v2.7 &bull; Edit & Rename Lists</div>
     </div>
 
     <div id="login-modal" class="modal hidden">
@@ -203,12 +203,33 @@
         </div>
     </div>
 
+    <div id="edit-meta-modal" class="modal hidden">
+        <div class="modal-card">
+            <div class="modal-head"><h3>Edit <span id="edit-meta-type-label"></span></h3><button class="close-btn" onclick="closeModal('edit-meta-modal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="bg-light p-10 mb-15">
+                    <label><strong>Rename:</strong></label>
+                    <div class="input-group mt-5">
+                        <input type="text" id="rename-input" class="input-std">
+                        <button class="btn-primary-action" onclick="saveRenamedMeta()">Save Name</button>
+                    </div>
+                </div>
+
+                <div class="divider">Manage Content</div>
+                
+                <p class="small-text">Select items to <strong>remove</strong> from this list:</p>
+                <div class="check-container" id="edit-meta-list-container" style="height: 300px;">
+                    </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn-text danger" onclick="removeSelectedFromMeta()">Remove Selected Orgs</button>
+            </div>
+        </div>
+    </div>
+
     <div id="populate-modal" class="modal hidden">
         <div class="modal-card">
-            <div class="modal-head">
-                <h3>Add Orgs to: <span id="target-name" class="text-primary"></span></h3>
-                <button class="close-btn" onclick="closeModal('populate-modal')">&times;</button>
-            </div>
+            <div class="modal-head"><h3>Add to: <span id="target-name" class="text-primary"></span></h3><button class="close-btn" onclick="closeModal('populate-modal')">&times;</button></div>
             <div class="modal-body">
                 <div class="populate-option"><h4>Option 1: New Bulk Upload</h4><p class="small-text">Paste Excel data directly.</p><button class="btn-secondary full" onclick="triggerBulkForTarget()">Open Bulk Uploader</button></div>
                 <div class="divider">OR</div>
