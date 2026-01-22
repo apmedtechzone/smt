@@ -1,6 +1,7 @@
 // ==========================================
 // 1. DATABASE CONFIGURATION
 // ==========================================
+// This object holds your data. The system updates this automatically.
 const defaultDB = {
     lists: [{ id: 'master', name: '★ Master List' }, { id: 'l2', name: 'Biovalley Project' }],
     cats: [{ id: 'c1', name: 'COE' }, { id: 'c2', name: 'MILD' }],
@@ -16,6 +17,7 @@ const defaultDB = {
     }]
 };
 
+// LOAD STATE: Prefer LocalStorage (Recent work), else fallback to GitHub Code (defaultDB)
 let db = JSON.parse(localStorage.getItem('amtz_db')) || defaultDB;
 
 // ==========================================
@@ -32,8 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initBulkRows(20); 
     renderTable();
     checkAdminStatus();
-    document.getElementById('bulk-tbody').addEventListener('paste', handleGridPaste);
     
+    // Global Listeners
+    document.getElementById('bulk-tbody').addEventListener('paste', handleGridPaste);
     document.addEventListener('keydown', (e) => {
         if(e.key === "Escape") document.querySelectorAll('.modal').forEach(m => closeModal(m.id));
     });
@@ -42,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function initDropdowns() {
     const populate = (id, data, ph) => {
         const el = document.getElementById(id);
+        if(!el) return;
         const curr = el.value;
         el.innerHTML = ph ? `<option value="all">${ph}</option>` : '';
         data.forEach(i => el.innerHTML += `<option value="${i.id}">${i.name}</option>`);
@@ -55,17 +59,55 @@ function initDropdowns() {
 }
 
 // ==========================================
-// 3. UTILITIES & TOASTS
+// 3. UTILITIES & SMART SAVE
 // ==========================================
-function saveDataLocally() {
+async function copyConfig() {
+    // 1. Save to Local Storage first (Safety net)
     localStorage.setItem('amtz_db', JSON.stringify(db));
-    showToast("Changes saved locally!", "success");
-    const codeToPaste = `const defaultDB = ${JSON.stringify(db, null, 4)};\n\nlet db = JSON.parse(localStorage.getItem('amtz_db')) || defaultDB;`;
-    navigator.clipboard.writeText(codeToPaste);
+    
+    try {
+        showToast("Generating full code...", "success");
+        
+        // 2. Fetch the SOURCE CODE of this very file
+        const response = await fetch('app.js');
+        if (!response.ok) throw new Error("Network response was not ok");
+        let sourceCode = await response.text();
+
+        // 3. Prepare the new data string
+        const newDataString = `const defaultDB = ${JSON.stringify(db, null, 4)};`;
+
+        // 4. SMART REPLACE: Find the old defaultDB block and replace it
+        // We look for 'const defaultDB =' up to the first semi-colon followed by 'let db ='
+        // or we just replace the exact start lines if structure is maintained.
+        
+        // Robust Regex replacement:
+        // Matches "const defaultDB = { ... };" (lazy match until semi-colon at end of line)
+        const regex = /const defaultDB\s*=\s*\{[\s\S]*?\};/;
+        
+        if (regex.test(sourceCode)) {
+            const newCode = sourceCode.replace(regex, newDataString);
+            
+            // 5. Copy FULL code to clipboard
+            await navigator.clipboard.writeText(newCode);
+            showToast("FULL CODE Copied! Paste entire file to GitHub.", "success");
+        } else {
+            // Fallback if regex fails (rare)
+            alert("Auto-update failed. Copying data only.");
+            navigator.clipboard.writeText(newDataString);
+        }
+
+    } catch (err) {
+        console.error(err);
+        // Fallback for offline testing
+        const fallbackCode = `const defaultDB = ${JSON.stringify(db, null, 4)};\n\n// PASTE THIS AT THE TOP OF APP.JS (REPLACING OLD defaultDB)`;
+        navigator.clipboard.writeText(fallbackCode);
+        alert("Could not fetch source (are you offline?). \n\nData object copied. \n\nMANUAL UPDATE:\nReplace the top 'const defaultDB = ...' block in GitHub with your clipboard.");
+    }
 }
 
 function showToast(msg, type = "success") {
     const container = document.getElementById('toast-container');
+    if(!container) return alert(msg);
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'circle-exclamation'}"></i> ${msg}`;
@@ -73,6 +115,9 @@ function showToast(msg, type = "success") {
     setTimeout(() => toast.remove(), 3000);
 }
 
+// ==========================================
+// 4. RENDER ENGINE
+// ==========================================
 function renderTable() {
     const listId = document.getElementById('filter-list').value;
     const catId = document.getElementById('filter-cat').value;
@@ -80,9 +125,8 @@ function renderTable() {
     const tbody = document.getElementById('table-body');
     const empty = document.getElementById('empty-state');
     
-    // Update Stats Bar
+    // Filter
     const total = db.orgs.length;
-    
     const results = db.orgs.filter(org => {
         if (listId!=='all' && !org.listIds.includes(listId)) return false;
         if (catId!=='all' && !org.catIds.includes(catId)) return false;
@@ -97,8 +141,11 @@ function renderTable() {
         return true;
     });
 
-    document.getElementById('stats-count').innerText = `${results.length} Organizations`;
-    document.getElementById('stats-filter').innerText = (listId === 'all' && catId === 'all' && search.length === 0) ? `Total Database: ${total}` : `Filtered from ${total}`;
+    // Update Stats
+    if(document.getElementById('stats-count')) {
+        document.getElementById('stats-count').innerText = `${results.length} Organizations`;
+        document.getElementById('stats-filter').innerText = (listId === 'all' && catId === 'all' && search.length === 0) ? `Total Database: ${total}` : `Filtered from ${total}`;
+    }
 
     if (results.length === 0) { tbody.innerHTML = ''; empty.classList.remove('hidden'); return; }
     empty.classList.add('hidden');
@@ -136,7 +183,7 @@ function renderLink(d, t) {
 }
 
 // ==========================================
-// 4. POPULATE & EDIT MODALS
+// 5. POPULATE & EDIT MODALS
 // ==========================================
 function openPopulateModal(type, id, name) {
     targetType = type; targetId = id;
@@ -156,7 +203,7 @@ function renderPopulateList() {
         return true;
     });
     if (matches.length === 0) { container.innerHTML = '<p class="small-text" style="text-align:center; padding:20px;">No new organizations found.</p>'; return; }
-    container.innerHTML = matches.map(org => `<div class="check-item"><input type="checkbox" value="${org.id}"> ${org.name}</div>`).join('');
+    container.innerHTML = matches.map(org => `<label class="check-item"><input type="checkbox" value="${org.id}"> ${org.name}</label>`).join('');
 }
 function savePopulateSelection() {
     const checkboxes = document.querySelectorAll('#populate-check-list input:checked');
@@ -169,7 +216,7 @@ function savePopulateSelection() {
             else if (targetType === 'cats' && !org.catIds.includes(targetId)) { org.catIds.push(targetId); count++; }
         }
     });
-    closeModal('populate-modal'); renderTable(); saveDataLocally(); 
+    closeModal('populate-modal'); renderTable(); saveDataLocally(); alert(`Added ${count} organizations.`);
 }
 function triggerBulkForTarget() {
     closeModal('populate-modal');
@@ -186,7 +233,7 @@ function openEditListModal(type, id, name) {
     const container = document.getElementById('edit-meta-list-container');
     const currentItems = db.orgs.filter(org => (type === 'lists' && org.listIds.includes(id)) || (type === 'cats' && org.catIds.includes(id)));
     if (currentItems.length === 0) { container.innerHTML = '<p class="small-text" style="text-align:center; padding:20px;">This list is empty.</p>'; } 
-    else { container.innerHTML = currentItems.map(org => `<div class="check-item"><input type="checkbox" value="${org.id}"> ${org.name}</div>`).join(''); }
+    else { container.innerHTML = currentItems.map(org => `<label class="check-item"><input type="checkbox" value="${org.id}"> ${org.name}</label>`).join(''); }
     openModal('edit-meta-modal');
 }
 function saveRenamedMeta() {
@@ -210,7 +257,7 @@ function removeSelectedFromMeta() {
 }
 
 // ==========================================
-// 5. BULK UPLOAD
+// 6. BULK UPLOAD
 // ==========================================
 function initBulkRows(count) {
     const tbody = document.getElementById('bulk-tbody');
@@ -235,8 +282,9 @@ function addBulkRows(count) {
 }
 function handleGridPaste(e) {
     e.preventDefault();
+    e.stopPropagation();
     const clipboardData = (e.clipboardData || window.clipboardData).getData('text');
-    const rows = clipboardData.split(/\r\n|\n|\r/).filter(row => row.trim() !== '');
+    const rows = clipboardData.split(/\r\n|\n|\r/).filter(row => row.length > 0);
     let target = e.target;
     if (target.tagName !== 'INPUT') return; 
     let currentRow = target.closest('tr');
@@ -245,9 +293,9 @@ function handleGridPaste(e) {
     const tableBody = document.getElementById('bulk-tbody');
 
     rows.forEach((rowData, rIdx) => {
-        if (startRowIndex + rIdx >= tableBody.children.length) addBulkRows(5);
-        const targetRow = tableBody.children[startRowIndex + rIdx];
         const cells = rowData.split('\t');
+        if (startRowIndex + rIdx >= tableBody.children.length) addBulkRows(1);
+        const targetRow = tableBody.children[startRowIndex + rIdx];
         cells.forEach((cellData, cIdx) => {
             const targetCellIndex = startColIndex + cIdx;
             if (targetCellIndex < targetRow.children.length) {
@@ -261,7 +309,7 @@ function handleGridPaste(e) {
         });
     });
 }
-function resetBulkGrid() { if(confirm("Discard all changes?")) initBulkRows(20); }
+function resetBulkGrid() { if(confirm("Discard all changes in grid?")) initBulkRows(20); }
 function validateTag(val) { return val.trim().startsWith('@') ? val.trim() : ''; }
 function ensureHandle(val) { val = val.trim(); if (!val) return ''; return val.startsWith('@') ? val : '@' + val; }
 
@@ -295,12 +343,7 @@ function analyzeBulkUpload() {
     });
     closeModal('bulk-modal');
     if(pendingConflicts.length > 0) { renderConflicts(); document.getElementById('conflict-count').innerText=pendingConflicts.length; openModal('conflict-modal'); }
-    else { 
-        showToast(`Imported ${created} organizations`); 
-        renderTable(); 
-        initBulkRows(20); // Clear logic 1
-        saveDataLocally(); 
-    }
+    else { showToast(`Imported ${created} organizations`); renderTable(); initBulkRows(20); saveDataLocally(); }
 }
 
 function renderConflicts() {
@@ -331,24 +374,17 @@ function resolveConflict(id, action) {
     pendingConflicts.splice(idx,1);
     document.getElementById(`conf-${id}`).remove();
     document.getElementById('conflict-count').innerText = pendingConflicts.length;
-    if(pendingConflicts.length===0) { 
-        closeModal('conflict-modal'); 
-        renderTable(); 
-        initBulkRows(20); // Clear logic 2 (post-conflict)
-        showToast("Conflicts resolved"); 
-        saveDataLocally(); 
-    }
+    if(pendingConflicts.length===0) { closeModal('conflict-modal'); renderTable(); showToast("Resolved"); saveDataLocally(); }
 }
 function resolveAll(act) { [...pendingConflicts].forEach(c=>resolveConflict(c.id,act)); }
 
 // ==========================================
-// 6. ADMIN & META MANAGER
+// 7. ADMIN & AUTH
 // ==========================================
-function login() { if(document.getElementById('login-email').value==='saragadamteja.k@amtz.in' && document.getElementById('login-pass').value==='9989'){ isAdmin=true; localStorage.setItem('amtz_admin', 'true'); updateUIForAdmin(); closeModal('login-modal'); showToast("Logged in successfully"); } else showToast("Invalid Credentials", "error"); }
+function login() { if(document.getElementById('login-email').value==='saragadamteja.k@amtz.in' && document.getElementById('login-pass').value==='9989'){ isAdmin=true; localStorage.setItem('amtz_admin', 'true'); updateUIForAdmin(); closeModal('login-modal'); showToast("Logged in"); } else showToast("Invalid Credentials", "error"); }
 function checkAdminStatus() { if(localStorage.getItem('amtz_admin') === 'true') { isAdmin = true; updateUIForAdmin(); } }
 function updateUIForAdmin() { document.getElementById('admin-panel').classList.remove('hidden'); document.getElementById('login-trigger').classList.add('hidden'); document.getElementById('add-org-wrapper').classList.remove('hidden'); document.querySelectorAll('.col-action').forEach(el=>el.classList.remove('hidden')); }
 function logout(){ localStorage.removeItem('amtz_admin'); location.reload(); }
-function copyConfig(){ saveDataLocally(); }
 function openOrgModal(){editingId=null; document.getElementById('edit-name').value=''; ['twitter','instagram'].forEach(k=>document.getElementById(`tag-${k}`).value=''); ['linkedin','facebook','website'].forEach(k=>{document.getElementById(`tag-${k}-val`).value='';document.getElementById(`tag-${k}-link`).value=''}); renderCheckboxes(['master'],[]); openModal('org-modal');}
 function editOrg(id){editingId=id; const o=db.orgs.find(i=>i.id===id); document.getElementById('edit-name').value=o.name; document.getElementById('tag-twitter').value=o.tags.twitter||''; document.getElementById('tag-instagram').value=o.tags.instagram||''; ['linkedin','facebook','website'].forEach(k=>{const t=o.tags[k]||{}; document.getElementById(`tag-${k}-val`).value=t.val||''; document.getElementById(`tag-${k}-link`).value=t.link||''}); renderCheckboxes(o.listIds,o.catIds); openModal('org-modal');}
 function renderCheckboxes(sl, sc){ const b=(d,s,id)=>document.getElementById(id).innerHTML=d.map(i=>`<label class="check-item ${i.id==='master'?'disabled':''}"><input type="checkbox" value="${i.id}" ${s.includes(i.id)||i.id==='master'?'checked':''} ${i.id==='master'?'disabled':''}> ${i.name}</label>`).join(''); b(db.lists,sl,'check-lists'); b(db.cats,sc,'check-cats'); }
@@ -385,11 +421,9 @@ function renderMetaList(){
 }
 function removeMeta(t,id){db[t]=db[t].filter(i=>i.id!==id); renderMetaList(); initDropdowns(); saveDataLocally();}
 function copyColumn(t){const l=document.getElementById('filter-list').value, c=document.getElementById('filter-cat').value; const v=db.orgs.filter(o=>(l==='all'||o.listIds.includes(l))&&(c==='all'||o.catIds.includes(c))).map(o=>{const x=o.tags[t]; return (typeof x==='string')?x:(x?.val||"")}).filter(k=>k); navigator.clipboard.writeText(v.join('\n')); showToast(`Copied ${v.length} tags`);}
-
-// IMPORTANT FIX: Auto-Clear Bulk Grid on Open
 function openModal(id){
     document.getElementById(id).classList.remove('hidden'); 
     if(id==='meta-modal') renderMetaList();
-    if(id==='bulk-modal') initBulkRows(20); // Forces fresh start
+    if(id==='bulk-modal') { initBulkRows(20); document.getElementById('bulk-list').value = 'master'; }
 }
 function closeModal(id){document.getElementById(id).classList.add('hidden');}
