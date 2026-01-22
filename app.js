@@ -5,20 +5,15 @@ const defaultDB = {
             "name": "★ Master List"
         },
         {
-            "id": "l2",
-            "name": "Biovalley Project"
-        }
-    ],
-    "cats": [
-        {
-            "id": "c1",
-            "name": "COE"
+            "id": "1769077814484",
+            "name": "AMTZ"
         },
         {
-            "id": "c2",
-            "name": "MILD"
+            "id": "1769077819038",
+            "name": "KIHT"
         }
     ],
+    "cats": [],
     "orgs": []
 };
 
