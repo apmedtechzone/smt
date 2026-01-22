@@ -32,18 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initBulkRows(20); 
     renderTable();
     checkAdminStatus();
+    document.getElementById('bulk-tbody').addEventListener('paste', handleGridPaste);
     
-    // --- KEYBOARD & PASTE LISTENERS ---
-    
-    // 1. Global Paste Listener (The Fix)
-    document.addEventListener('paste', (e) => {
-        // Only run if we are inside the bulk upload table
-        if (e.target.closest('#bulk-tbody')) {
-            handleGridPaste(e);
-        }
-    });
-
-    // 2. Escape Key to close modals
     document.addEventListener('keydown', (e) => {
         if(e.key === "Escape") document.querySelectorAll('.modal').forEach(m => closeModal(m.id));
     });
@@ -65,18 +55,17 @@ function initDropdowns() {
 }
 
 // ==========================================
-// 3. UTILITIES
+// 3. UTILITIES & TOASTS
 // ==========================================
 function saveDataLocally() {
     localStorage.setItem('amtz_db', JSON.stringify(db));
-    showToast("Saved Locally.");
+    showToast("Changes saved locally!", "success");
     const codeToPaste = `const defaultDB = ${JSON.stringify(db, null, 4)};\n\nlet db = JSON.parse(localStorage.getItem('amtz_db')) || defaultDB;`;
     navigator.clipboard.writeText(codeToPaste);
 }
 
 function showToast(msg, type = "success") {
     const container = document.getElementById('toast-container');
-    if(!container) return alert(msg);
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'circle-exclamation'}"></i> ${msg}`;
@@ -91,7 +80,7 @@ function renderTable() {
     const tbody = document.getElementById('table-body');
     const empty = document.getElementById('empty-state');
     
-    // Stats Update
+    // Update Stats Bar
     const total = db.orgs.length;
     
     const results = db.orgs.filter(org => {
@@ -108,10 +97,8 @@ function renderTable() {
         return true;
     });
 
-    if(document.getElementById('stats-count')) {
-        document.getElementById('stats-count').innerText = `${results.length} Organizations`;
-        document.getElementById('stats-filter').innerText = (listId === 'all' && catId === 'all' && search.length === 0) ? `Total Database: ${total}` : `Filtered from ${total}`;
-    }
+    document.getElementById('stats-count').innerText = `${results.length} Organizations`;
+    document.getElementById('stats-filter').innerText = (listId === 'all' && catId === 'all' && search.length === 0) ? `Total Database: ${total}` : `Filtered from ${total}`;
 
     if (results.length === 0) { tbody.innerHTML = ''; empty.classList.remove('hidden'); return; }
     empty.classList.add('hidden');
@@ -169,7 +156,7 @@ function renderPopulateList() {
         return true;
     });
     if (matches.length === 0) { container.innerHTML = '<p class="small-text" style="text-align:center; padding:20px;">No new organizations found.</p>'; return; }
-    container.innerHTML = matches.map(org => `<label class="check-item"><input type="checkbox" value="${org.id}"> ${org.name}</label>`).join('');
+    container.innerHTML = matches.map(org => `<div class="check-item"><input type="checkbox" value="${org.id}"> ${org.name}</div>`).join('');
 }
 function savePopulateSelection() {
     const checkboxes = document.querySelectorAll('#populate-check-list input:checked');
@@ -182,7 +169,7 @@ function savePopulateSelection() {
             else if (targetType === 'cats' && !org.catIds.includes(targetId)) { org.catIds.push(targetId); count++; }
         }
     });
-    closeModal('populate-modal'); renderTable(); saveDataLocally(); alert(`Added ${count} organizations.`);
+    closeModal('populate-modal'); renderTable(); saveDataLocally(); 
 }
 function triggerBulkForTarget() {
     closeModal('populate-modal');
@@ -199,7 +186,7 @@ function openEditListModal(type, id, name) {
     const container = document.getElementById('edit-meta-list-container');
     const currentItems = db.orgs.filter(org => (type === 'lists' && org.listIds.includes(id)) || (type === 'cats' && org.catIds.includes(id)));
     if (currentItems.length === 0) { container.innerHTML = '<p class="small-text" style="text-align:center; padding:20px;">This list is empty.</p>'; } 
-    else { container.innerHTML = currentItems.map(org => `<label class="check-item"><input type="checkbox" value="${org.id}"> ${org.name}</label>`).join(''); }
+    else { container.innerHTML = currentItems.map(org => `<div class="check-item"><input type="checkbox" value="${org.id}"> ${org.name}</div>`).join(''); }
     openModal('edit-meta-modal');
 }
 function saveRenamedMeta() {
@@ -223,7 +210,7 @@ function removeSelectedFromMeta() {
 }
 
 // ==========================================
-// 5. BULK UPLOAD (SMART PASTE ENGINE)
+// 5. BULK UPLOAD
 // ==========================================
 function initBulkRows(count) {
     const tbody = document.getElementById('bulk-tbody');
@@ -246,76 +233,37 @@ function addBulkRows(count) {
         </tr>`;
     }
 }
-
-// *** THE FIX: ROBUST PASTE HANDLER ***
 function handleGridPaste(e) {
-    // 1. Critical: Prevent default browser paste
     e.preventDefault();
-    e.stopPropagation();
-
-    // 2. Get Data
     const clipboardData = (e.clipboardData || window.clipboardData).getData('text');
-    
-    // 3. Parse Rows (Handle Windows/Unix newlines)
-    const rows = clipboardData.split(/\r\n|\n|\r/).filter(row => row.length > 0);
-    
-    // 4. Identify Target
-    const target = e.target;
-    if (target.tagName !== 'INPUT') return;
-    
-    // 5. Calculate Start Position
-    const currentRow = target.closest('tr');
-    const startRowIndex = Array.from(currentRow.parentElement.children).indexOf(currentRow);
-    const startColIndex = Array.from(currentRow.children).indexOf(target.parentElement);
+    const rows = clipboardData.split(/\r\n|\n|\r/).filter(row => row.trim() !== '');
+    let target = e.target;
+    if (target.tagName !== 'INPUT') return; 
+    let currentRow = target.closest('tr');
+    let startRowIndex = Array.from(currentRow.parentElement.children).indexOf(currentRow);
+    let startColIndex = Array.from(currentRow.children).indexOf(target.parentElement);
     const tableBody = document.getElementById('bulk-tbody');
 
-    // 6. Iterate and Fill
     rows.forEach((rowData, rIdx) => {
-        // Parse Columns (Tab Separated)
-        const cells = rowData.split('\t');
-        
-        // Auto-add rows if data is longer than table
-        if (startRowIndex + rIdx >= tableBody.children.length) {
-            addBulkRows(1);
-        }
-        
+        if (startRowIndex + rIdx >= tableBody.children.length) addBulkRows(5);
         const targetRow = tableBody.children[startRowIndex + rIdx];
-        
+        const cells = rowData.split('\t');
         cells.forEach((cellData, cIdx) => {
             const targetCellIndex = startColIndex + cIdx;
-            
-            // Safety check: ensure column exists
             if (targetCellIndex < targetRow.children.length) {
                 const input = targetRow.children[targetCellIndex].querySelector('input');
                 if (input) {
-                    // Clean Google Sheets Quotes
-                    let cleanText = cellData.trim();
-                    if (cleanText.startsWith('"') && cleanText.endsWith('"')) {
-                        cleanText = cleanText.substring(1, cleanText.length - 1).replace(/""/g, '"');
-                    }
-                    input.value = cleanText;
+                    let cleanData = cellData.trim();
+                    if(cleanData.startsWith('"') && cleanData.endsWith('"')) cleanData = cleanData.substring(1, cleanData.length - 1);
+                    input.value = cleanData;
                 }
             }
         });
     });
 }
-
-function resetBulkGrid() {
-    if(confirm("Discard all changes in grid?")) {
-        initBulkRows(20);
-    }
-}
-
-function validateTag(val) {
-    val = val.trim();
-    return (val.startsWith('@')) ? val : '';
-}
-
-function ensureHandle(val) {
-    val = val.trim();
-    if (!val) return '';
-    return val.startsWith('@') ? val : '@' + val;
-}
+function resetBulkGrid() { if(confirm("Discard all changes?")) initBulkRows(20); }
+function validateTag(val) { return val.trim().startsWith('@') ? val.trim() : ''; }
+function ensureHandle(val) { val = val.trim(); if (!val) return ''; return val.startsWith('@') ? val : '@' + val; }
 
 function analyzeBulkUpload() {
     const rows = document.querySelectorAll('.bulk-row');
@@ -328,28 +276,17 @@ function analyzeBulkUpload() {
     rows.forEach((row, idx) => {
         const inputs = row.querySelectorAll('input');
         const name = inputs[0].value.trim();
-        if(!name) return; // Skip
-
-        // COLS: 0=Name, 1=Tw, 2=Li(@), 3=Li(L), 4=Fb(@), 5=Fb(L), 6=Insta, 7=Web
+        if(!name) return;
         const newDat = {
             name: name,
             listIds: targetListIds,
             catIds: [],
             tags: {
                 twitter: validateTag(inputs[1].value),
-                linkedin: { 
-                    val: validateTag(inputs[2].value), 
-                    link: inputs[3].value.trim() 
-                },
-                facebook: { 
-                    val: validateTag(inputs[4].value), 
-                    link: inputs[5].value.trim() 
-                },
+                linkedin: { val: validateTag(inputs[2].value), link: inputs[3].value.trim() },
+                facebook: { val: validateTag(inputs[4].value), link: inputs[5].value.trim() },
                 instagram: validateTag(inputs[6].value),
-                website: { 
-                    val: inputs[7].value.trim() ? "Visit Site" : "", 
-                    link: inputs[7].value.trim() 
-                }
+                website: { val: inputs[7].value.trim() ? "Visit Site" : "", link: inputs[7].value.trim() }
             }
         };
         const existing = db.orgs.find(o => o.name.toLowerCase() === name.toLowerCase());
@@ -358,7 +295,12 @@ function analyzeBulkUpload() {
     });
     closeModal('bulk-modal');
     if(pendingConflicts.length > 0) { renderConflicts(); document.getElementById('conflict-count').innerText=pendingConflicts.length; openModal('conflict-modal'); }
-    else { alert(`Created: ${created} organizations.`); renderTable(); initBulkRows(20); saveDataLocally(); }
+    else { 
+        showToast(`Imported ${created} organizations`); 
+        renderTable(); 
+        initBulkRows(20); // Clear logic 1
+        saveDataLocally(); 
+    }
 }
 
 function renderConflicts() {
@@ -373,8 +315,6 @@ function resolveConflict(id, action) {
     if(idx===-1) return;
     const item = pendingConflicts[idx];
     const org = item.existingRef; 
-
-    // MERGE LISTS (Happens for BOTH actions)
     item.newData.listIds.forEach(l => { if(!org.listIds.includes(l)) org.listIds.push(l); });
     item.newData.catIds.forEach(c => { if(!org.catIds.includes(c)) org.catIds.push(c); });
 
@@ -391,14 +331,20 @@ function resolveConflict(id, action) {
     pendingConflicts.splice(idx,1);
     document.getElementById(`conf-${id}`).remove();
     document.getElementById('conflict-count').innerText = pendingConflicts.length;
-    if(pendingConflicts.length===0) { closeModal('conflict-modal'); renderTable(); alert("Resolved."); saveDataLocally(); }
+    if(pendingConflicts.length===0) { 
+        closeModal('conflict-modal'); 
+        renderTable(); 
+        initBulkRows(20); // Clear logic 2 (post-conflict)
+        showToast("Conflicts resolved"); 
+        saveDataLocally(); 
+    }
 }
 function resolveAll(act) { [...pendingConflicts].forEach(c=>resolveConflict(c.id,act)); }
 
 // ==========================================
 // 6. ADMIN & META MANAGER
 // ==========================================
-function login() { if(document.getElementById('login-email').value==='saragadamteja.k@amtz.in' && document.getElementById('login-pass').value==='9989'){ isAdmin=true; localStorage.setItem('amtz_admin', 'true'); updateUIForAdmin(); closeModal('login-modal'); } else alert('Invalid'); }
+function login() { if(document.getElementById('login-email').value==='saragadamteja.k@amtz.in' && document.getElementById('login-pass').value==='9989'){ isAdmin=true; localStorage.setItem('amtz_admin', 'true'); updateUIForAdmin(); closeModal('login-modal'); showToast("Logged in successfully"); } else showToast("Invalid Credentials", "error"); }
 function checkAdminStatus() { if(localStorage.getItem('amtz_admin') === 'true') { isAdmin = true; updateUIForAdmin(); } }
 function updateUIForAdmin() { document.getElementById('admin-panel').classList.remove('hidden'); document.getElementById('login-trigger').classList.add('hidden'); document.getElementById('add-org-wrapper').classList.remove('hidden'); document.querySelectorAll('.col-action').forEach(el=>el.classList.remove('hidden')); }
 function logout(){ localStorage.removeItem('amtz_admin'); location.reload(); }
@@ -407,7 +353,7 @@ function openOrgModal(){editingId=null; document.getElementById('edit-name').val
 function editOrg(id){editingId=id; const o=db.orgs.find(i=>i.id===id); document.getElementById('edit-name').value=o.name; document.getElementById('tag-twitter').value=o.tags.twitter||''; document.getElementById('tag-instagram').value=o.tags.instagram||''; ['linkedin','facebook','website'].forEach(k=>{const t=o.tags[k]||{}; document.getElementById(`tag-${k}-val`).value=t.val||''; document.getElementById(`tag-${k}-link`).value=t.link||''}); renderCheckboxes(o.listIds,o.catIds); openModal('org-modal');}
 function renderCheckboxes(sl, sc){ const b=(d,s,id)=>document.getElementById(id).innerHTML=d.map(i=>`<label class="check-item ${i.id==='master'?'disabled':''}"><input type="checkbox" value="${i.id}" ${s.includes(i.id)||i.id==='master'?'checked':''} ${i.id==='master'?'disabled':''}> ${i.name}</label>`).join(''); b(db.lists,sl,'check-lists'); b(db.cats,sc,'check-cats'); }
 function saveOrg(){ 
-    const n=document.getElementById('edit-name').value; if(!n)return alert('Name?'); 
+    const n=document.getElementById('edit-name').value; if(!n)return showToast("Name required", "error");
     const l=Array.from(document.querySelectorAll('#check-lists input:checked')).map(c=>c.value); if(!l.includes('master'))l.push('master'); 
     const c=Array.from(document.querySelectorAll('#check-cats input:checked')).map(x=>x.value); 
     const tags={
@@ -438,17 +384,12 @@ function renderMetaList(){
     render(db.lists, 'list-manager-ul', 'lists'); render(db.cats, 'cat-manager-ul', 'cats');
 }
 function removeMeta(t,id){db[t]=db[t].filter(i=>i.id!==id); renderMetaList(); initDropdowns(); saveDataLocally();}
-function copyColumn(t){const l=document.getElementById('filter-list').value, c=document.getElementById('filter-cat').value; const v=db.orgs.filter(o=>(l==='all'||o.listIds.includes(l))&&(c==='all'||o.catIds.includes(c))).map(o=>{const x=o.tags[t]; return (typeof x==='string')?x:(x?.val||"")}).filter(k=>k); navigator.clipboard.writeText(v.join('\n'));}
+function copyColumn(t){const l=document.getElementById('filter-list').value, c=document.getElementById('filter-cat').value; const v=db.orgs.filter(o=>(l==='all'||o.listIds.includes(l))&&(c==='all'||o.catIds.includes(c))).map(o=>{const x=o.tags[t]; return (typeof x==='string')?x:(x?.val||"")}).filter(k=>k); navigator.clipboard.writeText(v.join('\n')); showToast(`Copied ${v.length} tags`);}
 
-// *** FIX FOR OLD DATA PERSISTENCE ***
+// IMPORTANT FIX: Auto-Clear Bulk Grid on Open
 function openModal(id){
     document.getElementById(id).classList.remove('hidden'); 
     if(id==='meta-modal') renderMetaList();
-    
-    // Force a fresh grid when opening bulk upload
-    if(id==='bulk-modal') {
-        initBulkRows(20);
-        document.getElementById('bulk-list').value = 'master'; // Reset dropdown
-    }
+    if(id==='bulk-modal') initBulkRows(20); // Forces fresh start
 }
 function closeModal(id){document.getElementById(id).classList.add('hidden');}
