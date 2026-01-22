@@ -9,8 +9,8 @@ const defaultDB = {
         listIds: ['master', 'l2'], catIds: ['c1'],
         tags: {
             twitter: '@amtz_ltd', instagram: '@amtz_official',
-            linkedin: { val: 'AMTZ Ltd', link: 'https://linkedin.com/company/amtz' },
-            facebook: { val: 'AMTZ India', link: 'https://facebook.com/amtz' },
+            linkedin: { val: '@amtzltd', link: 'https://linkedin.com/company/amtz' },
+            facebook: { val: '@amtzindia', link: 'https://facebook.com/amtz' },
             website: { val: 'Visit Site', link: 'https://amtz.in' }
         }
     }]
@@ -24,7 +24,7 @@ let db = JSON.parse(localStorage.getItem('amtz_db')) || defaultDB;
 let isAdmin = false;
 let editingId = null;
 let pendingConflicts = []; 
-let targetType = null;
+let targetType = null; 
 let targetId = null; 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -99,11 +99,10 @@ function renderTable() {
 }
 function renderLink(d, t) {
     if(!d) return '<span class="empty-cell">&minus;</span>';
+    // For Twitter/Insta
     if(typeof d === 'string') return d ? `<a href="${t==='twitter'?'https://x.com/':'https://instagram.com/'}${d.replace('@','')}" target="_blank" class="tag-link"><i class="fa-brands fa-${t}"></i> ${d}</a>` : '<span class="empty-cell">&minus;</span>';
-    // For FB/LinkedIn/Web: use 'val' as Text and 'link' as HREF
-    if(d.val && d.link) return `<a href="${d.link}" target="_blank" class="tag-link"><i class="${t==='website'?'fa-solid fa-globe':'fa-brands fa-'+t}"></i> ${d.val}</a>`;
-    if(d.val) return `<span class="tag-link" style="cursor:default; color:#555;"><i class="${t==='website'?'fa-solid fa-globe':'fa-brands fa-'+t}"></i> ${d.val}</span>`;
-    return '<span class="empty-cell">&minus;</span>';
+    // For LinkedIn/Facebook/Web
+    return d.val ? `<a href="${d.link||'#'}" target="_blank" class="tag-link"><i class="${t==='website'?'fa-solid fa-globe':'fa-brands fa-'+t}"></i> ${d.val}</a>` : '<span class="empty-cell">&minus;</span>';
 }
 
 // ==========================================
@@ -150,7 +149,7 @@ function triggerBulkForTarget() {
 }
 
 // ==========================================
-// 5. BULK UPLOAD
+// 5. BULK UPLOAD (UPDATED FOR 8 COLS & VALIDATION)
 // ==========================================
 function initBulkRows(count) {
     const tbody = document.getElementById('bulk-tbody');
@@ -162,14 +161,14 @@ function addBulkRows(count) {
     for(let i=0; i<count; i++) {
         tbody.innerHTML += `
         <tr class="bulk-row">
-            <td><input type="text" class="input-cell" name="name" placeholder="Name"></td>
-            <td><input type="text" class="input-cell" name="twitter" placeholder="@handle"></td>
-            <td><input type="text" class="input-cell" name="li_tag" placeholder="Tag Name"></td>
-            <td><input type="text" class="input-cell" name="li_link" placeholder="Profile URL"></td>
-            <td><input type="text" class="input-cell" name="fb_tag" placeholder="Tag Name"></td>
-            <td><input type="text" class="input-cell" name="fb_link" placeholder="Page URL"></td>
-            <td><input type="text" class="input-cell" name="instagram" placeholder="@handle"></td>
-            <td><input type="text" class="input-cell" name="website" placeholder="Full Link"></td>
+            <td><input type="text" class="input-cell" placeholder="Name"></td>
+            <td><input type="text" class="input-cell" placeholder="@handle"></td>
+            <td><input type="text" class="input-cell" placeholder="@handle"></td>
+            <td><input type="text" class="input-cell" placeholder="Full Link"></td>
+            <td><input type="text" class="input-cell" placeholder="@handle"></td>
+            <td><input type="text" class="input-cell" placeholder="Full Link"></td>
+            <td><input type="text" class="input-cell" placeholder="@handle"></td>
+            <td><input type="text" class="input-cell" placeholder="Full Link"></td>
         </tr>`;
     }
 }
@@ -201,6 +200,12 @@ function handleGridPaste(e) {
         });
     });
 }
+
+function validateTag(val) {
+    val = val.trim();
+    return (val.startsWith('@')) ? val : '';
+}
+
 function analyzeBulkUpload() {
     const rows = document.querySelectorAll('.bulk-row');
     const targetList = document.getElementById('bulk-list').value;
@@ -211,19 +216,29 @@ function analyzeBulkUpload() {
 
     rows.forEach((row, idx) => {
         const inputs = row.querySelectorAll('input');
-        // Inputs: 0=Name, 1=Twitter, 2=LiTag, 3=LiLink, 4=FbTag, 5=FbLink, 6=Insta, 7=Web
         const name = inputs[0].value.trim();
-        if(!name) return;
+        if(!name) return; // Skip
+
+        // COLS: 0=Name, 1=Tw, 2=Li(@), 3=Li(L), 4=Fb(@), 5=Fb(L), 6=Insta, 7=Web
         const newDat = {
             name: name,
             listIds: targetListIds,
             catIds: [],
             tags: {
-                twitter: inputs[1].value.trim(),
-                linkedin: { val: inputs[2].value.trim() || (inputs[3].value.trim()?"Profile":""), link: inputs[3].value.trim() },
-                facebook: { val: inputs[4].value.trim() || (inputs[5].value.trim()?"Page":""), link: inputs[5].value.trim() },
-                instagram: inputs[6].value.trim(),
-                website: { val: "Visit Site", link: inputs[7].value.trim() } // Website is usually just link
+                twitter: validateTag(inputs[1].value),
+                linkedin: { 
+                    val: validateTag(inputs[2].value), 
+                    link: inputs[3].value.trim() 
+                },
+                facebook: { 
+                    val: validateTag(inputs[4].value), 
+                    link: inputs[5].value.trim() 
+                },
+                instagram: validateTag(inputs[6].value),
+                website: { 
+                    val: inputs[7].value.trim() ? "Visit Site" : "", 
+                    link: inputs[7].value.trim() 
+                }
             }
         };
         const existing = db.orgs.find(o => o.name.toLowerCase() === name.toLowerCase());
@@ -234,6 +249,7 @@ function analyzeBulkUpload() {
     if(pendingConflicts.length > 0) { renderConflicts(); document.getElementById('conflict-count').innerText=pendingConflicts.length; openModal('conflict-modal'); }
     else { alert(`Created: ${created} organizations.`); renderTable(); initBulkRows(20); saveDataLocally(); }
 }
+
 function renderConflicts() {
     document.getElementById('conflict-list').innerHTML = pendingConflicts.map(i => `
         <div class="conflict-item" id="conf-${i.id}">
@@ -252,10 +268,14 @@ function resolveConflict(id, action) {
         if(t.twitter) o.tags.twitter = t.twitter;
         if(t.instagram) o.tags.instagram = t.instagram;
         
-        // Update complex tags if new data provided
-        if(t.linkedin.link) o.tags.linkedin = t.linkedin;
-        if(t.facebook.link) o.tags.facebook = t.facebook;
-        if(t.website.link) o.tags.website = t.website;
+        // Handle logic for complex tags (LI/FB)
+        if(t.linkedin.val) o.tags.linkedin.val = t.linkedin.val;
+        if(t.linkedin.link) o.tags.linkedin.link = t.linkedin.link;
+        
+        if(t.facebook.val) o.tags.facebook.val = t.facebook.val;
+        if(t.facebook.link) o.tags.facebook.link = t.facebook.link;
+        
+        if(t.website.link) o.tags.website.link = t.website.link;
     }
     pendingConflicts.splice(idx,1);
     document.getElementById(`conf-${id}`).remove();
