@@ -113,7 +113,7 @@
                 <p>No organizations found matching your filters.</p>
             </div>
         </main>
-        <div class="footer-note">AMTZ Tags Pro v2.2 &bull; Grid Uploader</div>
+        <div class="footer-note">AMTZ Tags Pro v2.3 &bull; Master List Lock</div>
     </div>
 
     <div id="login-modal" class="modal hidden">
@@ -169,9 +169,10 @@
                 <button class="close-btn" onclick="closeModal('bulk-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="grid-2 bg-light p-10 mb-15">
-                    <div><label>Assign to List:</label><select id="bulk-list" class="input-std"></select></div>
-                    <div><label>Assign to Category:</label><select id="bulk-cat" class="input-std"></select></div>
+                
+                <div class="bg-light p-10 mb-15">
+                    <label><strong>Assign to List:</strong> (Master List is always included)</label>
+                    <select id="bulk-list" class="input-std mt-5"></select>
                 </div>
 
                 <div class="bulk-table-container">
@@ -186,8 +187,7 @@
                                 <th>Website (URL)</th>
                             </tr>
                         </thead>
-                        <tbody id="bulk-tbody">
-                            </tbody>
+                        <tbody id="bulk-tbody"></tbody>
                     </table>
                 </div>
                 <button class="btn-secondary mt-15" onclick="addBulkRows(5)">+ Add 5 More Rows</button>
