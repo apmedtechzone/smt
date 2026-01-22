@@ -103,6 +103,7 @@ td { padding: 16px 20px; border-bottom: 1px solid var(--border); vertical-align:
 .p-10 { padding: 10px; }
 .mb-15 { margin-bottom: 15px; }
 .mt-15 { margin-top: 15px; }
+.mt-5 { margin-top: 5px; }
 .hidden { display: none !important; }
 .full { width: 100%; }
 .meta-list li { padding: 8px 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
