@@ -24,7 +24,6 @@ let db = JSON.parse(localStorage.getItem('amtz_db')) || defaultDB;
 let isAdmin = false;
 let editingId = null;
 let pendingConflicts = []; 
-// Target State for "Add Existing" Modal
 let targetType = null; // 'lists' or 'cats'
 let targetId = null; 
 
@@ -47,8 +46,6 @@ function initDropdowns() {
     populate('filter-list', db.lists, 'All Lists');
     populate('filter-cat', db.cats, 'All Categories');
     populate('bulk-list', db.lists, null);
-    
-    // For Populate Modal
     populate('pop-src-list', db.lists, 'All Lists');
     populate('pop-src-cat', db.cats, 'All Categories');
 }
@@ -107,93 +104,47 @@ function renderLink(d, t) {
 }
 
 // ==========================================
-// 4. POPULATE MANAGER (ADD EXISTING)
+// 4. POPULATE MANAGER
 // ==========================================
 function openPopulateModal(type, id, name) {
-    targetType = type; // 'lists' or 'cats'
-    targetId = id;
-    
-    // UI Setup
+    targetType = type; targetId = id;
     document.getElementById('target-name').innerText = name;
-    
-    // Render list based on current filters (all by default)
     renderPopulateList();
-    
     openModal('populate-modal');
 }
-
 function renderPopulateList() {
     const listId = document.getElementById('pop-src-list').value;
     const catId = document.getElementById('pop-src-cat').value;
     const container = document.getElementById('populate-check-list');
-    
-    // Filter Orgs
     const matches = db.orgs.filter(org => {
         if (listId!=='all' && !org.listIds.includes(listId)) return false;
         if (catId!=='all' && !org.catIds.includes(catId)) return false;
-        
-        // Exclude ones ALREADY in the target
         if (targetType === 'lists' && org.listIds.includes(targetId)) return false;
         if (targetType === 'cats' && org.catIds.includes(targetId)) return false;
-        
         return true;
     });
-
-    if (matches.length === 0) {
-        container.innerHTML = '<p class="small-text" style="text-align:center; padding:20px;">No organizations found (or all are already added).</p>';
-        return;
-    }
-
-    container.innerHTML = matches.map(org => `
-        <label class="check-item">
-            <input type="checkbox" value="${org.id}">
-            ${org.name}
-        </label>
-    `).join('');
+    if (matches.length === 0) { container.innerHTML = '<p class="small-text" style="text-align:center; padding:20px;">No new organizations found.</p>'; return; }
+    container.innerHTML = matches.map(org => `<label class="check-item"><input type="checkbox" value="${org.id}"> ${org.name}</label>`).join('');
 }
-
 function savePopulateSelection() {
     const checkboxes = document.querySelectorAll('#populate-check-list input:checked');
     const idsToAdd = Array.from(checkboxes).map(cb => parseFloat(cb.value));
-
-    if (idsToAdd.length === 0) return alert("No organizations selected.");
-
+    if (idsToAdd.length === 0) return alert("None selected.");
     let count = 0;
     db.orgs.forEach(org => {
         if (idsToAdd.includes(org.id)) {
-            if (targetType === 'lists' && !org.listIds.includes(targetId)) {
-                org.listIds.push(targetId);
-                count++;
-            } else if (targetType === 'cats' && !org.catIds.includes(targetId)) {
-                org.catIds.push(targetId);
-                count++;
-            }
+            if (targetType === 'lists' && !org.listIds.includes(targetId)) { org.listIds.push(targetId); count++; } 
+            else if (targetType === 'cats' && !org.catIds.includes(targetId)) { org.catIds.push(targetId); count++; }
         }
     });
-
-    closeModal('populate-modal');
-    renderTable();
-    saveDataLocally();
-    alert(`Successfully added ${count} organizations to ${targetType === 'lists' ? 'List' : 'Category'}.`);
+    closeModal('populate-modal'); renderTable(); saveDataLocally(); alert(`Added ${count} organizations.`);
 }
-
 function triggerBulkForTarget() {
     closeModal('populate-modal');
-    
-    // Setup Bulk Modal based on Target
-    if (targetType === 'lists') {
-        document.getElementById('bulk-list').value = targetId;
-        // Disable changing it to avoid confusion? Or just let them know.
-    } else {
-        // Bulk upload doesn't support category assignment directly in this version
-        // But we can set the list to Master and let them manually tag later, OR
-        // You could extend bulk upload to handle cats. For now, we default to Master.
-        document.getElementById('bulk-list').value = 'master';
-        alert("Note: Bulk Uploader currently adds to Lists. The organizations will be added to the Master List, then you can add them to this Category.");
-    }
+    if (targetType === 'lists') { document.getElementById('bulk-list').value = targetId; } 
+    else { document.getElementById('bulk-list').value = 'master'; alert("Bulk upload adds to Lists. Will add to Master List first."); }
     openModal('bulk-modal');
 }
-
 
 // ==========================================
 // 5. BULK UPLOAD
