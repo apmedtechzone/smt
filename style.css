@@ -1,16 +1,9 @@
 :root {
-    --primary: #4338ca;      
-    --primary-light: #6366f1;
-    --bg-body: #f1f5f9;      
-    --bg-card: #ffffff;
-    --text-main: #1e293b;    
-    --text-muted: #64748b;   
-    --border: #e2e8f0;       
-    --accent-red: #ef4444;
-    --accent-orange: #f59e0b;
+    --primary: #4338ca; --primary-light: #6366f1; --bg-body: #f1f5f9; --bg-card: #ffffff;
+    --text-main: #1e293b; --text-muted: #64748b; --border: #e2e8f0;
+    --accent-red: #ef4444; --accent-orange: #f59e0b;
     --twitter: #1da1f2; --linkedin: #0a66c2; --facebook: #1877f2; --insta: #e1306c;
 }
-
 body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; padding-bottom: 40px; }
 * { box-sizing: border-box; outline: none; }
 
@@ -36,8 +29,10 @@ button { cursor: pointer; border: none; font-family: inherit; transition: 0.2s; 
 .btn-text.danger:hover { color: var(--accent-red); background: #fee2e2; }
 .btn-secondary { background: #e2e8f0; color: var(--text-main); padding: 8px 16px; }
 .btn-sm { padding: 4px 10px; font-size: 0.8rem; }
-.btn-tiny { padding: 4px 10px; font-size: 0.75rem; background: #dbeafe; color: var(--primary); margin-left: auto; margin-right: 10px; }
+.btn-tiny { padding: 4px 10px; font-size: 0.75rem; background: #dbeafe; color: var(--primary); margin-left: 5px; }
 .btn-tiny:hover { background: var(--primary); color: white; }
+.btn-tiny.edit { background: #f3f4f6; color: var(--text-main); }
+.btn-tiny.edit:hover { background: #e5e7eb; color: #000; }
 
 /* Layout */
 .dashboard-container { max-width: 1400px; margin: 30px auto; padding: 0 20px; }
@@ -85,7 +80,7 @@ td { padding: 16px 20px; border-bottom: 1px solid var(--border); vertical-align:
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 200; display: flex; justify-content: center; align-items: center; }
 .modal-card { background: white; width: 95%; max-width: 650px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; }
 .modal-card.large { max-width: 800px; }
-.modal-card.x-large { max-width: 1300px; height: 90vh; } /* Increased width for 8 columns */
+.modal-card.x-large { max-width: 1300px; height: 90vh; }
 .modal-head { padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .modal-head h3 { margin: 0; font-size: 1.1rem; }
 .close-btn { font-size: 1.5rem; background: none; color: var(--text-muted); }
