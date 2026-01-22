@@ -99,14 +99,12 @@ function renderTable() {
 }
 function renderLink(d, t) {
     if(!d) return '<span class="empty-cell">&minus;</span>';
-    // For Twitter/Insta
     if(typeof d === 'string') return d ? `<a href="${t==='twitter'?'https://x.com/':'https://instagram.com/'}${d.replace('@','')}" target="_blank" class="tag-link"><i class="fa-brands fa-${t}"></i> ${d}</a>` : '<span class="empty-cell">&minus;</span>';
-    // For LinkedIn/Facebook/Web
     return d.val ? `<a href="${d.link||'#'}" target="_blank" class="tag-link"><i class="${t==='website'?'fa-solid fa-globe':'fa-brands fa-'+t}"></i> ${d.val}</a>` : '<span class="empty-cell">&minus;</span>';
 }
 
 // ==========================================
-// 4. POPULATE MANAGER
+// 4. POPULATE MANAGER & EDIT LISTS
 // ==========================================
 function openPopulateModal(type, id, name) {
     targetType = type; targetId = id;
@@ -148,8 +146,69 @@ function triggerBulkForTarget() {
     openModal('bulk-modal');
 }
 
+// --- NEW: EDIT LISTS/CATS (Rename & Bulk Remove) ---
+function openEditListModal(type, id, name) {
+    targetType = type; targetId = id;
+    document.getElementById('edit-meta-type-label').innerText = (type === 'lists' ? 'List' : 'Category');
+    document.getElementById('rename-input').value = name;
+    
+    // Render current items in this list
+    const container = document.getElementById('edit-meta-list-container');
+    const currentItems = db.orgs.filter(org => {
+        return (type === 'lists' && org.listIds.includes(id)) || (type === 'cats' && org.catIds.includes(id));
+    });
+
+    if (currentItems.length === 0) {
+        container.innerHTML = '<p class="small-text" style="text-align:center; padding:20px;">This list is empty.</p>';
+    } else {
+        container.innerHTML = currentItems.map(org => `<label class="check-item"><input type="checkbox" value="${org.id}"> ${org.name}</label>`).join('');
+    }
+    
+    openModal('edit-meta-modal');
+}
+
+function saveRenamedMeta() {
+    const newName = document.getElementById('rename-input').value.trim();
+    if (!newName) return alert("Name cannot be empty.");
+    
+    const collection = db[targetType];
+    const item = collection.find(x => x.id === targetId);
+    if (item) {
+        item.name = newName;
+        saveDataLocally();
+        renderMetaList(); // Refresh Admin List
+        initDropdowns(); // Refresh Dropdowns
+        closeModal('edit-meta-modal');
+        alert("Renamed successfully.");
+    }
+}
+
+function removeSelectedFromMeta() {
+    const checkboxes = document.querySelectorAll('#edit-meta-list-container input:checked');
+    const idsToRemove = Array.from(checkboxes).map(cb => parseFloat(cb.value));
+    
+    if (idsToRemove.length === 0) return alert("No items selected to remove.");
+    if (!confirm(`Remove ${idsToRemove.length} organizations from this list? (They will remain in Master List)`)) return;
+
+    db.orgs.forEach(org => {
+        if (idsToRemove.includes(org.id)) {
+            if (targetType === 'lists') {
+                org.listIds = org.listIds.filter(id => id !== targetId);
+            } else {
+                org.catIds = org.catIds.filter(id => id !== targetId);
+            }
+        }
+    });
+
+    saveDataLocally();
+    renderTable(); // Update view
+    closeModal('edit-meta-modal');
+    alert("Removed successfully.");
+}
+
+
 // ==========================================
-// 5. BULK UPLOAD (UPDATED FOR 8 COLS & VALIDATION)
+// 5. BULK UPLOAD
 // ==========================================
 function initBulkRows(count) {
     const tbody = document.getElementById('bulk-tbody');
@@ -267,14 +326,10 @@ function resolveConflict(id, action) {
         const t = item.newData.tags;
         if(t.twitter) o.tags.twitter = t.twitter;
         if(t.instagram) o.tags.instagram = t.instagram;
-        
-        // Handle logic for complex tags (LI/FB)
         if(t.linkedin.val) o.tags.linkedin.val = t.linkedin.val;
         if(t.linkedin.link) o.tags.linkedin.link = t.linkedin.link;
-        
         if(t.facebook.val) o.tags.facebook.val = t.facebook.val;
         if(t.facebook.link) o.tags.facebook.link = t.facebook.link;
-        
         if(t.website.link) o.tags.website.link = t.website.link;
     }
     pendingConflicts.splice(idx,1);
@@ -304,11 +359,14 @@ function renderMetaList(){
         document.getElementById(elementId).innerHTML = data.filter(x => x.id !== 'master').map(item => `
             <li>
                 <span style="font-weight:600;">${item.name}</span>
-                <div>
+                <div style="display:flex; align-items:center;">
                     <button class="btn-tiny" onclick="openPopulateModal('${type}', '${item.id}', '${item.name}')">
                         <i class="fa-solid fa-user-plus"></i> Add
                     </button>
-                    <button class="close-btn" style="font-size:1rem; margin-left:10px;" onclick="removeMeta('${type}','${item.id}')">&times;</button>
+                    <button class="btn-tiny edit" onclick="openEditListModal('${type}', '${item.id}', '${item.name}')">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </button>
+                    <button class="close-btn" style="font-size:1rem; margin-left:8px;" onclick="removeMeta('${type}','${item.id}')">&times;</button>
                 </div>
             </li>`).join('');
     };
