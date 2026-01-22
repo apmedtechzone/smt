@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tag Master System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav>
+        <div class="brand"><i class="fa-solid fa-layer-group"></i> Organization Directory</div>
+        <div class="nav-actions">
+            <span id="user-status" class="hidden">Admin Mode</span>
+            <button id="login-btn" onclick="openModal('login-modal')">Login</button>
+            <button id="logout-btn" class="hidden btn-danger" onclick="logout()">Logout</button>
+            <button id="save-btn" class="hidden btn-success" onclick="downloadData()">
+                <i class="fa-solid fa-floppy-disk"></i> Save & Export
+            </button>
+        </div>
+    </nav>
+
+    <main id="public-view">
+        <div class="filter-bar">
+            <label>Select Category:</label>
+            <select id="public-category-select" onchange="renderPublicTable()">
+                </select>
+        </div>
+        <div class="table-container">
+            <table id="public-table">
+                <thead>
+                    <tr>
+                        <th>Organization</th>
+                        <th>Website</th>
+                        <th>Social Tags</th>
+                    </tr>
+                </thead>
+                <tbody id="public-table-body"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <main id="admin-view" class="hidden">
+        
+        <div class="admin-grid">
+            <div class="panel">
+                <h3><i class="fa-solid fa-tags"></i> Master Tag Library</h3>
+                <div class="panel-controls">
+                    <button class="btn-sm" onclick="openModal('add-tag-modal')">+ Add Single</button>
+                    <button class="btn-sm" onclick="openModal('bulk-tag-modal')">++ Bulk Upload</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="tag-search" placeholder="Search tags..." onkeyup="renderMasterTags()">
+                </div>
+                <div id="master-tag-list" class="tag-list-scroll">
+                    </div>
+            </div>
+
+            <div class="panel">
+                <h3><i class="fa-solid fa-sitemap"></i> Organization Manager</h3>
+                <div class="panel-controls">
+                    <select id="admin-category-select" onchange="renderAdminTable()"></select>
+                    <button class="btn-primary" onclick="openOrgModal()">+ New Org</button>
+                </div>
+                <div class="table-container-sm">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Tags Assigned</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content sm">
+            <span class="close" onclick="closeModal('login-modal')">&times;</span>
+            <h3>Admin Login</h3>
+            <input type="email" id="login-email" placeholder="Email">
+            <input type="password" id="login-pass" placeholder="Password">
+            <button class="btn-primary full-width" onclick="login()">Enter</button>
+        </div>
+    </div>
+
+    <div id="org-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('org-modal')">&times;</span>
+            <h3 id="org-modal-title">Edit Organization</h3>
+            <input type="hidden" id="org-id">
+            
+            <label>Name</label>
+            <input type="text" id="org-name">
+            
+            <label>Category</label>
+            <select id="org-cat"></select>
+            
+            <label>Website URL</label>
+            <input type="text" id="org-web">
+
+            <label>Assign Tags (Click to toggle)</label>
+            <input type="text" id="org-tag-search" placeholder="Search to filter..." onkeyup="renderOrgTagSelector()">
+            <div id="org-tag-selector" class="tag-selector-grid"></div>
+
+            <button class="btn-primary" onclick="saveOrg()">Save Organization</button>
+        </div>
+    </div>
+
+    <div id="add-tag-modal" class="modal hidden">
+        <div class="modal-content sm">
+            <span class="close" onclick="closeModal('add-tag-modal')">&times;</span>
+            <h3>Add/Edit Tag</h3>
+            <label>Tag Name (e.g. @amtz)</label>
+            <input type="text" id="tag-name">
+            
+            <label>Platform Type</label>
+            <select id="tag-type" onchange="toggleTagLinkInput()">
+                <option value="twitter">Twitter (Auto Link)</option>
+                <option value="instagram">Instagram (Auto Link)</option>
+                <option value="linkedin">LinkedIn (Embed Link)</option>
+                <option value="facebook">Facebook (Embed Link)</option>
+                <option value="website">Other Website (Embed Link)</option>
+            </select>
+
+            <div id="tag-link-container" class="hidden">
+                <label>Embed Link URL</label>
+                <input type="text" id="tag-link" placeholder="https://...">
+            </div>
+
+            <button class="btn-primary" onclick="saveMasterTag()">Save Tag</button>
+        </div>
+    </div>
+
+    <div id="bulk-tag-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('bulk-tag-modal')">&times;</span>
+            <h3>Bulk Upload Tags</h3>
+            <p class="hint">Format: Name, Type, Link (Optional)</p>
+            <p class="hint">Example:<br>@mytag, twitter<br>@company, linkedin, https://linkedin.com/co/...</p>
+            <textarea id="bulk-text" rows="10" placeholder="Paste csv data here..."></textarea>
+            <button class="btn-primary" onclick="processBulkTags()">Process Upload</button>
+        </div>
+    </div>
+
+    <div id="cross-ref-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cross-ref-modal')">&times;</span>
+            <h3>Manage Tag Presence</h3>
+            <p id="cross-ref-title"></p>
+            <div class="scroll-box">
+                <table class="simple-table">
+                    <thead><tr><th>Category</th><th>Organization</th><th>Present?</th></tr></thead>
+                    <tbody id="cross-ref-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
