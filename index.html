@@ -113,7 +113,7 @@
                 <p>No organizations found matching your filters.</p>
             </div>
         </main>
-        <div class="footer-note">AMTZ Tags Pro v2.7 &bull; Edit & Rename Lists</div>
+        <div class="footer-note">AMTZ Tags Pro v2.8 &bull; Grid Controls</div>
     </div>
 
     <div id="login-modal" class="modal hidden">
@@ -178,7 +178,10 @@
                 <p class="small-text mt-5 text-muted">* <strong>Note:</strong> Tags without '@' will be ignored.</p>
                 <button class="btn-secondary mt-15" onclick="addBulkRows(5)">+ Add 5 More Rows</button>
             </div>
-            <div class="modal-foot"><button class="btn-primary full" onclick="analyzeBulkUpload()">Analyze & Import</button></div>
+            <div class="modal-foot">
+                <button class="btn-text danger" onclick="resetBulkGrid()">Discard / Clear</button>
+                <button class="btn-primary" onclick="analyzeBulkUpload()">Analyze & Import</button>
+            </div>
         </div>
     </div>
 
@@ -207,23 +210,12 @@
         <div class="modal-card">
             <div class="modal-head"><h3>Edit <span id="edit-meta-type-label"></span></h3><button class="close-btn" onclick="closeModal('edit-meta-modal')">&times;</button></div>
             <div class="modal-body">
-                <div class="bg-light p-10 mb-15">
-                    <label><strong>Rename:</strong></label>
-                    <div class="input-group mt-5">
-                        <input type="text" id="rename-input" class="input-std">
-                        <button class="btn-primary-action" onclick="saveRenamedMeta()">Save Name</button>
-                    </div>
-                </div>
-
+                <div class="bg-light p-10 mb-15"><label><strong>Rename:</strong></label><div class="input-group mt-5"><input type="text" id="rename-input" class="input-std"><button class="btn-primary-action" onclick="saveRenamedMeta()">Save Name</button></div></div>
                 <div class="divider">Manage Content</div>
-                
                 <p class="small-text">Select items to <strong>remove</strong> from this list:</p>
-                <div class="check-container" id="edit-meta-list-container" style="height: 300px;">
-                    </div>
+                <div class="check-container" id="edit-meta-list-container" style="height: 300px;"></div>
             </div>
-            <div class="modal-foot">
-                <button class="btn-text danger" onclick="removeSelectedFromMeta()">Remove Selected Orgs</button>
-            </div>
+            <div class="modal-foot"><button class="btn-text danger" onclick="removeSelectedFromMeta()">Remove Selected Orgs</button></div>
         </div>
     </div>
 
