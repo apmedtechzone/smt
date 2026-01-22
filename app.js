@@ -99,7 +99,9 @@ function renderTable() {
 }
 function renderLink(d, t) {
     if(!d) return '<span class="empty-cell">&minus;</span>';
+    // For Twitter/Insta
     if(typeof d === 'string') return d ? `<a href="${t==='twitter'?'https://x.com/':'https://instagram.com/'}${d.replace('@','')}" target="_blank" class="tag-link"><i class="fa-brands fa-${t}"></i> ${d}</a>` : '<span class="empty-cell">&minus;</span>';
+    // For LinkedIn/Facebook/Web
     return d.val ? `<a href="${d.link||'#'}" target="_blank" class="tag-link"><i class="${t==='website'?'fa-solid fa-globe':'fa-brands fa-'+t}"></i> ${d.val}</a>` : '<span class="empty-cell">&minus;</span>';
 }
 
@@ -258,6 +260,12 @@ function handleGridPaste(e) {
             }
         });
     });
+}
+
+function resetBulkGrid() {
+    if(confirm("Discard all changes in grid?")) {
+        initBulkRows(20);
+    }
 }
 
 function validateTag(val) {
