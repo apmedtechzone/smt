@@ -16,12 +16,23 @@ const defaultDB = {
     }]
 };
 
-let db = JSON.parse(localStorage.getItem('amtz_db')) || defaultDB;
-
 // ==========================================
-// 2. STATE & INIT
+// 2. STATE & SECURITY INIT (THE CORE FIX)
 // ==========================================
 let isAdmin = false;
+let db = defaultDB; // Start by assuming normal user (sees ONLY server data)
+
+// Check if current user is Admin
+if (localStorage.getItem('amtz_admin') === 'true') {
+    isAdmin = true;
+    // IF ADMIN: Check if they have unsaved work in LocalStorage
+    const localWork = localStorage.getItem('amtz_db');
+    if (localWork) {
+        db = JSON.parse(localWork);
+    }
+}
+
+// Variables
 let editingId = null;
 let pendingConflicts = []; 
 let targetType = null; 
@@ -32,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDropdowns();
     initBulkRows(20); 
     renderTable();
-    checkAdminStatus();
+    if (isAdmin) updateUIForAdmin();
     
     document.getElementById('bulk-tbody').addEventListener('paste', handleGridPaste);
     document.addEventListener('keydown', (e) => {
@@ -59,11 +70,19 @@ function initDropdowns() {
 // ==========================================
 // 3. UTILITIES & TOASTS
 // ==========================================
+// ADMIN ONLY: Saves work to local storage so they don't lose it on refresh
+function saveDataLocally() {
+    if (isAdmin) {
+        localStorage.setItem('amtz_db', JSON.stringify(db));
+    }
+}
+
 async function copyConfig() {
-    localStorage.setItem('amtz_db', JSON.stringify(db));
+    saveDataLocally();
     try {
         showToast("Generating full code...", "success");
-        const response = await fetch('app.js');
+        // Fetches clean app.js without the cache buster URL parameter
+        const response = await fetch(window.location.href.split('?')[0].replace('index.html','') + 'app.js');
         if (!response.ok) throw new Error("Network response was not ok");
         let sourceCode = await response.text();
         const newDataString = `const defaultDB = ${JSON.stringify(db, null, 4)};`;
@@ -83,10 +102,6 @@ async function copyConfig() {
     }
 }
 
-function saveDataLocally() {
-    localStorage.setItem('amtz_db', JSON.stringify(db));
-}
-
 function showToast(msg, type = "success") {
     const container = document.getElementById('toast-container');
     if(!container) return alert(msg);
@@ -103,15 +118,13 @@ function debouncedRender() {
 }
 
 // ==========================================
-// 4. RENDER ENGINE (SMART SEARCH UPDATE)
+// 4. RENDER ENGINE (SMART SEARCH)
 // ==========================================
 function renderTable() {
     const listId = document.getElementById('filter-list').value;
     const catId = document.getElementById('filter-cat').value;
     
-    // SMART SEARCH LOGIC: 
-    // 1. Split by comma (OR logic)
-    // 2. Split by space (AND logic inside groups)
+    // Split by comma (OR logic), then by space (AND logic)
     const rawSearch = document.getElementById('search-bar').value.toLowerCase();
     const searchGroups = rawSearch.split(',').map(s => s.trim()).filter(s => s !== '');
     
@@ -130,11 +143,9 @@ function renderTable() {
                 if(typeof t === 'string') txt += " " + t.toLowerCase();
                 else if(t && t.val) txt += " " + t.val.toLowerCase() + " " + (t.link||"").toLowerCase();
             });
-
             // Return true if matches ANY of the comma-separated groups
             return searchGroups.some(group => {
                 const terms = group.split(' ').filter(t => t);
-                // Within a group, must match ALL terms (e.g., "Ministry Health")
                 return terms.every(term => txt.includes(term));
             });
         }
@@ -162,10 +173,28 @@ function renderTable() {
     `).join('');
 }
 
+function renderLink(d, t) {
+    if(!d) return '<span class="empty-cell">&minus;</span>';
+    const text = (typeof d === 'string') ? d : d.val;
+    if(!text) return '<span class="empty-cell">&minus;</span>';
+
+    const fullText = text;
+    let displayText = fullText;
+    if(fullText.length > 15) { displayText = fullText.substring(0, 12) + '...'; }
+
+    let url = '#';
+    if(typeof d === 'string') {
+        url = t === 'twitter' ? `https://x.com/${d.replace('@','')}` : `https://instagram.com/${d.replace('@','')}`;
+    } else {
+        url = d.link || '#';
+    }
+    const icon = t === 'website' ? 'fa-solid fa-globe' : `fa-brands fa-${t}`;
+    return `<a href="${url}" target="_blank" class="tag-link" title="${fullText}"><i class="${icon}"></i> <span class="tag-truncate">${displayText}</span></a>`;
+}
+
 function exportToCSV() {
     const listId = document.getElementById('filter-list').value;
     const catId = document.getElementById('filter-cat').value;
-    
     const rawSearch = document.getElementById('search-bar').value.toLowerCase();
     const searchGroups = rawSearch.split(',').map(s => s.trim()).filter(s => s !== '');
     
@@ -188,14 +217,7 @@ function exportToCSV() {
 
     let csvContent = "data:text/csv;charset=utf-8,Name,Twitter,LinkedIn,Facebook,Instagram,Website\n";
     visibleOrgs.forEach(org => {
-        const row = [
-            `"${org.name}"`,
-            org.tags.twitter || "",
-            org.tags.linkedin.link || "",
-            org.tags.facebook.link || "",
-            org.tags.instagram || "",
-            org.tags.website.link || ""
-        ].join(",");
+        const row = [`"${org.name}"`, org.tags.twitter || "", org.tags.linkedin.link || "", org.tags.facebook.link || "", org.tags.instagram || "", org.tags.website.link || ""].join(",");
         csvContent += row + "\n";
     });
 
@@ -214,25 +236,6 @@ function resetFilters() {
     document.getElementById('filter-cat').value = 'all';
     document.getElementById('search-bar').value = '';
     renderTable();
-}
-
-function renderLink(d, t) {
-    if(!d) return '<span class="empty-cell">&minus;</span>';
-    const text = (typeof d === 'string') ? d : d.val;
-    if(!text) return '<span class="empty-cell">&minus;</span>';
-
-    const fullText = text;
-    let displayText = fullText;
-    if(fullText.length > 15) { displayText = fullText.substring(0, 12) + '...'; }
-
-    let url = '#';
-    if(typeof d === 'string') {
-        url = t === 'twitter' ? `https://x.com/${d.replace('@','')}` : `https://instagram.com/${d.replace('@','')}`;
-    } else {
-        url = d.link || '#';
-    }
-    const icon = t === 'website' ? 'fa-solid fa-globe' : `fa-brands fa-${t}`;
-    return `<a href="${url}" target="_blank" class="tag-link" title="${fullText}"><i class="${icon}"></i> <span class="tag-truncate">${displayText}</span></a>`;
 }
 
 // ==========================================
@@ -302,11 +305,8 @@ function removeSelectedFromMeta() {
     if (!confirm(`Remove ${idsToRemove.length} organizations from this list?`)) return;
     db.orgs.forEach(org => {
         if (idsToRemove.includes(org.id)) {
-            if (targetType === 'lists') {
-                org.listIds = org.listIds.filter(id => id !== targetId);
-            } else {
-                org.catIds = org.catIds.filter(id => id !== targetId);
-            }
+            if (targetType === 'lists') org.listIds = org.listIds.filter(id => id !== targetId);
+            else org.catIds = org.catIds.filter(id => id !== targetId);
         }
     });
     saveDataLocally(); renderTable(); closeModal('edit-meta-modal'); alert("Removed successfully.");
@@ -435,12 +435,19 @@ function resolveConflict(id, action) {
 function resolveAll(act) { [...pendingConflicts].forEach(c=>resolveConflict(c.id,act)); }
 
 // ==========================================
-// 7. ADMIN & AUTH
+// 7. ADMIN & AUTH (LOGOUT FIX HERE)
 // ==========================================
 function login() { if(document.getElementById('login-email').value==='saragadamteja.k@amtz.in' && document.getElementById('login-pass').value==='9989'){ isAdmin=true; localStorage.setItem('amtz_admin', 'true'); updateUIForAdmin(); closeModal('login-modal'); showToast("Logged in"); } else showToast("Invalid Credentials", "error"); }
 function checkAdminStatus() { if(localStorage.getItem('amtz_admin') === 'true') { isAdmin = true; updateUIForAdmin(); } }
 function updateUIForAdmin() { document.getElementById('admin-panel').classList.remove('hidden'); document.getElementById('login-trigger').classList.add('hidden'); document.getElementById('add-org-wrapper').classList.remove('hidden'); document.querySelectorAll('.col-action').forEach(el=>el.classList.remove('hidden')); }
-function logout(){ localStorage.removeItem('amtz_admin'); location.reload(); }
+
+// LOGOUT: Destroys both Admin token AND Local Cache Database
+function logout(){ 
+    localStorage.removeItem('amtz_admin'); 
+    localStorage.removeItem('amtz_db'); // DELETES ADMIN'S LOCAL WORK
+    location.reload(); 
+}
+
 function openOrgModal(){editingId=null; document.getElementById('edit-name').value=''; ['twitter','instagram'].forEach(k=>document.getElementById(`tag-${k}`).value=''); ['linkedin','facebook','website'].forEach(k=>{document.getElementById(`tag-${k}-val`).value='';document.getElementById(`tag-${k}-link`).value=''}); renderCheckboxes(['master'],[]); openModal('org-modal');}
 function editOrg(id){editingId=id; const o=db.orgs.find(i=>i.id===id); document.getElementById('edit-name').value=o.name; document.getElementById('tag-twitter').value=o.tags.twitter||''; document.getElementById('tag-instagram').value=o.tags.instagram||''; ['linkedin','facebook','website'].forEach(k=>{const t=o.tags[k]||{}; document.getElementById(`tag-${k}-val`).value=t.val||''; document.getElementById(`tag-${k}-link`).value=t.link||''}); renderCheckboxes(o.listIds,o.catIds); openModal('org-modal');}
 function renderCheckboxes(sl, sc){ const b=(d,s,id)=>document.getElementById(id).innerHTML=d.map(i=>`<label class="check-item ${i.id==='master'?'disabled':''}"><input type="checkbox" value="${i.id}" ${s.includes(i.id)||i.id==='master'?'checked':''} ${i.id==='master'?'disabled':''}> ${i.name}</label>`).join(''); b(db.lists,sl,'check-lists'); b(db.cats,sc,'check-cats'); }
