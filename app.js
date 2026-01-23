@@ -38,7 +38,11 @@ let targetType = null;
 let targetId = null; 
 let searchTimer = null; 
 
-document.addEventListener('DOMContentLoaded', () => {
+// ==========================================
+// THE FIX: SMART INITIALIZATION
+// Handles dynamic cache-buster loading properly
+// ==========================================
+function initApp() {
     initDropdowns();
     initBulkRows(20); 
     renderTable();
@@ -48,7 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', (e) => {
         if(e.key === "Escape") document.querySelectorAll('.modal').forEach(m => closeModal(m.id));
     });
-});
+}
+
+// If the page is already loaded (due to cache buster), run immediately. 
+// Otherwise, wait for it to load.
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}
 
 function initDropdowns() {
     const populate = (id, data, ph) => {
@@ -433,7 +445,7 @@ function resolveConflict(id, action) {
 function resolveAll(act) { [...pendingConflicts].forEach(c=>resolveConflict(c.id,act)); }
 
 // ==========================================
-// 7. ADMIN & AUTH (THE FIX)
+// 7. ADMIN & AUTH
 // ==========================================
 function login() { 
     if(document.getElementById('login-email').value==='saragadamteja.k@amtz.in' && document.getElementById('login-pass').value==='9989'){ 
@@ -445,8 +457,8 @@ function login() {
         if (localWork) db = JSON.parse(localWork);
         
         updateUIForAdmin(); 
-        initDropdowns(); // CRITICAL FIX: Refresh dropdowns
-        renderTable();   // CRITICAL FIX: Refresh table
+        initDropdowns(); // Refresh dropdowns
+        renderTable();   // Refresh table
         
         closeModal('login-modal'); 
         showToast("Logged in successfully"); 
@@ -465,7 +477,7 @@ function checkAdminStatus() {
 function updateUIForAdmin() { 
     document.getElementById('admin-panel').classList.remove('hidden'); 
     document.getElementById('login-trigger').classList.add('hidden'); 
-    document.getElementById('add-btn').classList.remove('hidden'); // CRITICAL FIX: Match the new HTML ID
+    document.getElementById('add-btn').classList.remove('hidden'); 
     document.querySelectorAll('.col-action').forEach(el=>el.classList.remove('hidden')); 
 }
 
