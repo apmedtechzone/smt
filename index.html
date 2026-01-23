@@ -3,271 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-
     <title>AMTZ Tags Pro</title>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <script>
-        const version = Date.now();
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = `style.css?v=${version}`;
-        document.head.appendChild(link);
-    </script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <nav>
-        <div class="logo-area">
-            <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
-            <div class="logo-text">AMTZ Tags <span>Pro</span></div>
-        </div>
-        <div class="nav-right">
-            <div id="admin-panel" class="hidden fade-in">
-                <span class="status-badge"><i class="fa-solid fa-shield-halved"></i> Admin Mode</span>
-                <button class="btn-glass" onclick="openModal('meta-modal')">
-                    <i class="fa-solid fa-list-check"></i> Lists
+    <header>
+        <div class="header-content">
+            <h1><i class="fa-solid fa-tags"></i> AMTZ Tags Pro</h1>
+            <div class="header-actions">
+                <button id="theme-toggle" class="btn-icon" title="Toggle Dark/Light Mode" onclick="toggleTheme()">
+                    <i class="fa-solid fa-moon"></i>
                 </button>
-                <button class="btn-glass" onclick="openModal('bulk-modal')">
-                    <i class="fa-solid fa-table-list"></i> Upload
-                </button>
-                <button class="btn-primary-action" onclick="copyConfig()">
-                    <i class="fa-solid fa-floppy-disk"></i> Save Data
-                </button>
-                <button class="btn-icon-only" onclick="logout()" title="Logout">
-                    <i class="fa-solid fa-power-off"></i>
-                </button>
-            </div>
-            <button id="login-trigger" class="btn-primary" onclick="openModal('login-modal')">Admin Login</button>
-        </div>
-    </nav>
-
-    <div class="dashboard-container">
-        <header class="toolbar">
-            <div class="filter-wrapper">
-                <label>Filter List</label>
-                <div class="select-box">
-                    <i class="fa-solid fa-filter"></i>
-                    <select id="filter-list" onchange="renderTable()"></select>
+                <button id="login-trigger" class="btn-secondary" onclick="openModal('login-modal')">Admin Login</button>
+                <div id="admin-panel" class="hidden">
+                    <span class="admin-badge"><i class="fa-solid fa-shield-halved"></i> ADMIN</span>
+                    <button class="btn-secondary" onclick="openModal('meta-modal')">Manage Lists</button>
+                    <button class="btn-secondary" onclick="openModal('bulk-modal')">Bulk Upload</button>
+                    <button class="btn-secondary" onclick="copyConfig()">Export JS</button>
+                    <button class="btn-danger" onclick="logout()">Logout</button>
                 </div>
             </div>
-            <div class="filter-wrapper">
-                <label>Filter Category</label>
-                <div class="select-box">
-                    <i class="fa-solid fa-folder-open"></i>
-                    <select id="filter-cat" onchange="renderTable()"></select>
-                </div>
-            </div>
-            <div class="search-wrapper">
-                <label>Search Directory</label>
-                <div class="input-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="search-bar" placeholder="Name, @tag, website..." onkeyup="debouncedRender()">
-                </div>
-            </div>
-            <div class="action-wrapper">
-                <label>&nbsp;</label>
-                <div class="flex-actions">
-                    <button class="btn-secondary btn-icon" onclick="exportToCSV()" title="Export View to CSV">
-                        <i class="fa-solid fa-download"></i>
-                    </button>
-                    <button id="add-btn" class="btn-add hidden" onclick="openOrgModal()">
-                        <i class="fa-solid fa-plus"></i> Add
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <div class="stats-bar">
-            <span id="stats-count">Loading...</span>
-            <span class="separator">•</span>
-            <span id="stats-filter">All Records</span>
         </div>
+    </header>
 
-        <main class="table-card">
-            <div class="table-scroll">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="col-fixed-name">Organization</th>
-                            <th>
-                                <div class="th-content">
-                                    <span><i class="fa-brands fa-twitter text-twitter"></i> Twitter</span>
-                                    <button class="copy-mini" onclick="copyColumn('twitter')"><i class="fa-regular fa-copy"></i></button>
-                                </div>
-                            </th>
-                            <th>
-                                <div class="th-content">
-                                    <span><i class="fa-brands fa-linkedin text-linkedin"></i> LinkedIn</span>
-                                    <button class="copy-mini" onclick="copyColumn('linkedin')"><i class="fa-regular fa-copy"></i></button>
-                                </div>
-                            </th>
-                            <th>
-                                <div class="th-content">
-                                    <span><i class="fa-brands fa-facebook text-facebook"></i> Facebook</span>
-                                    <button class="copy-mini" onclick="copyColumn('facebook')"><i class="fa-regular fa-copy"></i></button>
-                                </div>
-                            </th>
-                            <th>
-                                <div class="th-content">
-                                    <span><i class="fa-brands fa-instagram text-insta"></i> Instagram</span>
-                                    <button class="copy-mini" onclick="copyColumn('instagram')"><i class="fa-regular fa-copy"></i></button>
-                                </div>
-                            </th>
-                            <th>
-                                <div class="th-content">
-                                    <span><i class="fa-solid fa-globe text-web"></i> Website</span>
-                                    <button class="copy-mini" onclick="copyColumn('website')"><i class="fa-regular fa-copy"></i></button>
-                                </div>
-                            </th>
-                            <th class="col-action hidden">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body"></tbody>
-                </table>
+    <main>
+        <section class="controls">
+            <div class="filters">
+                <select id="filter-list" onchange="renderTable()"></select>
+                <select id="filter-cat" onchange="renderTable()"></select>
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id="search-bar" placeholder="Search (comma separated)..." onkeyup="debouncedRender()">
+                </div>
+                <button class="btn-secondary" onclick="resetFilters()">Reset</button>
             </div>
-            <div id="empty-state" class="empty-state hidden">
-                <i class="fa-solid fa-filter-circle-xmark"></i>
-                <p>No organizations found matching your filters.</p>
-                <button class="btn-text" onclick="resetFilters()">Reset Filters</button>
+            <div class="actions">
+                <span id="stats-count" class="stats">Loading...</span>
+                <button class="btn-secondary" onclick="exportToCSV()"><i class="fa-solid fa-download"></i> CSV</button>
+                <button id="add-btn" class="btn-primary hidden" onclick="openOrgModal()">+ Add Org</button>
             </div>
-        </main>
-        
-        <div class="footer-note">
-            AMTZ Tags Pro v4.0 &bull; Real-time Secure DB
+        </section>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="col-fixed-name">Organization</th>
+                        <th>Twitter <button class="btn-copy-col" onclick="copyColumn('twitter')"><i class="fa-regular fa-copy"></i></button></th>
+                        <th>LinkedIn <button class="btn-copy-col" onclick="copyColumn('linkedin')"><i class="fa-regular fa-copy"></i></button></th>
+                        <th>Facebook <button class="btn-copy-col" onclick="copyColumn('facebook')"><i class="fa-regular fa-copy"></i></button></th>
+                        <th>Instagram <button class="btn-copy-col" onclick="copyColumn('instagram')"><i class="fa-regular fa-copy"></i></button></th>
+                        <th>Website <button class="btn-copy-col" onclick="copyColumn('website')"><i class="fa-regular fa-copy"></i></button></th>
+                        <th class="col-action hidden">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
         </div>
-    </div>
+        <div id="empty-state" class="empty-state hidden">No organizations match your filters.</div>
+    </main>
 
     <div id="toast-container"></div>
 
-    <div id="login-modal" class="modal hidden">
-        <div class="modal-card small">
-            <div class="modal-head"><h3>Admin Access</h3><button class="close-btn" onclick="closeModal('login-modal')">&times;</button></div>
-            <div class="modal-body">
-                <input type="email" id="login-email" class="input-std" placeholder="Email">
-                <input type="password" id="login-pass" class="input-std" placeholder="Password">
-                <button class="btn-primary full" onclick="login()">Authenticate</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="org-modal" class="modal hidden">
-        <div class="modal-card">
-            <div class="modal-head"><h3>Organization Details</h3><button class="close-btn" onclick="closeModal('org-modal')">&times;</button></div>
-            <div class="modal-body">
-                <input type="hidden" id="edit-id">
-                <div class="form-group"><label>Organization Name</label><input type="text" id="edit-name" class="input-lg" placeholder="e.g. AMTZ Ltd"></div>
-                <div class="grid-2">
-                    <div class="form-group"><label>Lists</label><div id="check-lists" class="check-container"></div></div>
-                    <div class="form-group"><label>Categories</label><div id="check-cats" class="check-container"></div></div>
-                </div>
-                <div class="divider">Social Presence</div>
-                <div class="social-grid">
-                    <div class="social-item"><label><i class="fa-brands fa-twitter text-twitter"></i> Twitter</label><input type="text" id="tag-twitter" class="input-std" placeholder="@handle"></div>
-                    <div class="social-item"><label><i class="fa-brands fa-instagram text-insta"></i> Instagram</label><input type="text" id="tag-instagram" class="input-std" placeholder="@handle"></div>
-                    <div class="social-item span-2"><label><i class="fa-brands fa-linkedin text-linkedin"></i> LinkedIn</label><div class="input-group"><input type="text" id="tag-linkedin-val" class="input-std" placeholder="Display Tag (@)"><input type="text" id="tag-linkedin-link" class="input-std" placeholder="Full Link URL"></div></div>
-                    <div class="social-item span-2"><label><i class="fa-brands fa-facebook text-facebook"></i> Facebook</label><div class="input-group"><input type="text" id="tag-facebook-val" class="input-std" placeholder="Display Tag (@)"><input type="text" id="tag-facebook-link" class="input-std" placeholder="Full Link URL"></div></div>
-                    <div class="social-item span-2"><label><i class="fa-solid fa-globe text-web"></i> Website</label><div class="input-group"><input type="text" id="tag-website-val" class="input-std" placeholder="Display Text"><input type="text" id="tag-website-link" class="input-std" placeholder="Full Link URL"></div></div>
-                </div>
-            </div>
-            <div class="modal-foot"><button class="btn-text danger" onclick="deleteOrg()">Delete</button><button class="btn-primary" onclick="saveOrg()">Save Changes</button></div>
-        </div>
-    </div>
-
-    <div id="bulk-modal" class="modal hidden">
-        <div class="modal-card x-large">
-            <div class="modal-head"><h3>Bulk Upload Grid</h3><button class="close-btn" onclick="closeModal('bulk-modal')">&times;</button></div>
-            <div class="modal-body">
-                <div class="bg-light p-10 mb-15">
-                    <label><strong>Assign to List:</strong> (Master List is always included)</label>
-                    <select id="bulk-list" class="input-std mt-5"></select>
-                </div>
-                <div class="bulk-table-container">
-                    <table class="bulk-grid-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 220px;">Org Name *</th>
-                                <th style="width: 140px;">Twitter (@)</th>
-                                <th style="width: 140px;">LinkedIn (@)</th>
-                                <th>LinkedIn (Link)</th>
-                                <th style="width: 140px;">Facebook (@)</th>
-                                <th>Facebook (Link)</th>
-                                <th style="width: 140px;">Instagram (@)</th>
-                                <th>Website (Link)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bulk-tbody"></tbody>
-                    </table>
-                </div>
-                <p class="small-text mt-5 text-muted">* Tags without '@' will be ignored. Paste Excel data directly into the grid.</p>
-                <button class="btn-secondary mt-15" onclick="addBulkRows(5)">+ Add 5 More Rows</button>
-            </div>
-            <div class="modal-foot">
-                <button class="btn-text danger" onclick="resetBulkGrid()">Discard / Clear</button>
-                <button class="btn-primary" onclick="analyzeBulkUpload()">Analyze & Import</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="conflict-modal" class="modal hidden">
-        <div class="modal-card large">
-            <div class="modal-head"><h3><i class="fa-solid fa-triangle-exclamation text-warn"></i> Conflicts Detected</h3><span class="badge-count" id="conflict-count">0</span></div>
-            <div class="modal-body">
-                <div class="conflict-header"><button class="btn-text" onclick="resolveAll('ignore')">Ignore (Keep Old)</button><button class="btn-primary-action btn-sm" onclick="resolveAll('overwrite')">Overwrite All</button></div>
-                <div id="conflict-list" class="conflict-container"></div>
-            </div>
-            <div class="modal-foot"><button class="btn-text" onclick="closeModal('conflict-modal')">Cancel All</button></div>
-        </div>
-    </div>
-
-    <div id="meta-modal" class="modal hidden">
-        <div class="modal-card large">
-            <div class="modal-head"><h3>Lists & Categories</h3><button class="close-btn" onclick="closeModal('meta-modal')">&times;</button></div>
-            <div class="modal-body">
-                <div class="meta-section"><h4>Lists</h4><div class="input-group"><input type="text" id="new-list" class="input-std" placeholder="New Name"><button class="btn-secondary" onclick="addMeta('lists','new-list')">Add</button></div><ul id="list-manager-ul" class="meta-list"></ul></div>
-                <div class="meta-section mt-15"><h4>Categories</h4><div class="input-group"><input type="text" id="new-cat" class="input-std" placeholder="New Name"><button class="btn-secondary" onclick="addMeta('cats','new-cat')">Add</button></div><ul id="cat-manager-ul" class="meta-list"></ul></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="edit-meta-modal" class="modal hidden">
-        <div class="modal-card">
-            <div class="modal-head"><h3>Edit <span id="edit-meta-type-label"></span></h3><button class="close-btn" onclick="closeModal('edit-meta-modal')">&times;</button></div>
-            <div class="modal-body">
-                <div class="bg-light p-10 mb-15"><label><strong>Rename:</strong></label><div class="input-group mt-5"><input type="text" id="rename-input" class="input-std"><button class="btn-primary-action" onclick="saveRenamedMeta()">Save Name</button></div></div>
-                <div class="divider">Manage Content</div>
-                <p class="small-text">Select items to <strong>remove</strong> from this list:</p>
-                <div class="readable-list-container" id="edit-meta-list-container"></div>
-            </div>
-            <div class="modal-foot"><button class="btn-text danger" onclick="removeSelectedFromMeta()">Remove Selected Orgs</button></div>
-        </div>
-    </div>
-
-    <div id="populate-modal" class="modal hidden">
-        <div class="modal-card">
-            <div class="modal-head"><h3>Add to: <span id="target-name" class="text-primary"></span></h3><button class="close-btn" onclick="closeModal('populate-modal')">&times;</button></div>
-            <div class="modal-body">
-                <div class="populate-option"><h4>Option 1: New Bulk Upload</h4><p class="small-text">Paste Excel data directly.</p><button class="btn-secondary full" onclick="triggerBulkForTarget()">Open Bulk Uploader</button></div>
-                <div class="divider">OR</div>
-                <div class="populate-option">
-                    <h4>Option 2: Select Existing Orgs</h4>
-                    <div class="grid-2"><div><label>Source List</label><select id="pop-src-list" class="input-std" onchange="renderPopulateList()"></select></div><div><label>Source Category</label><select id="pop-src-cat" class="input-std" onchange="renderPopulateList()"></select></div></div>
-                    <div class="readable-list-container mt-15" id="populate-check-list"></div>
-                </div>
-            </div>
-            <div class="modal-foot"><button class="btn-primary full" onclick="savePopulateSelection()">Add Selected Orgs</button></div>
-        </div>
-    </div>
-
     <script>
         const script = document.createElement('script');
-        script.src = `app.js?v=${version}`;
+        script.src = 'app.js?v=' + new Date().getTime();
         document.body.appendChild(script);
     </script>
 </body>
