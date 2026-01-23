@@ -1538,6 +1538,9 @@ let targetType = null;
 let targetId = null; 
 let searchTimer = null; 
 
+// NEW: Tracker to remember if the user has clicked copy once (10) or twice (ALL)
+let copyClickState = {}; 
+
 // ==========================================
 // THEME MANAGEMENT
 // ==========================================
@@ -1673,6 +1676,9 @@ function toggleStar(orgId, listId) {
 }
 
 function renderTable() {
+    // Reset copy state every time table updates (filter change, search, etc.)
+    copyClickState = {}; 
+
     const listId = document.getElementById('filter-list').value;
     const catId = document.getElementById('filter-cat').value;
     const rawSearch = document.getElementById('search-bar').value.toLowerCase();
@@ -1700,7 +1706,6 @@ function renderTable() {
         return true;
     });
 
-    // APPLY TIME & ALPHABETICAL SORTING (Works for both Admin and Regular Users)
     results = sortTableData(results, listId);
 
     if(document.getElementById('stats-count')) {
@@ -1712,7 +1717,6 @@ function renderTable() {
     empty.classList.add('hidden');
 
     tbody.innerHTML = results.map(org => {
-        // FIX: The star button is ONLY rendered if the current user is an Admin
         const isStarred = (listId !== 'all') && org.starredIn && org.starredIn[listId];
         const starHTML = (isAdmin && listId !== 'all') 
             ? `<button class="btn-star ${isStarred ? 'starred' : ''}" onclick="toggleStar(${org.id}, '${listId}')" title="Star this org"><i class="fa-solid fa-star"></i></button>` 
@@ -2046,7 +2050,62 @@ function renderMetaList(){
 }
 
 function removeMeta(t,id){db[t]=db[t].filter(i=>i.id!==id); renderMetaList(); initDropdowns(); saveDataLocally();}
-function copyColumn(t){const l=document.getElementById('filter-list').value, c=document.getElementById('filter-cat').value; const v=db.orgs.filter(o=>(l==='all'||o.listIds.includes(l))&&(c==='all'||o.catIds.includes(c))).map(o=>{const x=o.tags[t]; return (typeof x==='string')?x:(x?.val||"")}).filter(k=>k); navigator.clipboard.writeText(v.join('\n')); showToast(`Copied ${v.length} tags`);}
+
+// ==========================================
+// 8. UPDATED: SMART COPY COLUMN LOGIC
+// ==========================================
+function copyColumn(t) {
+    const listId = document.getElementById('filter-list').value;
+    const catId = document.getElementById('filter-cat').value;
+    const rawSearch = document.getElementById('search-bar').value.toLowerCase();
+    const searchGroups = rawSearch.split(',').map(s => s.trim()).filter(s => s !== '');
+
+    // 1. Get filtered organizations (matching what the user sees)
+    let visibleOrgs = db.orgs.filter(org => {
+        if (listId !== 'all' && !org.listIds.includes(listId)) return false;
+        if (catId !== 'all' && !org.catIds.includes(catId)) return false;
+        if (searchGroups.length > 0) {
+            let txt = org.name.toLowerCase();
+            Object.values(org.tags).forEach(t => {
+                if(typeof t === 'string') txt += " " + t.toLowerCase();
+                else if(t && t.val) txt += " " + t.val.toLowerCase();
+            });
+            return searchGroups.some(group => group.split(' ').filter(t=>t).every(term => txt.includes(term)));
+        }
+        return true;
+    });
+
+    // 2. Sort the list EXACTLY how the table is sorted (Starred + Alphabetical)
+    visibleOrgs = sortTableData(visibleOrgs, listId);
+
+    // 3. Extract non-empty tags
+    const allTags = visibleOrgs.map(o => {
+        const x = o.tags[t];
+        return (typeof x === 'string') ? x : (x?.val || "");
+    }).filter(k => k);
+
+    if (allTags.length === 0) return showToast("No tags found to copy", "error");
+
+    // 4. TOP 10 vs ALL Logic
+    if (!copyClickState[t]) copyClickState[t] = 'first';
+
+    let tagsToCopy = allTags;
+    let msg = "";
+
+    // If there are more than 10 tags and it's the first click
+    if (allTags.length > 10 && copyClickState[t] === 'first') {
+        tagsToCopy = allTags.slice(0, 10);
+        copyClickState[t] = 'second'; // Queue up ALL for the next click
+        msg = "Copied top 10 tags! Click again to copy ALL.";
+    } else {
+        tagsToCopy = allTags;
+        copyClickState[t] = 'first'; // Reset state
+        msg = `Copied all ${allTags.length} tags.`;
+    }
+
+    navigator.clipboard.writeText(tagsToCopy.join('\n'));
+    showToast(msg);
+}
 
 function openModal(id){
     document.getElementById(id).classList.remove('hidden'); 
