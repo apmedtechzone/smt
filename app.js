@@ -56,7 +56,10 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152774058",
+                "1769152758115",
+                "1769152769571"
             ],
             "catIds": [],
             "starredIn": {},
@@ -83,7 +86,10 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152774058",
+                "1769152758115",
+                "1769152769571"
             ],
             "catIds": [],
             "starredIn": {},
@@ -110,7 +116,10 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152761251",
+                "1769152774058",
+                "1769152763902"
             ],
             "catIds": [],
             "starredIn": {},
@@ -137,7 +146,9 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152761251",
+                "1769152763902"
             ],
             "catIds": [],
             "starredIn": {},
@@ -164,7 +175,9 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152761251",
+                "1769152763902"
             ],
             "catIds": [],
             "starredIn": {},
@@ -190,7 +203,8 @@ const defaultDB = {
             "name": "Ficci",
             "listIds": [
                 "master",
-                "1769152748576"
+                "1769152748576",
+                "1769152763902"
             ],
             "catIds": [],
             "starredIn": {},
@@ -216,7 +230,9 @@ const defaultDB = {
             "name": "World Trade Center AMTZ",
             "listIds": [
                 "master",
-                "1769152748576"
+                "1769152748576",
+                "1769152761251",
+                "1769152763902"
             ],
             "catIds": [],
             "starredIn": {},
@@ -268,7 +284,8 @@ const defaultDB = {
             "name": "Indian Biomedical Skill Consortium",
             "listIds": [
                 "master",
-                "1769152748576"
+                "1769152748576",
+                "1769152766592"
             ],
             "catIds": [],
             "starredIn": {},
@@ -295,7 +312,13 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152761251",
+                "1769152754642",
+                "1769152774058",
+                "1769152763902",
+                "1769152758115",
+                "1769152766592"
             ],
             "catIds": [],
             "starredIn": {},
@@ -348,7 +371,8 @@ const defaultDB = {
             "name": "Kalam Institute Of Health Technology",
             "listIds": [
                 "master",
-                "1769152748576"
+                "1769152748576",
+                "1769152754642"
             ],
             "catIds": [],
             "starredIn": {},
@@ -378,9 +402,7 @@ const defaultDB = {
                 "1769152751181"
             ],
             "catIds": [],
-            "starredIn": {
-                "1769152751181": 1769152893947
-            },
+            "starredIn": {},
             "tags": {
                 "twitter": "@Biovalley2",
                 "linkedin": {
@@ -404,7 +426,10 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152761251",
+                "1769152774058",
+                "1769152763902"
             ],
             "catIds": [],
             "starredIn": {},
@@ -431,7 +456,9 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152774058",
+                "1769152766592"
             ],
             "catIds": [],
             "starredIn": {},
@@ -458,7 +485,9 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152761251",
+                "1769152774058"
             ],
             "catIds": [],
             "starredIn": {},
@@ -485,7 +514,9 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152761251",
+                "1769152774058"
             ],
             "catIds": [],
             "starredIn": {},
@@ -512,7 +543,10 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152761251",
+                "1769152774058",
+                "1769152763902"
             ],
             "catIds": [],
             "starredIn": {},
@@ -539,7 +573,11 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769152761251",
+                "1769152754642",
+                "1769152774058",
+                "1769152763902"
             ],
             "catIds": [],
             "starredIn": {},
@@ -565,7 +603,10 @@ const defaultDB = {
             "name": "Andhra Pradesh MedTech Zone Limited",
             "listIds": [
                 "master",
-                "1769152751181"
+                "1769152751181",
+                "1769152761251",
+                "1769152774058",
+                "1769152766592"
             ],
             "catIds": [],
             "starredIn": {},
@@ -643,7 +684,8 @@ const defaultDB = {
             "name": "ISPOR",
             "listIds": [
                 "master",
-                "1769152751181"
+                "1769152751181",
+                "1769152758115"
             ],
             "catIds": [],
             "starredIn": {},
@@ -661,6 +703,814 @@ const defaultDB = {
                 "website": {
                     "val": "Visit Site",
                     "link": "https://www.ispor.org/"
+                }
+            }
+        },
+        {
+            "id": 1769153067633.818,
+            "name": "ASM International",
+            "listIds": [
+                "master",
+                "1769152754642"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ASMInternatnl",
+                "linkedin": {
+                    "val": "@ASM International",
+                    "link": "https://www.linkedin.com/company/asm-international/"
+                },
+                "facebook": {
+                    "val": "@asminternational",
+                    "link": "https://www.facebook.com/asminternational/"
+                },
+                "instagram": "@asminternational",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.asminternational.org/"
+                }
+            }
+        },
+        {
+            "id": 1769153067633.9172,
+            "name": "Ministry of Electronics & IT",
+            "listIds": [
+                "master",
+                "1769152754642"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@GoI_MeitY",
+                "linkedin": {
+                    "val": "@Ministry of Electronics and Information Technology",
+                    "link": "https://www.linkedin.com/company/meity-in/"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": ""
+                },
+                "instagram": "",
+                "website": {
+                    "val": "",
+                    "link": ""
+                }
+            }
+        },
+        {
+            "id": 1769153067633.3184,
+            "name": "Ministry of MSME",
+            "listIds": [
+                "master",
+                "1769152754642"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@minmsme",
+                "linkedin": {
+                    "val": "@Ministry of Micro, Small and Medium Enterprises, Government of India",
+                    "link": "https://www.linkedin.com/company/ministry-of-micro-small-and-medium-enterprises-government-of-india/about/"
+                },
+                "facebook": {
+                    "val": "@minmsme",
+                    "link": "https://www.facebook.com/minmsme/"
+                },
+                "instagram": "@minmsme",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://msme.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153067633.3801,
+            "name": "Ministry of Education",
+            "listIds": [
+                "master",
+                "1769152754642"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@EduMinOfIndia",
+                "linkedin": {
+                    "val": "@MINISTRY OF EDUCATION, GOVERNMENT OF INDIA",
+                    "link": "https://www.linkedin.com/company/ministry-of-education-government-of-india/"
+                },
+                "facebook": {
+                    "val": "@EduMinOfIndia",
+                    "link": "https://www.facebook.com/EduMinOfIndia"
+                },
+                "instagram": "@eduminofindia",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.education.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153067633.8662,
+            "name": "IIT Hyderabad",
+            "listIds": [
+                "master",
+                "1769152754642"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@IITHyderabad",
+                "linkedin": {
+                    "val": "@Indian Institute of Technology Hyderabad",
+                    "link": "https://www.linkedin.com/school/iithyderabad/"
+                },
+                "facebook": {
+                    "val": "@iithyderabad",
+                    "link": "https://www.facebook.com/iithyderabad/"
+                },
+                "instagram": "@iithyderabad",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.iith.ac.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153067633.0923,
+            "name": "Sarda Metals & Alloys Ltd.",
+            "listIds": [
+                "master",
+                "1769152754642"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@sardametalsltd",
+                "linkedin": {
+                    "val": "@Sarda Metals & Alloys Ltd.",
+                    "link": "https://www.linkedin.com/company/sarda-metals-alloys-ltd"
+                },
+                "facebook": {
+                    "val": "@sardametalsltd",
+                    "link": "https://www.facebook.com/sardametalsltd"
+                },
+                "instagram": "@sardametalsltd",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://sardametals.com/"
+                }
+            }
+        },
+        {
+            "id": 1769153067633.8027,
+            "name": "VIZAGAPATAM CHAMBER OF COMMERCE & INDUSTRY",
+            "listIds": [
+                "master",
+                "1769152754642"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@VCCI14",
+                "linkedin": {
+                    "val": "@The Vizagapatam Chamber of Commerce and Industry",
+                    "link": "https://www.linkedin.com/in/the-vizagapatam-chamber-of-commerce-and-industry-7ab0152a8/"
+                },
+                "facebook": {
+                    "val": "@vizagchamber",
+                    "link": "https://www.facebook.com/vizagchamber/"
+                },
+                "instagram": "@vizagchamber",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.vizagchamber.com/"
+                }
+            }
+        },
+        {
+            "id": 1769153067633.257,
+            "name": "GITAM Deemed University",
+            "listIds": [
+                "master",
+                "1769152754642"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "",
+                "linkedin": {
+                    "val": "",
+                    "link": "https://www.linkedin.com/school/gitam-deemed-university"
+                },
+                "facebook": {
+                    "val": "@gitamdeemeduniversity",
+                    "link": "https://www.facebook.com/gitamdeemeduniversity"
+                },
+                "instagram": "@gitamdeemeduniversity",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.gitam.edu/"
+                }
+            }
+        },
+        {
+            "id": 1769153067634.4785,
+            "name": "Principal Scientific Adviser, Govt. of India",
+            "listIds": [
+                "master",
+                "1769152754642",
+                "1769152758115"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@PrinSciAdvGoI",
+                "linkedin": {
+                    "val": "@Office of the Principal Scientific Adviser to the Government of India",
+                    "link": "https://www.linkedin.com/company/prinsciadvoff/"
+                },
+                "facebook": {
+                    "val": "@prinsciadvoff",
+                    "link": "https://www.facebook.com/prinsciadvoff/"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.psa.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153067634.6868,
+            "name": "Office of Principal Scientific Adviser to the GoI",
+            "listIds": [
+                "master",
+                "1769152754642",
+                "1769152758115"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@PrinSciAdvOff",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.psa.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153067634.4153,
+            "name": "Atal Innovation Mission Official",
+            "listIds": [
+                "master",
+                "1769152754642"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@AIMtoInnovate",
+                "linkedin": {
+                    "val": "@Atal Innovation Mission Official",
+                    "link": "https://www.linkedin.com/company/atal-innovation-mission-official/"
+                },
+                "facebook": {
+                    "val": "@AIMToInnovate",
+                    "link": "https://www.facebook.com/AIMToInnovate/"
+                },
+                "instagram": "@aimtoinnovate",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.aim.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153067634.8408,
+            "name": "CMO Andhra Pradesh",
+            "listIds": [
+                "master",
+                "1769152754642"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@AndhraPradeshCM",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769153098770.7566,
+            "name": "Global Index",
+            "listIds": [
+                "master",
+                "1769152763902"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@TheGlobal_Index",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769153116650.3438,
+            "name": "Biotechnology Industry Research Assistance Council",
+            "listIds": [
+                "master",
+                "1769152758115"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@BIRAC_2012",
+                "linkedin": {
+                    "val": "@DBT BIRAC",
+                    "link": "https://www.linkedin.com/in/dbt-birac-bba322232/"
+                },
+                "facebook": {
+                    "val": "@dbt.birac.2012",
+                    "link": "https://www.facebook.com/dbt.birac.2012"
+                },
+                "instagram": "@dbt.birac",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.birac.nic.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153116650.1897,
+            "name": "World Health Organization (WHO)",
+            "listIds": [
+                "master",
+                "1769152758115"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@WHO",
+                "linkedin": {
+                    "val": "@World Health Organization",
+                    "link": "https://www.linkedin.com/company/world-health-organization/"
+                },
+                "facebook": {
+                    "val": "@WHO",
+                    "link": "https://www.facebook.com/WHO"
+                },
+                "instagram": "@who",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.who.int/"
+                }
+            }
+        },
+        {
+            "id": 1769153116651.6199,
+            "name": "Department of Biotechnology",
+            "listIds": [
+                "master",
+                "1769152758115"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@DBTIndia",
+                "linkedin": {
+                    "val": "@Department of Biotechnology",
+                    "link": "https://www.linkedin.com/company/dbtindia/"
+                },
+                "facebook": {
+                    "val": "@DBTInd",
+                    "link": "https://www.facebook.com/DBTInd"
+                },
+                "instagram": "@dbt_india",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://dbtindia.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153116651.3987,
+            "name": "Institut Pasteur",
+            "listIds": [
+                "master",
+                "1769152758115"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@institutpasteur",
+                "linkedin": {
+                    "val": "@Institut Pasteur",
+                    "link": "https://www.linkedin.com/company/institut-pasteur/"
+                },
+                "facebook": {
+                    "val": "@InstitutPasteur",
+                    "link": "https://www.facebook.com/InstitutPasteur"
+                },
+                "instagram": "@institut.pasteur",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.pasteur.fr/fr"
+                }
+            }
+        },
+        {
+            "id": 1769153133691.2227,
+            "name": "The Medical Device Manufacturers Association (MDMA)",
+            "listIds": [
+                "master",
+                "1769152766592"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@medicaldevices",
+                "linkedin": {
+                    "val": "@Medical Device Manufacturers Association (MDMA)",
+                    "link": "https://www.linkedin.com/company/mdma-medicaldevices/"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.medicaldevices.org/"
+                }
+            }
+        },
+        {
+            "id": 1769153133691.6184,
+            "name": "AdvaMed",
+            "listIds": [
+                "master",
+                "1769152766592"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@AdvaMedUpdate",
+                "linkedin": {
+                    "val": "@AdvaMed",
+                    "link": "https://www.linkedin.com/company/advamed/"
+                },
+                "facebook": {
+                    "val": "@AdvaMed",
+                    "link": "https://www.facebook.com/AdvaMed"
+                },
+                "instagram": "@advamed",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.advamed.org/"
+                }
+            }
+        },
+        {
+            "id": 1769153133691.1443,
+            "name": "APACMed",
+            "listIds": [
+                "master",
+                "1769152766592"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@APACMed",
+                "linkedin": {
+                    "val": "@Asia Pacific Medical Technology Association (APACMed)",
+                    "link": "https://www.linkedin.com/company/asia-pacific-medical-technology-association/?originalSubdomain=sg"
+                },
+                "facebook": {
+                    "val": "@APACMed",
+                    "link": "https://www.facebook.com/APACMed/"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://apacmed.org/"
+                }
+            }
+        },
+        {
+            "id": 1769153133691.2207,
+            "name": "Consultants Consortium of Chennai (CCC)",
+            "listIds": [
+                "master",
+                "1769152766592"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ccofchennai",
+                "linkedin": {
+                    "val": "@Consultants Consortium of Chennai - CCC",
+                    "link": "https://www.linkedin.com/company/ccofchennai/"
+                },
+                "facebook": {
+                    "val": "@ccofchennai",
+                    "link": "https://www.facebook.com/ccofchennai/"
+                },
+                "instagram": "@ccchennai",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://ccc-consultants.org/"
+                }
+            }
+        },
+        {
+            "id": 1769153149837.3848,
+            "name": "Wheelchair Basketball Federation of India",
+            "listIds": [
+                "master",
+                "1769152769571"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@wbfi_info",
+                "linkedin": {
+                    "val": "@Wheelchair Basketball Federation of India",
+                    "link": "https://www.linkedin.com/company/wheelchair-basketball-federation-of-india/"
+                },
+                "facebook": {
+                    "val": "@wbfiindia",
+                    "link": "https://www.facebook.com/wbfiindia/"
+                },
+                "instagram": "@wbfiindia",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.wbfi.org.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153149837.529,
+            "name": "Ministry of Social Justice & Empowerment, GOI",
+            "listIds": [
+                "master",
+                "1769152769571"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@MSJEGOI",
+                "linkedin": {
+                    "val": "@Ministry of Social Justice & Empowerment, GOI",
+                    "link": "https://www.linkedin.com/company/ministry-of-social-justice-empowerment-goi/"
+                },
+                "facebook": {
+                    "val": "@goimsje",
+                    "link": "https://www.facebook.com/goimsje"
+                },
+                "instagram": "@msjegoi",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://socialjustice.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153149837.611,
+            "name": "Bhagavatula Charitable Trust",
+            "listIds": [
+                "master",
+                "1769152769571"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@bct_ngo",
+                "linkedin": {
+                    "val": "@Bhagavatula Charitable Trust",
+                    "link": "https://www.linkedin.com/company/bctindia/"
+                },
+                "facebook": {
+                    "val": "@bctorg",
+                    "link": "https://www.facebook.com/bctorg#"
+                },
+                "instagram": "@bct_india",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.bctindia.org/"
+                }
+            }
+        },
+        {
+            "id": 1769153149837.1238,
+            "name": "Boccia India",
+            "listIds": [
+                "master",
+                "1769152769571"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@bocciaindia",
+                "linkedin": {
+                    "val": "@Boccia India",
+                    "link": "https://www.linkedin.com/company/boccia-india/"
+                },
+                "facebook": {
+                    "val": "@bocciaindia",
+                    "link": "https://www.facebook.com/bocciaindia"
+                },
+                "instagram": "@artistsaritadwivedi",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://bocciaindia.com/"
+                }
+            }
+        },
+        {
+            "id": 1769153149837.797,
+            "name": "Inclusive Divyangjan Entrepreneur Association-IDEA",
+            "listIds": [
+                "master",
+                "1769152769571"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@idea4newindia",
+                "linkedin": {
+                    "val": "@Inclusive Divyangjan Entrepreneur Association - IDEA",
+                    "link": "https://www.linkedin.com/company/idea4newindia/"
+                },
+                "facebook": {
+                    "val": "@idea4newindia",
+                    "link": "https://www.facebook.com/idea4newindia/"
+                },
+                "instagram": "@idea4newindia",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769153149837.0828,
+            "name": "Paralympic Committee of India",
+            "listIds": [
+                "master",
+                "1769152769571"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@PCI_IN_Official",
+                "linkedin": {
+                    "val": "@Paralympic Committee of India",
+                    "link": "https://www.linkedin.com/company/pci-official/"
+                },
+                "facebook": {
+                    "val": "@ParalympicCommitteeOfIndia",
+                    "link": "https://www.facebook.com/ParalympicCommitteeOfIndia/"
+                },
+                "instagram": "@paralympicsindia_official",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.paralympicindia.com/"
+                }
+            }
+        },
+        {
+            "id": 1769153149837.6753,
+            "name": "Paralympic India",
+            "listIds": [
+                "master",
+                "1769152769571"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ParalympicIndia",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@paralympicindia",
+                    "link": "https://www.facebook.com/paralympicindia/"
+                },
+                "instagram": "@paralympicindia",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.paralympicindia.org.in/"
+                }
+            }
+        },
+        {
+            "id": 1769153149837.5984,
+            "name": "International Wheelchair Basketball Federation",
+            "listIds": [
+                "master",
+                "1769152769571"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@IWBF",
+                "linkedin": {
+                    "val": "@International Wheelchair Basketball Federation (IWBF)",
+                    "link": "https://www.linkedin.com/company/international-wheelchair-basketball-federation/"
+                },
+                "facebook": {
+                    "val": "@IWBF",
+                    "link": "https://www.facebook.com/InternationalWheelchairBasketballFederation"
+                },
+                "instagram": "@int_wheelchair_basketball_fed",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.iwbf.org/"
+                }
+            }
+        },
+        {
+            "id": 1769153149837.2834,
+            "name": "ICRC New Delhi",
+            "listIds": [
+                "master",
+                "1769152769571"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ICRC_nd",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://blogs.icrc.org/new-delhi/"
+                }
+            }
+        },
+        {
+            "id": 1769153149837.1638,
+            "name": "Orthotics and Prosthetics Association of India",
+            "listIds": [
+                "master",
+                "1769152769571"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@OPAI_India",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@Opai-India",
+                    "link": "https://www.facebook.com/people/Opai-India/pfbid0ARH4Co13qacWEfEzcYrQvZAfKb5cqDaEHW5u3s6icqwWkhMMHc7a1GctwkHmExwhl/"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://opai.org.in/"
                 }
             }
         }
