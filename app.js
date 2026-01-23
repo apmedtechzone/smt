@@ -2,18 +2,14 @@
 // 1. DATABASE CONFIGURATION
 // ==========================================
 const defaultDB = {
-    lists: [{ id: 'master', name: '★ Master List' }, { id: 'l2', name: 'Biovalley Project' }],
-    cats: [{ id: 'c1', name: 'COE' }, { id: 'c2', name: 'MILD' }],
-    orgs: [{ 
-        id: 1715420000000, name: 'Andhra Pradesh MedTech Zone',
-        listIds: ['master', 'l2'], catIds: ['c1'],
-        tags: {
-            twitter: '@amtz_ltd', instagram: '@amtz_official',
-            linkedin: { val: '@amtzltd', link: 'https://linkedin.com/company/amtz' },
-            facebook: { val: '@amtzindia', link: 'https://facebook.com/amtz' },
-            website: { val: 'Visit Site', link: 'https://amtz.in' }
+    "lists": [
+        {
+            "id": "master",
+            "name": "★ Master List"
         }
-    }]
+    ],
+    "cats": [],
+    "orgs": []
 };
 
 // ==========================================
