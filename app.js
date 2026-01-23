@@ -3,10 +3,668 @@
 // ==========================================
 const defaultDB = {
     "lists": [
-        { "id": "master", "name": "★ Master List" }
+        {
+            "id": "master",
+            "name": "★ Master List"
+        },
+        {
+            "id": "1769152748576",
+            "name": "AMTZ"
+        },
+        {
+            "id": "1769152751181",
+            "name": "KIHT"
+        },
+        {
+            "id": "1769152754642",
+            "name": "COE"
+        },
+        {
+            "id": "1769152758115",
+            "name": "WHIF"
+        },
+        {
+            "id": "1769152761251",
+            "name": "IBSC"
+        },
+        {
+            "id": "1769152763902",
+            "name": "WTC"
+        },
+        {
+            "id": "1769152766592",
+            "name": "KCS"
+        },
+        {
+            "id": "1769152769571",
+            "name": "ALC"
+        },
+        {
+            "id": "1769152774058",
+            "name": "BioValley"
+        },
+        {
+            "id": "1769152779600",
+            "name": "MediValley"
+        }
     ],
     "cats": [],
-    "orgs": []
+    "orgs": [
+        {
+            "id": 1769152845342.9998,
+            "name": "Indian Council Of Medical Research",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ICMRDELHI",
+                "linkedin": {
+                    "val": "@Indian Council of Medical Research (ICMR)",
+                    "link": "https://www.linkedin.com/company/icmrorganization/"
+                },
+                "facebook": {
+                    "val": "@ICMROrganisation",
+                    "link": "https://www.facebook.com/ICMROrganisation"
+                },
+                "instagram": "@icmrorganisation",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.icmr.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845342.34,
+            "name": "Ministry of Health and Family Welfare, Government of India",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@MoHFW_INDIA",
+                "linkedin": {
+                    "val": "@Ministry of Health and Family Welfare, Government of India",
+                    "link": "https://www.linkedin.com/company/%E5%93%87%E5%96%94/"
+                },
+                "facebook": {
+                    "val": "@MoHFWIndia",
+                    "link": "https://www.facebook.com/MoHFWIndia/"
+                },
+                "instagram": "@mohfwindia",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://mohfw.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.2192,
+            "name": "Invest India",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@investindia",
+                "linkedin": {
+                    "val": "@Invest India",
+                    "link": "https://www.linkedin.com/company/invest-india/"
+                },
+                "facebook": {
+                    "val": "@InvestIndiaIPA",
+                    "link": "https://www.facebook.com/InvestIndiaIPA/"
+                },
+                "instagram": "@investindiaofficial",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.investindia.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.7021,
+            "name": "TiE Vizag",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@TiEVizag",
+                "linkedin": {
+                    "val": "@TiE Vizag",
+                    "link": "https://www.linkedin.com/company/tievizag/"
+                },
+                "facebook": {
+                    "val": "@TiEVizag",
+                    "link": "https://www.facebook.com/TiEVizag"
+                },
+                "instagram": "@tievizag",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://vizag.tie.org/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.3083,
+            "name": "TiE Global",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@TiEGlobal",
+                "linkedin": {
+                    "val": "@TiE",
+                    "link": "https://www.linkedin.com/company/tieglobal1/"
+                },
+                "facebook": {
+                    "val": "@TiEGlobal1",
+                    "link": "https://www.facebook.com/TiEGlobal1/"
+                },
+                "instagram": "@tieglobal_",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://tie.org/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.1897,
+            "name": "Ficci",
+            "listIds": [
+                "master",
+                "1769152748576"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ficci_india",
+                "linkedin": {
+                    "val": "@FICCI",
+                    "link": "https://www.linkedin.com/company/ficci/"
+                },
+                "facebook": {
+                    "val": "@ficciindia",
+                    "link": "https://www.facebook.com/ficciindia"
+                },
+                "instagram": "@ficci_india",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.ficci.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.053,
+            "name": "World Trade Center AMTZ",
+            "listIds": [
+                "master",
+                "1769152748576"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@wtcamtz",
+                "linkedin": {
+                    "val": "@World Trade Center AMTZ",
+                    "link": "https://www.linkedin.com/company/world-trade-center-wtc-amtz-business-centre/"
+                },
+                "facebook": {
+                    "val": "@World-Trade-Center-AMTZ",
+                    "link": "https://www.facebook.com/people/World-Trade-Center-AMTZ"
+                },
+                "instagram": "@wtcamtz",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.amtz.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.459,
+            "name": "Andhra & Amaravati Updates",
+            "listIds": [
+                "master",
+                "1769152748576"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@AP_CRDANews",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.3313,
+            "name": "Indian Biomedical Skill Consortium",
+            "listIds": [
+                "master",
+                "1769152748576"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ibsc_skill",
+                "linkedin": {
+                    "val": "@Indian Biomedical Skill Consortium",
+                    "link": "https://www.linkedin.com/company/ibsc-indian-biomedical-skill-consortium-promoting-biomedical-engineering-skill-training-programs/"
+                },
+                "facebook": {
+                    "val": "@IBSCskill",
+                    "link": "https://www.facebook.com/IBSCskill/"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "http://www.ibsc-amtz.in"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.9583,
+            "name": "Association of Indian Medical Devices Industry",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@MiIAiMeD",
+                "linkedin": {
+                    "val": "@Association of Indian Medical Device Industry (AIMED)",
+                    "link": "https://www.linkedin.com/company/association-of-indian-medical-device-industry-aimed-"
+                },
+                "facebook": {
+                    "val": "@Aimedindia2017",
+                    "link": "https://www.facebook.com/Aimedindia2017"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.aimedindia.com/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.865,
+            "name": "CoE Additive Manufacturing - MDS",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@CoE_AM_MDS",
+                "linkedin": {
+                    "val": "@CoE Additive Manufacturing-MDS",
+                    "link": "https://www.linkedin.com/company/center-of-excellence-for-additive-manufacturing-medical-device-sector-coe-am-mds"
+                },
+                "facebook": {
+                    "val": "@CoE-Additive-Manufacturing-MDS",
+                    "link": "https://www.facebook.com/people/CoE-Additive-Manufacturing-MDS/61563391881588/"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://coe.amtz.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.2852,
+            "name": "Kalam Institute Of Health Technology",
+            "listIds": [
+                "master",
+                "1769152748576"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@KIHTech",
+                "linkedin": {
+                    "val": "@Kalam Institute Of Health Technology",
+                    "link": "https://www.linkedin.com/company/kalam-institute-of-health-technology-2016"
+                },
+                "facebook": {
+                    "val": "@KIHTech",
+                    "link": "https://www.facebook.com/KIHTech"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://kiht.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.4985,
+            "name": "Bio Valley Incubation Council",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {
+                "1769152751181": 1769152893947
+            },
+            "tags": {
+                "twitter": "@Biovalley2",
+                "linkedin": {
+                    "val": "@Bio Valley Incubation Council",
+                    "link": "https://www.linkedin.com/company/bio-valley-incubation-council-amtz-bio-technology-incubators-biotech-incubation-centre"
+                },
+                "facebook": {
+                    "val": "@Biovalley-Incubation-Council",
+                    "link": "https://www.facebook.com/people/Biovalley-Incubation-Council/61563349198355/"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.biovalley-amtz.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.5867,
+            "name": "Confederation of Indian Industry",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@FollowCII",
+                "linkedin": {
+                    "val": "@Confederation of Indian Industry",
+                    "link": "https://www.linkedin.com/company/confederation-of-indian-industry/"
+                },
+                "facebook": {
+                    "val": "@FollowCII",
+                    "link": "https://www.facebook.com/FollowCII/"
+                },
+                "instagram": "@followcii",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.cii.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.9219,
+            "name": "Medivalley Incubation Council",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@MediValleyAMTZ",
+                "linkedin": {
+                    "val": "@AIC-AMTZ MediValley || NITI Aayog, GoI.",
+                    "link": "https://www.linkedin.com/company/aic-medivalley/"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.medivalley-aic.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.3103,
+            "name": "Ficci Heal",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ficci_heal",
+                "linkedin": {
+                    "val": "@FICCI Health Services",
+                    "link": "https://www.linkedin.com/company/ficci-healthcare-excellence-awards/"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "@ficcihealthservices",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://health.ficci.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.0981,
+            "name": "Andhra Pradesh Infra Story",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@APInfraStory",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@AndhraPradeshInfraStory",
+                    "link": "https://www.facebook.com/AndhraPradeshInfraStory/"
+                },
+                "instagram": "@apinfra_story",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.4634,
+            "name": "Vizag - A Predestined City",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@destined_vizag2",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769152845343.8293,
+            "name": "Vizag- The beautiful city of destiny",
+            "listIds": [
+                "master",
+                "1769152748576",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@mywaltair",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769152862673.18,
+            "name": "Andhra Pradesh MedTech Zone Limited",
+            "listIds": [
+                "master",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@AP_MedTechZone",
+                "linkedin": {
+                    "val": "@Andhra Pradesh MedTech Zone Limited",
+                    "link": "https://www.linkedin.com/company/andhra-pradesh-medtech-zone-limited-medical-technology-park-in-india/"
+                },
+                "facebook": {
+                    "val": "@amtzltd",
+                    "link": "https://www.facebook.com/amtzltd/"
+                },
+                "instagram": "@apmedtechzone",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://amtz.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152862673.6936,
+            "name": "Health Technology Assessment in India",
+            "listIds": [
+                "master",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@DhrHtain",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://htain.dhr.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769152862673.3203,
+            "name": "JBI",
+            "listIds": [
+                "master",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@JBIEBHC",
+                "linkedin": {
+                    "val": "@JBI",
+                    "link": "https://www.linkedin.com/company/jbiebhc/"
+                },
+                "facebook": {
+                    "val": "@JBIEBHC",
+                    "link": "https://www.facebook.com/JBIEBHC/"
+                },
+                "instagram": "@jbiebhc",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://jbi.global/"
+                }
+            }
+        },
+        {
+            "id": 1769152862673.845,
+            "name": "ISPOR",
+            "listIds": [
+                "master",
+                "1769152751181"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ISPORorg",
+                "linkedin": {
+                    "val": "@ISPOR—The Professional Society for Health Economics and Outcomes Research",
+                    "link": "https://www.linkedin.com/company/ispororg/"
+                },
+                "facebook": {
+                    "val": "@ISPORorg",
+                    "link": "https://www.facebook.com/ISPORorg/#"
+                },
+                "instagram": "@ispororg",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.ispor.org/"
+                }
+            }
+        }
+    ]
 };
 
 // ==========================================
