@@ -1,5 +1,5 @@
 // ==========================================
-// 1. DATABASE CONFIGURATION & RECOVERY
+// 1. DATABASE CONFIGURATION
 // ==========================================
 const defaultDB = {
     lists: [{ id: 'master', name: '★ Master List' }, { id: 'l2', name: 'Biovalley Project' }],
@@ -16,15 +16,7 @@ const defaultDB = {
     }]
 };
 
-// CRITICAL RECOVERY LOGIC: 
-// 1. Check if the user has data in their Local Storage.
-// 2. If not, use the data hard-coded in this file (which is what you saved to GitHub last time).
-let db = JSON.parse(localStorage.getItem('amtz_db'));
-
-if (!db || !db.orgs || db.orgs.length <= 1) {
-    db = defaultDB; // Recover from GitHub file
-    localStorage.setItem('amtz_db', JSON.stringify(db)); // Re-sync local storage
-}
+let db = JSON.parse(localStorage.getItem('amtz_db')) || defaultDB;
 
 // ==========================================
 // 2. STATE & INIT
@@ -71,8 +63,7 @@ async function copyConfig() {
     localStorage.setItem('amtz_db', JSON.stringify(db));
     try {
         showToast("Generating full code...", "success");
-        // FIX: Remove cache buster query for the fetch request so it finds the clean file
-        const response = await fetch(window.location.href.split('?')[0].replace('index.html','') + 'app.js');
+        const response = await fetch('app.js');
         if (!response.ok) throw new Error("Network response was not ok");
         let sourceCode = await response.text();
         const newDataString = `const defaultDB = ${JSON.stringify(db, null, 4)};`;
@@ -112,12 +103,15 @@ function debouncedRender() {
 }
 
 // ==========================================
-// 4. RENDER ENGINE
+// 4. RENDER ENGINE (SMART SEARCH UPDATE)
 // ==========================================
 function renderTable() {
     const listId = document.getElementById('filter-list').value;
     const catId = document.getElementById('filter-cat').value;
     
+    // SMART SEARCH LOGIC: 
+    // 1. Split by comma (OR logic)
+    // 2. Split by space (AND logic inside groups)
     const rawSearch = document.getElementById('search-bar').value.toLowerCase();
     const searchGroups = rawSearch.split(',').map(s => s.trim()).filter(s => s !== '');
     
@@ -136,8 +130,11 @@ function renderTable() {
                 if(typeof t === 'string') txt += " " + t.toLowerCase();
                 else if(t && t.val) txt += " " + t.val.toLowerCase() + " " + (t.link||"").toLowerCase();
             });
+
+            // Return true if matches ANY of the comma-separated groups
             return searchGroups.some(group => {
                 const terms = group.split(' ').filter(t => t);
+                // Within a group, must match ALL terms (e.g., "Ministry Health")
                 return terms.every(term => txt.includes(term));
             });
         }
@@ -168,6 +165,7 @@ function renderTable() {
 function exportToCSV() {
     const listId = document.getElementById('filter-list').value;
     const catId = document.getElementById('filter-cat').value;
+    
     const rawSearch = document.getElementById('search-bar').value.toLowerCase();
     const searchGroups = rawSearch.split(',').map(s => s.trim()).filter(s => s !== '');
     
