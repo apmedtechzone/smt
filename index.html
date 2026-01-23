@@ -3,25 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-
     <title>AMTZ Tags Pro</title>
-    
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <script>
-        const version = Date.now(); // Creates a unique number for this exact second
-        
-        // Load Stylesheet
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = `style.css?v=${version}`;
-        document.head.appendChild(link);
-    </script>
 </head>
 <body>
 
@@ -32,15 +17,15 @@
         </div>
         <div class="nav-right">
             <div id="admin-panel" class="hidden fade-in">
-                <span class="status-badge"><i class="fa-solid fa-shield-halved"></i> Admin Mode</span>
+                <span class="status-badge"><i class="fa-solid fa-shield-halved"></i> Admin</span>
                 <button class="btn-glass" onclick="openModal('meta-modal')">
-                    <i class="fa-solid fa-list-check"></i> Lists
+                    <i class="fa-solid fa-list-check"></i> Lists & Cats
                 </button>
                 <button class="btn-glass" onclick="openModal('bulk-modal')">
-                    <i class="fa-solid fa-table-list"></i> Upload
+                    <i class="fa-solid fa-table-list"></i> Bulk Upload
                 </button>
                 <button class="btn-primary-action" onclick="copyConfig()">
-                    <i class="fa-solid fa-floppy-disk"></i> Save Data
+                    <i class="fa-solid fa-floppy-disk"></i> Save
                 </button>
                 <button class="btn-icon-only" onclick="logout()" title="Logout">
                     <i class="fa-solid fa-power-off"></i>
@@ -70,27 +55,16 @@
                 <label>Search Directory</label>
                 <div class="input-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="search-bar" placeholder="Name, @tag, website..." onkeyup="debouncedRender()">
+                    <input type="text" id="search-bar" placeholder="Name, @tag, website..." onkeyup="renderTable()">
                 </div>
             </div>
-            <div class="action-wrapper">
+            <div class="action-wrapper hidden" id="add-org-wrapper">
                 <label>&nbsp;</label>
-                <div class="flex-actions">
-                    <button class="btn-secondary btn-icon" onclick="exportToCSV()" title="Export View to CSV">
-                        <i class="fa-solid fa-download"></i>
-                    </button>
-                    <button id="add-btn" class="btn-add hidden" onclick="openOrgModal()">
-                        <i class="fa-solid fa-plus"></i> Add
-                    </button>
-                </div>
+                <button class="btn-add" onclick="openOrgModal()">
+                    <i class="fa-solid fa-plus"></i> Add Org
+                </button>
             </div>
         </header>
-
-        <div class="stats-bar">
-            <span id="stats-count">Loading...</span>
-            <span class="separator">•</span>
-            <span id="stats-filter">All Records</span>
-        </div>
 
         <main class="table-card">
             <div class="table-scroll">
@@ -128,25 +102,19 @@
                                     <button class="copy-mini" onclick="copyColumn('website')"><i class="fa-regular fa-copy"></i></button>
                                 </div>
                             </th>
-                            <th class="col-action hidden">Action</th>
+                            <th class="col-action hidden">Edit</th>
                         </tr>
                     </thead>
                     <tbody id="table-body"></tbody>
                 </table>
             </div>
             <div id="empty-state" class="empty-state hidden">
-                <i class="fa-solid fa-filter-circle-xmark"></i>
+                <i class="fa-solid fa-magnifying-glass-minus"></i>
                 <p>No organizations found matching your filters.</p>
-                <button class="btn-text" onclick="resetFilters()">Reset Filters</button>
             </div>
         </main>
-        
-        <div class="footer-note">
-            AMTZ Tags Pro v3.2 &bull; Auto-Update System Active
-        </div>
+        <div class="footer-note">AMTZ Tags Pro v3.1 &bull; Optimized Layout</div>
     </div>
-
-    <div id="toast-container"></div>
 
     <div id="login-modal" class="modal hidden">
         <div class="modal-card small">
@@ -171,8 +139,8 @@
                 </div>
                 <div class="divider">Social Presence</div>
                 <div class="social-grid">
-                    <div class="social-item"><label><i class="fa-brands fa-twitter text-twitter"></i> Twitter</label><input type="text" id="tag-twitter" class="input-std" placeholder="@handle"></div>
-                    <div class="social-item"><label><i class="fa-brands fa-instagram text-insta"></i> Instagram</label><input type="text" id="tag-instagram" class="input-std" placeholder="@handle"></div>
+                    <div class="social-item"><label><i class="fa-brands fa-twitter text-twitter"></i> Twitter</label><input type="text" id="tag-twitter" class="input-std"></div>
+                    <div class="social-item"><label><i class="fa-brands fa-instagram text-insta"></i> Instagram</label><input type="text" id="tag-instagram" class="input-std"></div>
                     <div class="social-item span-2"><label><i class="fa-brands fa-linkedin text-linkedin"></i> LinkedIn</label><div class="input-group"><input type="text" id="tag-linkedin-val" class="input-std" placeholder="Display Tag (@)"><input type="text" id="tag-linkedin-link" class="input-std" placeholder="Full Link URL"></div></div>
                     <div class="social-item span-2"><label><i class="fa-brands fa-facebook text-facebook"></i> Facebook</label><div class="input-group"><input type="text" id="tag-facebook-val" class="input-std" placeholder="Display Tag (@)"><input type="text" id="tag-facebook-link" class="input-std" placeholder="Full Link URL"></div></div>
                     <div class="social-item span-2"><label><i class="fa-solid fa-globe text-web"></i> Website</label><div class="input-group"><input type="text" id="tag-website-val" class="input-std" placeholder="Display Text"><input type="text" id="tag-website-link" class="input-std" placeholder="Full Link URL"></div></div>
@@ -194,7 +162,7 @@
                     <table class="bulk-grid-table">
                         <thead>
                             <tr>
-                                <th style="width: 220px;">Org Name *</th>
+                                <th style="width: 200px;">Org Name *</th>
                                 <th style="width: 140px;">Twitter (@)</th>
                                 <th style="width: 140px;">LinkedIn (@)</th>
                                 <th>LinkedIn (Link)</th>
@@ -207,7 +175,7 @@
                         <tbody id="bulk-tbody"></tbody>
                     </table>
                 </div>
-                <p class="small-text mt-5 text-muted">* Tags without '@' will be ignored. Paste Excel data directly into the grid.</p>
+                <p class="small-text mt-5 text-muted">* <strong>Note:</strong> Tags without '@' will be ignored.</p>
                 <button class="btn-secondary mt-15" onclick="addBulkRows(5)">+ Add 5 More Rows</button>
             </div>
             <div class="modal-foot">
@@ -221,7 +189,7 @@
         <div class="modal-card large">
             <div class="modal-head"><h3><i class="fa-solid fa-triangle-exclamation text-warn"></i> Conflicts Detected</h3><span class="badge-count" id="conflict-count">0</span></div>
             <div class="modal-body">
-                <div class="conflict-header"><button class="btn-text" onclick="resolveAll('ignore')">Ignore (Keep Old)</button><button class="btn-primary-action btn-sm" onclick="resolveAll('overwrite')">Overwrite All</button></div>
+                <div class="conflict-header"><button class="btn-text" onclick="resolveAll('ignore')">Ignore (Add to List)</button><button class="btn-primary-action btn-sm" onclick="resolveAll('overwrite')">Overwrite (Update Tags)</button></div>
                 <div id="conflict-list" class="conflict-container"></div>
             </div>
             <div class="modal-foot"><button class="btn-text" onclick="closeModal('conflict-modal')">Cancel All</button></div>
@@ -267,10 +235,6 @@
         </div>
     </div>
 
-    <script>
-        const script = document.createElement('script');
-        script.src = `app.js?v=${version}`;
-        document.body.appendChild(script);
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
