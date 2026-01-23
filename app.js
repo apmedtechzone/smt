@@ -17,15 +17,14 @@ const defaultDB = {
 };
 
 // ==========================================
-// 2. STATE & SECURITY INIT (THE CORE FIX)
+// 2. STATE & SECURITY INIT
 // ==========================================
 let isAdmin = false;
-let db = defaultDB; // Start by assuming normal user (sees ONLY server data)
+let db = defaultDB; // Start with default data
 
-// Check if current user is Admin
+// Check if current user is already an Admin
 if (localStorage.getItem('amtz_admin') === 'true') {
     isAdmin = true;
-    // IF ADMIN: Check if they have unsaved work in LocalStorage
     const localWork = localStorage.getItem('amtz_db');
     if (localWork) {
         db = JSON.parse(localWork);
@@ -70,7 +69,6 @@ function initDropdowns() {
 // ==========================================
 // 3. UTILITIES & TOASTS
 // ==========================================
-// ADMIN ONLY: Saves work to local storage so they don't lose it on refresh
 function saveDataLocally() {
     if (isAdmin) {
         localStorage.setItem('amtz_db', JSON.stringify(db));
@@ -81,7 +79,6 @@ async function copyConfig() {
     saveDataLocally();
     try {
         showToast("Generating full code...", "success");
-        // Fetches clean app.js without the cache buster URL parameter
         const response = await fetch(window.location.href.split('?')[0].replace('index.html','') + 'app.js');
         if (!response.ok) throw new Error("Network response was not ok");
         let sourceCode = await response.text();
@@ -118,13 +115,12 @@ function debouncedRender() {
 }
 
 // ==========================================
-// 4. RENDER ENGINE (SMART SEARCH)
+// 4. RENDER ENGINE
 // ==========================================
 function renderTable() {
     const listId = document.getElementById('filter-list').value;
     const catId = document.getElementById('filter-cat').value;
     
-    // Split by comma (OR logic), then by space (AND logic)
     const rawSearch = document.getElementById('search-bar').value.toLowerCase();
     const searchGroups = rawSearch.split(',').map(s => s.trim()).filter(s => s !== '');
     
@@ -143,7 +139,6 @@ function renderTable() {
                 if(typeof t === 'string') txt += " " + t.toLowerCase();
                 else if(t && t.val) txt += " " + t.val.toLowerCase() + " " + (t.link||"").toLowerCase();
             });
-            // Return true if matches ANY of the comma-separated groups
             return searchGroups.some(group => {
                 const terms = group.split(' ').filter(t => t);
                 return terms.every(term => txt.includes(term));
@@ -305,8 +300,11 @@ function removeSelectedFromMeta() {
     if (!confirm(`Remove ${idsToRemove.length} organizations from this list?`)) return;
     db.orgs.forEach(org => {
         if (idsToRemove.includes(org.id)) {
-            if (targetType === 'lists') org.listIds = org.listIds.filter(id => id !== targetId);
-            else org.catIds = org.catIds.filter(id => id !== targetId);
+            if (targetType === 'lists') {
+                org.listIds = org.listIds.filter(id => id !== targetId);
+            } else {
+                org.catIds = org.catIds.filter(id => id !== targetId);
+            }
         }
     });
     saveDataLocally(); renderTable(); closeModal('edit-meta-modal'); alert("Removed successfully.");
@@ -435,16 +433,45 @@ function resolveConflict(id, action) {
 function resolveAll(act) { [...pendingConflicts].forEach(c=>resolveConflict(c.id,act)); }
 
 // ==========================================
-// 7. ADMIN & AUTH (LOGOUT FIX HERE)
+// 7. ADMIN & AUTH (THE FIX)
 // ==========================================
-function login() { if(document.getElementById('login-email').value==='saragadamteja.k@amtz.in' && document.getElementById('login-pass').value==='9989'){ isAdmin=true; localStorage.setItem('amtz_admin', 'true'); updateUIForAdmin(); closeModal('login-modal'); showToast("Logged in"); } else showToast("Invalid Credentials", "error"); }
-function checkAdminStatus() { if(localStorage.getItem('amtz_admin') === 'true') { isAdmin = true; updateUIForAdmin(); } }
-function updateUIForAdmin() { document.getElementById('admin-panel').classList.remove('hidden'); document.getElementById('login-trigger').classList.add('hidden'); document.getElementById('add-org-wrapper').classList.remove('hidden'); document.querySelectorAll('.col-action').forEach(el=>el.classList.remove('hidden')); }
+function login() { 
+    if(document.getElementById('login-email').value==='saragadamteja.k@amtz.in' && document.getElementById('login-pass').value==='9989'){ 
+        isAdmin=true; 
+        localStorage.setItem('amtz_admin', 'true'); 
+        
+        // RE-LOAD data when logging in
+        const localWork = localStorage.getItem('amtz_db');
+        if (localWork) db = JSON.parse(localWork);
+        
+        updateUIForAdmin(); 
+        initDropdowns(); // CRITICAL FIX: Refresh dropdowns
+        renderTable();   // CRITICAL FIX: Refresh table
+        
+        closeModal('login-modal'); 
+        showToast("Logged in successfully"); 
+    } else {
+        showToast("Invalid Credentials", "error"); 
+    }
+}
 
-// LOGOUT: Destroys both Admin token AND Local Cache Database
+function checkAdminStatus() { 
+    if(localStorage.getItem('amtz_admin') === 'true') { 
+        isAdmin = true; 
+        updateUIForAdmin(); 
+    } 
+}
+
+function updateUIForAdmin() { 
+    document.getElementById('admin-panel').classList.remove('hidden'); 
+    document.getElementById('login-trigger').classList.add('hidden'); 
+    document.getElementById('add-btn').classList.remove('hidden'); // CRITICAL FIX: Match the new HTML ID
+    document.querySelectorAll('.col-action').forEach(el=>el.classList.remove('hidden')); 
+}
+
 function logout(){ 
     localStorage.removeItem('amtz_admin'); 
-    localStorage.removeItem('amtz_db'); // DELETES ADMIN'S LOCAL WORK
+    localStorage.removeItem('amtz_db'); // Clears data on logout
     location.reload(); 
 }
 
