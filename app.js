@@ -63,7 +63,8 @@ const defaultDB = {
                 "1769152751181",
                 "1769152774058",
                 "1769152758115",
-                "1769152769571"
+                "1769152769571",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -93,7 +94,8 @@ const defaultDB = {
                 "1769152751181",
                 "1769152774058",
                 "1769152758115",
-                "1769152769571"
+                "1769152769571",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1289,7 +1291,8 @@ const defaultDB = {
             "name": "Ministry of Social Justice & Empowerment, GOI",
             "listIds": [
                 "master",
-                "1769152769571"
+                "1769152769571",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1367,7 +1370,8 @@ const defaultDB = {
             "name": "Inclusive Divyangjan Entrepreneur Association-IDEA",
             "listIds": [
                 "master",
-                "1769152769571"
+                "1769152769571",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1393,7 +1397,8 @@ const defaultDB = {
             "name": "Paralympic Committee of India",
             "listIds": [
                 "master",
-                "1769152769571"
+                "1769152769571",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1419,7 +1424,8 @@ const defaultDB = {
             "name": "Paralympic India",
             "listIds": [
                 "master",
-                "1769152769571"
+                "1769152769571",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1522,7 +1528,8 @@ const defaultDB = {
             "id": 1769505351991.885,
             "name": "pro kabaddi",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1547,7 +1554,8 @@ const defaultDB = {
             "id": 1769505351991.8594,
             "name": "mallika nadda",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1572,7 +1580,8 @@ const defaultDB = {
             "id": 1769505351991.3948,
             "name": "wheeling happiness",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1597,7 +1606,8 @@ const defaultDB = {
             "id": 1769505351991.0256,
             "name": "indian para kabaddi",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1622,7 +1632,8 @@ const defaultDB = {
             "id": 1769505351991.317,
             "name": "devi malik",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1647,7 +1658,8 @@ const defaultDB = {
             "id": 1769505351991.9668,
             "name": "deepa malik",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1672,7 +1684,8 @@ const defaultDB = {
             "id": 1769505351991.378,
             "name": "jagseer singh",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1697,7 +1710,8 @@ const defaultDB = {
             "id": 1769505351991.7747,
             "name": "khel now",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1722,7 +1736,8 @@ const defaultDB = {
             "id": 1769505351991.6003,
             "name": "gosport voices",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1747,7 +1762,8 @@ const defaultDB = {
             "id": 1769505351991.4558,
             "name": "Department of Empowerment of Persons with Disabilities",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1772,7 +1788,8 @@ const defaultDB = {
             "id": 1769505351992.4092,
             "name": "Andhra Nexus",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1797,7 +1814,8 @@ const defaultDB = {
             "id": 1769505351992.566,
             "name": "Govenment of India",
             "listIds": [
-                "master"
+                "master",
+                "1769505334073"
             ],
             "catIds": [],
             "starredIn": {},
