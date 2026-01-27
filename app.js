@@ -50,6 +50,10 @@ const defaultDB = {
         {
             "id": "1769506748086",
             "name": "KCC_IEC"
+        },
+        {
+            "id": "1769515179766",
+            "name": "Para Kabaddi"
         }
     ],
     "cats": [],
@@ -63,7 +67,8 @@ const defaultDB = {
                 "1769152751181",
                 "1769152774058",
                 "1769152758115",
-                "1769152769571"
+                "1769152769571",
+                "1769515179766"
             ],
             "catIds": [],
             "starredIn": {},
@@ -94,7 +99,8 @@ const defaultDB = {
                 "1769152774058",
                 "1769152758115",
                 "1769152769571",
-                "1769506748086"
+                "1769506748086",
+                "1769515179766"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1300,7 +1306,8 @@ const defaultDB = {
             "name": "Ministry of Social Justice & Empowerment, GOI",
             "listIds": [
                 "master",
-                "1769152769571"
+                "1769152769571",
+                "1769515179766"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1378,7 +1385,8 @@ const defaultDB = {
             "name": "Inclusive Divyangjan Entrepreneur Association-IDEA",
             "listIds": [
                 "master",
-                "1769152769571"
+                "1769152769571",
+                "1769515179766"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1404,7 +1412,8 @@ const defaultDB = {
             "name": "Paralympic Committee of India",
             "listIds": [
                 "master",
-                "1769152769571"
+                "1769152769571",
+                "1769515179766"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1430,7 +1439,8 @@ const defaultDB = {
             "name": "Paralympic India",
             "listIds": [
                 "master",
-                "1769152769571"
+                "1769152769571",
+                "1769515179766"
             ],
             "catIds": [],
             "starredIn": {},
@@ -2060,7 +2070,8 @@ const defaultDB = {
             "name": "Andhra Nexus",
             "listIds": [
                 "master",
-                "1769506748086"
+                "1769506748086",
+                "1769515179766"
             ],
             "catIds": [],
             "starredIn": {},
@@ -2285,7 +2296,8 @@ const defaultDB = {
             "id": 1769506555914.748,
             "name": "Department of Empowerment of Persons with Disabilities",
             "listIds": [
-                "master"
+                "master",
+                "1769515179766"
             ],
             "catIds": [],
             "starredIn": {},
@@ -2830,6 +2842,266 @@ const defaultDB = {
                 "website": {
                     "val": "Visit Site",
                     "link": "https://www.ahpi.in/"
+                }
+            }
+        },
+        {
+            "id": 1769515189820.4075,
+            "name": "pro kabaddi",
+            "listIds": [
+                "master",
+                "1769515179766"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ProKabaddi",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@ProKabaddi",
+                    "link": "https://www.facebook.com/ProKabaddi"
+                },
+                "instagram": "@prokabaddi",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.prokabaddi.com/"
+                }
+            }
+        },
+        {
+            "id": 1769515189820.9502,
+            "name": "mallika nadda",
+            "listIds": [
+                "master",
+                "1769515179766"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@DrMallikaNadda",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@DrMallikaNadda",
+                    "link": "https://www.facebook.com/DrMallikaNadda"
+                },
+                "instagram": "@malikanadda",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769515189821.51,
+            "name": "wheeling happiness",
+            "listIds": [
+                "master",
+                "1769515179766"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@wheelinghappiness",
+                    "link": "https://www.facebook.com/wheelinghappiness"
+                },
+                "instagram": "@wheelinghappiness",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://wheelinghappiness.org/?fbclid=IwZXh0bgNhZW0CMTAAYnJpZBExY3lBV0Q1ZGY5ZFNuUnUwV3NydGMGYXBwX2lkEDIyMjAzOTE3ODgyMDA4OTIAAR7RbAQHZ81EZshGtQsHhxnY6JVep5aFIIl2h1q_obTjginduXizqLkaE1RMLA_aem_nYjMdlOy6Z1C1KuqRfof-Q"
+                }
+            }
+        },
+        {
+            "id": 1769515189821.9824,
+            "name": "indian para kabaddi",
+            "listIds": [
+                "master",
+                "1769515179766"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "@indianparakabaddi",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769515189821.5576,
+            "name": "devi malik",
+            "listIds": [
+                "master",
+                "1769515179766"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@devikamalik_394",
+                "linkedin": {
+                    "val": "@Devika Malik",
+                    "link": "https://www.linkedin.com/in/devika-malik-a4377345/"
+                },
+                "facebook": {
+                    "val": "@devika.malikQYL",
+                    "link": "https://www.facebook.com/devika.malikQYL"
+                },
+                "instagram": "@devikamalik394",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769515189821.527,
+            "name": "deepa malik",
+            "listIds": [
+                "master",
+                "1769515179766"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@DeepaAthlete",
+                "linkedin": {
+                    "val": "@Dr. Deepa Malik",
+                    "link": "https://www.linkedin.com/in/deepamalikofficial/"
+                },
+                "facebook": {
+                    "val": "@officialdeepamalik",
+                    "link": "https://www.facebook.com/officialdeepamalik"
+                },
+                "instagram": "@deepa_paralympian",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769515189821.369,
+            "name": "jagseer singh",
+            "listIds": [
+                "master",
+                "1769515179766"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@jagseersingh19",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@jagseersinghofficial",
+                    "link": "https://www.facebook.com/jagseersinghofficial"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769515189821.1218,
+            "name": "khel now",
+            "listIds": [
+                "master",
+                "1769515179766"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@KhelNow",
+                "linkedin": {
+                    "val": "@Khel Now",
+                    "link": "https://www.linkedin.com/company/khel-now/"
+                },
+                "facebook": {
+                    "val": "@khelnow",
+                    "link": "https://www.facebook.com/KhelNowFootball"
+                },
+                "instagram": "@khelnow",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://khelnow.com/"
+                }
+            }
+        },
+        {
+            "id": 1769515189821.2,
+            "name": "gosport voices",
+            "listIds": [
+                "master",
+                "1769515179766"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@GoSportsVoices",
+                "linkedin": {
+                    "val": "@GoSports Foundation",
+                    "link": "https://www.linkedin.com/company/gosports-foundation/"
+                },
+                "facebook": {
+                    "val": "@GoSportsFoundation",
+                    "link": "https://www.facebook.com/GoSportsFoundation"
+                },
+                "instagram": "@gosportsvoices",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://gosports.in/"
+                }
+            }
+        },
+        {
+            "id": 1769515189822.026,
+            "name": "Govenment of India",
+            "listIds": [
+                "master",
+                "1769515179766"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@mygovindia",
+                "linkedin": {
+                    "val": "@MyGov India",
+                    "link": "https://www.linkedin.com/company/mygov-india/"
+                },
+                "facebook": {
+                    "val": "@MyGovIndia",
+                    "link": "https://www.facebook.com/MyGovIndia/"
+                },
+                "instagram": "@mygovindia",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.mygov.in/"
                 }
             }
         }
