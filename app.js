@@ -48,8 +48,8 @@ const defaultDB = {
             "name": "MediValley"
         },
         {
-            "id": "1769505334073",
-            "name": "Para Kabaddi"
+            "id": "1769506748086",
+            "name": "KCC_IEC"
         }
     ],
     "cats": [],
@@ -63,8 +63,7 @@ const defaultDB = {
                 "1769152751181",
                 "1769152774058",
                 "1769152758115",
-                "1769152769571",
-                "1769505334073"
+                "1769152769571"
             ],
             "catIds": [],
             "starredIn": {},
@@ -95,7 +94,7 @@ const defaultDB = {
                 "1769152774058",
                 "1769152758115",
                 "1769152769571",
-                "1769505334073"
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -125,7 +124,8 @@ const defaultDB = {
                 "1769152751181",
                 "1769152761251",
                 "1769152774058",
-                "1769152763902"
+                "1769152763902",
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -210,7 +210,8 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152763902"
+                "1769152763902",
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -324,7 +325,8 @@ const defaultDB = {
                 "1769152774058",
                 "1769152763902",
                 "1769152758115",
-                "1769152766592"
+                "1769152766592",
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -351,7 +353,8 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -378,7 +381,8 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152754642"
+                "1769152754642",
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -405,7 +409,8 @@ const defaultDB = {
             "listIds": [
                 "master",
                 "1769152748576",
-                "1769152751181"
+                "1769152751181",
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -435,7 +440,8 @@ const defaultDB = {
                 "1769152751181",
                 "1769152761251",
                 "1769152774058",
-                "1769152763902"
+                "1769152763902",
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -464,7 +470,8 @@ const defaultDB = {
                 "1769152748576",
                 "1769152751181",
                 "1769152774058",
-                "1769152766592"
+                "1769152766592",
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -493,7 +500,8 @@ const defaultDB = {
                 "1769152748576",
                 "1769152751181",
                 "1769152761251",
-                "1769152774058"
+                "1769152774058",
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -522,7 +530,8 @@ const defaultDB = {
                 "1769152748576",
                 "1769152751181",
                 "1769152761251",
-                "1769152774058"
+                "1769152774058",
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1291,8 +1300,7 @@ const defaultDB = {
             "name": "Ministry of Social Justice & Empowerment, GOI",
             "listIds": [
                 "master",
-                "1769152769571",
-                "1769505334073"
+                "1769152769571"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1370,8 +1378,7 @@ const defaultDB = {
             "name": "Inclusive Divyangjan Entrepreneur Association-IDEA",
             "listIds": [
                 "master",
-                "1769152769571",
-                "1769505334073"
+                "1769152769571"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1397,8 +1404,7 @@ const defaultDB = {
             "name": "Paralympic Committee of India",
             "listIds": [
                 "master",
-                "1769152769571",
-                "1769505334073"
+                "1769152769571"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1424,8 +1430,7 @@ const defaultDB = {
             "name": "Paralympic India",
             "listIds": [
                 "master",
-                "1769152769571",
-                "1769505334073"
+                "1769152769571"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1525,271 +1530,537 @@ const defaultDB = {
             }
         },
         {
-            "id": 1769505351991.885,
-            "name": "pro kabaddi",
+            "id": 1769506555913.2253,
+            "name": "Shripad Y. Naik",
             "listIds": [
-                "master",
-                "1769505334073"
+                "master"
             ],
             "catIds": [],
             "starredIn": {},
             "tags": {
-                "twitter": "@ProKabaddi",
+                "twitter": "@shripadynaik",
+                "linkedin": {
+                    "val": "@Shripad Naik",
+                    "link": "https://www.linkedin.com/in/shripad-naik/?originalSubdomain=in"
+                },
+                "facebook": {
+                    "val": "@Shripad Naik",
+                    "link": "https://www.facebook.com/shripadynaik?ref=embed_page"
+                },
+                "instagram": "@shripadyessonaik",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.shripadnaik.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.5623,
+            "name": "Ministry of New and Renewable Energy (MNRE)",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@mnreindia",
+                "linkedin": {
+                    "val": "@Ministry of New and Renewable Energy (MNRE)",
+                    "link": "https://www.linkedin.com/company/mnreindia/"
+                },
+                "facebook": {
+                    "val": "@Ministry of New and Renewable Energy (MNRE), Government of India",
+                    "link": "https://www.facebook.com/MNREMinistry/?ref_type=bookmark#"
+                },
+                "instagram": "@mnreindia",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://mnre.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.0066,
+            "name": "Citizen engagement platform of Government of India",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@mygovindia",
+                "linkedin": {
+                    "val": "@MyGov India",
+                    "link": "https://www.linkedin.com/company/mygov-india/"
+                },
+                "facebook": {
+                    "val": "@MyGovIndia",
+                    "link": "https://www.facebook.com/MyGovIndia/"
+                },
+                "instagram": "@mygovindia",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.mygov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.0015,
+            "name": "Ministry of Power",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@MinOfPower",
                 "linkedin": {
                     "val": "",
                     "link": "-"
                 },
                 "facebook": {
-                    "val": "@ProKabaddi",
-                    "link": "https://www.facebook.com/ProKabaddi"
+                    "val": "@Ministry of Power, Government of India",
+                    "link": "https://www.facebook.com/PowerMinistryIndia/?ref_typea#"
                 },
-                "instagram": "@prokabaddi",
+                "instagram": "@minofpower",
                 "website": {
                     "val": "Visit Site",
-                    "link": "https://www.prokabaddi.com/"
+                    "link": "https://powermin.gov.in/"
                 }
             }
         },
         {
-            "id": 1769505351991.8594,
-            "name": "mallika nadda",
+            "id": 1769506555914.5845,
+            "name": "NITI Aayog",
             "listIds": [
                 "master",
-                "1769505334073"
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
             "tags": {
-                "twitter": "@DrMallikaNadda",
+                "twitter": "@NITIAayog",
                 "linkedin": {
+                    "val": "@NITI Aayog",
+                    "link": "https://www.linkedin.com/company/nitiaayog/"
+                },
+                "facebook": {
+                    "val": "@NITIAayog",
+                    "link": "https://www.facebook.com/NITIAayog/"
+                },
+                "instagram": "@niti.aayog",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.niti.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.5347,
+            "name": "Ministry of Ayush",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@moayush",
+                "linkedin": {
+                    "val": "@Ministry of Ayush",
+                    "link": "https://www.linkedin.com/company/ministry-of-ayush/?originalSubdomain=in"
+                },
+                "facebook": {
+                    "val": "@Ministry of Ayush, Government of India",
+                    "link": "https://www.facebook.com/moayush?ref=embed_page"
+                },
+                "instagram": "@ministryofayush",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://ayush.gov.in/#!/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.4236,
+            "name": "Make in India",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@makeinindia",
+                "linkedin": {
+                    "val": "@Make In India",
+                    "link": "https://www.linkedin.com/company/make-in-india/?originalSubdomain=in"
+                },
+                "facebook": {
+                    "val": "@Make In India",
+                    "link": "https://www.facebook.com/makeinindiaofficial/"
+                },
+                "instagram": "@makeinindia",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.makeinindia.com/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.8535,
+            "name": "Association of diagnostics manufacture of india",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@Diagnostic58962",
+                "linkedin": {
+                    "val": "@ASSOCIATION OF DIAGNOSTICS MANUFACTURERS OF INDIA",
+                    "link": "https://www.linkedin.com/company/association-of-diagnostics-manufacturers-of-india/"
+                },
+                "facebook": {
                     "val": "",
-                    "link": "-"
-                },
-                "facebook": {
-                    "val": "@DrMallikaNadda",
-                    "link": "https://www.facebook.com/DrMallikaNadda"
-                },
-                "instagram": "@malikanadda",
-                "website": {
-                    "val": "Visit Site",
-                    "link": "-"
-                }
-            }
-        },
-        {
-            "id": 1769505351991.3948,
-            "name": "wheeling happiness",
-            "listIds": [
-                "master",
-                "1769505334073"
-            ],
-            "catIds": [],
-            "starredIn": {},
-            "tags": {
-                "twitter": "",
-                "linkedin": {
-                    "val": "",
-                    "link": "-"
-                },
-                "facebook": {
-                    "val": "@wheelinghappiness",
-                    "link": "https://www.facebook.com/wheelinghappiness"
-                },
-                "instagram": "@wheelinghappiness",
-                "website": {
-                    "val": "Visit Site",
-                    "link": "https://wheelinghappiness.org/?fbclid=IwZXh0bgNhZW0CMTAAYnJpZBExY3lBV0Q1ZGY5ZFNuUnUwV3NydGMGYXBwX2lkEDIyMjAzOTE3ODgyMDA4OTIAAR7RbAQHZ81EZshGtQsHhxnY6JVep5aFIIl2h1q_obTjginduXizqLkaE1RMLA_aem_nYjMdlOy6Z1C1KuqRfof-Q"
-                }
-            }
-        },
-        {
-            "id": 1769505351991.0256,
-            "name": "indian para kabaddi",
-            "listIds": [
-                "master",
-                "1769505334073"
-            ],
-            "catIds": [],
-            "starredIn": {},
-            "tags": {
-                "twitter": "",
-                "linkedin": {
-                    "val": "",
-                    "link": "-"
-                },
-                "facebook": {
-                    "val": "",
-                    "link": "-"
-                },
-                "instagram": "@indianparakabaddi",
-                "website": {
-                    "val": "Visit Site",
-                    "link": "-"
-                }
-            }
-        },
-        {
-            "id": 1769505351991.317,
-            "name": "devi malik",
-            "listIds": [
-                "master",
-                "1769505334073"
-            ],
-            "catIds": [],
-            "starredIn": {},
-            "tags": {
-                "twitter": "@devikamalik_394",
-                "linkedin": {
-                    "val": "@Devika Malik",
-                    "link": "https://www.linkedin.com/in/devika-malik-a4377345/"
-                },
-                "facebook": {
-                    "val": "@devika.malikQYL",
-                    "link": "https://www.facebook.com/devika.malikQYL"
-                },
-                "instagram": "@devikamalik394",
-                "website": {
-                    "val": "Visit Site",
-                    "link": "-"
-                }
-            }
-        },
-        {
-            "id": 1769505351991.9668,
-            "name": "deepa malik",
-            "listIds": [
-                "master",
-                "1769505334073"
-            ],
-            "catIds": [],
-            "starredIn": {},
-            "tags": {
-                "twitter": "@DeepaAthlete",
-                "linkedin": {
-                    "val": "@Dr. Deepa Malik",
-                    "link": "https://www.linkedin.com/in/deepamalikofficial/"
-                },
-                "facebook": {
-                    "val": "@officialdeepamalik",
-                    "link": "https://www.facebook.com/officialdeepamalik"
-                },
-                "instagram": "@deepa_paralympian",
-                "website": {
-                    "val": "Visit Site",
-                    "link": "-"
-                }
-            }
-        },
-        {
-            "id": 1769505351991.378,
-            "name": "jagseer singh",
-            "listIds": [
-                "master",
-                "1769505334073"
-            ],
-            "catIds": [],
-            "starredIn": {},
-            "tags": {
-                "twitter": "@jagseersingh19",
-                "linkedin": {
-                    "val": "",
-                    "link": "-"
-                },
-                "facebook": {
-                    "val": "@jagseersinghofficial",
-                    "link": "https://www.facebook.com/jagseersinghofficial"
+                    "link": ""
                 },
                 "instagram": "",
                 "website": {
                     "val": "Visit Site",
+                    "link": "https://admi-india.org/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.1694,
+            "name": "Voice of Helath care",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@vohglobal",
+                "linkedin": {
+                    "val": "@VOICE OF HEALTHCARE",
+                    "link": "https://www.linkedin.com/company/vohglobal/?viewAsMember=true"
+                },
+                "facebook": {
+                    "val": "@Voice Of Healthcare",
+                    "link": "https://www.facebook.com/vohglobal"
+                },
+                "instagram": "@vohglobal",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.voiceofhealthcare.org/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.1807,
+            "name": "Assoiciation of healthcareproviders india",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ahpi_india",
+                "linkedin": {
+                    "val": "@Association of Healthcare Providers - AHPI (India)",
+                    "link": "https://www.linkedin.com/company/association-of-healthcare-providers/"
+                },
+                "facebook": {
+                    "val": "@AHPI",
+                    "link": "https://www.facebook.com/AssociationofHealthcareProvidersIndiaAhpi/"
+                },
+                "instagram": "@ahpi_india",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.ahpi.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.514,
+            "name": "QAI",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@QAI2017",
+                "linkedin": {
+                    "val": "@Quality and Accreditation Institute",
+                    "link": "https://www.linkedin.com/school/quality-and-accreditation-institute/"
+                },
+                "facebook": {
+                    "val": "@Quality & Accreditation Institute",
+                    "link": "https://www.facebook.com/qaipl/"
+                },
+                "instagram": "@qai_quality_2017",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://qai.org.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.1147,
+            "name": "Nasscom",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@nasscom",
+                "linkedin": {
+                    "val": "@nasscom",
+                    "link": "https://www.linkedin.com/company/nasscom-india/"
+                },
+                "facebook": {
+                    "val": "@nasscom",
+                    "link": "https://www.facebook.com/nasscomOfficial/"
+                },
+                "instagram": "@nasscom_in",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://nasscom.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.5889,
+            "name": "Startup incubation & innovation centre",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@incubatorIITK",
+                "linkedin": {
+                    "val": "@Startup Incubation and Innovation Centre, IIT Kanpur (incubatoriitk)",
+                    "link": "https://www.linkedin.com/company/incubatoriitk/"
+                },
+                "facebook": {
+                    "val": "@Startup Incubation and Innovation Centre, IIT Kanpur",
+                    "link": "https://www.facebook.com/IncubatorIITK/"
+                },
+                "instagram": "@incubatoriitk",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://siicincubator.com/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.6462,
+            "name": "Healthcare events",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@EventsHcare",
+                "linkedin": {
+                    "val": "@Healthcare Events",
+                    "link": "https://www.linkedin.com/company/healthcare-events/"
+                },
+                "facebook": {
+                    "val": "@Healthcare Events",
+                    "link": "https://www.facebook.com/events.healthcare"
+                },
+                "instagram": "@healthcareevents",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://knowledge-healthcare.events/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.2827,
+            "name": "Messe Düsseldorf India",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@MDI_IND",
+                "linkedin": {
+                    "val": "@Messe Düsseldorf India Pvt. Ltd.",
+                    "link": "https://www.linkedin.com/company/messe-duesseldorf-india-pvt-ltd-/"
+                },
+                "facebook": {
+                    "val": "@Messe Düsseldorf India Pvt. Ltd.",
+                    "link": "https://www.facebook.com/messeduesseldorfindia.mdi/"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.md-india.com/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.8633,
+            "name": "Medical Fair India",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@medical_fair",
+                "linkedin": {
+                    "val": "@Medical Fair India",
+                    "link": "https://www.linkedin.com/company/medicalfair-india/"
+                },
+                "facebook": {
+                    "val": "@Medical Fair India",
+                    "link": "https://www.facebook.com/medicalfairindia"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.medicalfair-india.com/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.0635,
+            "name": "AP Digital Technology Industry (APDTI) Network",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@apdtindustry",
+                "linkedin": {
+                    "val": "@AP Digital Technology Industry (APDTI) Network",
+                    "link": "https://www.linkedin.com/company/apdtindustry/about/"
+                },
+                "facebook": {
+                    "val": "@APDTIndustry",
+                    "link": "https://www.facebook.com/people/APDTIndustry/61561380479837/"
+                },
+                "instagram": "@apdtindustry",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://apdti.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.854,
+            "name": "Indian Tech & Infra",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@IndianTechGuide",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@Indian Tech & Infra",
+                    "link": "https://www.facebook.com/p/Indian-Tech-Infra-100094802035594/"
+                },
+                "instagram": "@indiantechandinfra",
+                "website": {
+                    "val": "Visit Site",
                     "link": "-"
                 }
             }
         },
         {
-            "id": 1769505351991.7747,
-            "name": "khel now",
+            "id": 1769506555914.9077,
+            "name": "Pharmabiz",
             "listIds": [
-                "master",
-                "1769505334073"
+                "master"
             ],
             "catIds": [],
             "starredIn": {},
             "tags": {
-                "twitter": "@KhelNow",
+                "twitter": "@pharmabiznews",
                 "linkedin": {
-                    "val": "@Khel Now",
-                    "link": "https://www.linkedin.com/company/khel-now/"
+                    "val": "@Chronicle Pharmabiz",
+                    "link": "https://www.linkedin.com/in/chroniclepharmabiz/"
                 },
                 "facebook": {
-                    "val": "@khelnow",
-                    "link": "https://www.facebook.com/KhelNowFootball"
+                    "val": "@Pharmabiz",
+                    "link": "https://www.facebook.com/pharmabizindia/"
                 },
-                "instagram": "@khelnow",
+                "instagram": "@chroniclepharmabiz2000",
                 "website": {
                     "val": "Visit Site",
-                    "link": "https://khelnow.com/"
+                    "link": "https://www.pharmabiz.com/"
                 }
             }
         },
         {
-            "id": 1769505351991.6003,
-            "name": "gosport voices",
+            "id": 1769506555914.2856,
+            "name": "Pharmacy Times",
             "listIds": [
-                "master",
-                "1769505334073"
+                "master"
             ],
             "catIds": [],
             "starredIn": {},
             "tags": {
-                "twitter": "@GoSportsVoices",
+                "twitter": "@Pharmacy_Times",
                 "linkedin": {
-                    "val": "@GoSports Foundation",
-                    "link": "https://www.linkedin.com/company/gosports-foundation/"
+                    "val": "@Pharmacy Times",
+                    "link": "https://www.linkedin.com/company/pharmacy-times/"
                 },
                 "facebook": {
-                    "val": "@GoSportsFoundation",
-                    "link": "https://www.facebook.com/GoSportsFoundation"
+                    "val": "@Pharmacy Times",
+                    "link": "https://www.facebook.com/PharmacyTimes"
                 },
-                "instagram": "@gosportsvoices",
+                "instagram": "@pharmacytimes",
                 "website": {
                     "val": "Visit Site",
-                    "link": "https://gosports.in/"
+                    "link": "https://www.pharmacytimes.com/"
                 }
             }
         },
         {
-            "id": 1769505351991.4558,
-            "name": "Department of Empowerment of Persons with Disabilities",
+            "id": 1769506555914.934,
+            "name": "PHD Chamber Of Commerce and Industry",
             "listIds": [
-                "master",
-                "1769505334073"
+                "master"
             ],
             "catIds": [],
             "starredIn": {},
             "tags": {
-                "twitter": "@socialpwds",
+                "twitter": "@phdchamber",
                 "linkedin": {
-                    "val": "@Divyang Empowerment",
-                    "link": "https://www.linkedin.com/in/divyang-empowerment-291b21278/"
+                    "val": "@PHD Chamber of Commerce and Industry",
+                    "link": "https://www.linkedin.com/company/phd-chamber-of-commerce-and-industry/?originalSubdomain=in"
                 },
                 "facebook": {
-                    "val": "@DoEPWD",
-                    "link": "https://www.facebook.com/DoEPWD/"
+                    "val": "@PHD Chamber Of Commerce and Industry",
+                    "link": "https://www.facebook.com/phdcci1905"
                 },
-                "instagram": "@depwd_goi",
+                "instagram": "@phdcci",
                 "website": {
                     "val": "Visit Site",
-                    "link": "https://depwd.gov.in/sitemap/"
+                    "link": "https://www.phdcci.in/"
                 }
             }
         },
         {
-            "id": 1769505351992.4092,
+            "id": 1769506555914.9988,
             "name": "Andhra Nexus",
             "listIds": [
                 "master",
-                "1769505334073"
+                "1769506748086"
             ],
             "catIds": [],
             "starredIn": {},
@@ -1811,28 +2082,754 @@ const defaultDB = {
             }
         },
         {
-            "id": 1769505351992.566,
-            "name": "Govenment of India",
+            "id": 1769506555914.3127,
+            "name": "Tech|Innovation|Economy, Andhra Pradesh",
             "listIds": [
-                "master",
-                "1769505334073"
+                "master"
             ],
             "catIds": [],
             "starredIn": {},
             "tags": {
-                "twitter": "@mygovindia",
+                "twitter": "@TechAndhra",
                 "linkedin": {
-                    "val": "@MyGov India",
-                    "link": "https://www.linkedin.com/company/mygov-india/"
+                    "val": "",
+                    "link": "-"
                 },
                 "facebook": {
-                    "val": "@MyGovIndia",
-                    "link": "https://www.facebook.com/MyGovIndia/"
+                    "val": "",
+                    "link": "-"
                 },
-                "instagram": "@mygovindia",
+                "instagram": "",
                 "website": {
                     "val": "Visit Site",
-                    "link": "https://www.mygov.in/"
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.9595,
+            "name": "Interesting STEM",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@InterestingSTEM",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "@interestingstem",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.942,
+            "name": "World Food Programme",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@WFP",
+                "linkedin": {
+                    "val": "@World Food Programme",
+                    "link": "https://www.linkedin.com/company/unwfp/"
+                },
+                "facebook": {
+                    "val": "@WorldFoodProgramme",
+                    "link": "https://www.facebook.com/WorldFoodProgramme"
+                },
+                "instagram": "@worldfoodprogramme",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.wfp.org/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.3882,
+            "name": "Wellbeing Foundation Africa",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "",
+                "linkedin": {
+                    "val": "",
+                    "link": ""
+                },
+                "facebook": {
+                    "val": "",
+                    "link": ""
+                },
+                "instagram": "",
+                "website": {
+                    "val": "",
+                    "link": ""
+                }
+            }
+        },
+        {
+            "id": 1769506555914.363,
+            "name": "Mr. Suman Murkuri",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "",
+                "linkedin": {
+                    "val": "@Suman Murkuri",
+                    "link": "https://www.linkedin.com/in/suman-murkuri-17ab1047/"
+                },
+                "facebook": {
+                    "val": "@Suman Murkuri",
+                    "link": "https://www.facebook.com/suman.murkuri/"
+                },
+                "instagram": "@sumanmurkuri",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.0955,
+            "name": "STS Wealth",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "",
+                "linkedin": {
+                    "val": "@STS Wealth",
+                    "link": "https://www.linkedin.com/company/sts-wealth/?originalSubdomain=in"
+                },
+                "facebook": {
+                    "val": "@STS Wealth",
+                    "link": "https://www.facebook.com/stswealthvizag/"
+                },
+                "instagram": "@stswealth",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://stswealth.com/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.403,
+            "name": "Dr. Deepa Malik",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@DeepaAthlete",
+                "linkedin": {
+                    "val": "@Dr. Deepa Malik",
+                    "link": "https://www.linkedin.com/in/deepamalikofficial/"
+                },
+                "facebook": {
+                    "val": "@officialdeepamalik",
+                    "link": "https://www.facebook.com/officialdeepamalik"
+                },
+                "instagram": "@deepa_paralympian",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.deepamalik.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.3691,
+            "name": "Murlikant Petkar",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@murlikantpetkar",
+                "linkedin": {
+                    "val": "@Murlikant Petkar",
+                    "link": "https://www.linkedin.com/in/murlikant-petkar-3813b3133/?originalSubdomain=in"
+                },
+                "facebook": {
+                    "val": "@murlikantpetkar1947",
+                    "link": "https://www.facebook.com/murlikantpetkar1947/"
+                },
+                "instagram": "@murlikantpetka",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://murlikantpetkar.com/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.748,
+            "name": "Department of Empowerment of Persons with Disabilities",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@socialpwds",
+                "linkedin": {
+                    "val": "@Divyang Empowerment",
+                    "link": "https://www.linkedin.com/in/divyang-empowerment-291b21278/"
+                },
+                "facebook": {
+                    "val": "@DoEPWD",
+                    "link": "https://www.facebook.com/DoEPWD/"
+                },
+                "instagram": "@depwd_goi",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://depwd.gov.in/sitemap/"
+                }
+            }
+        },
+        {
+            "id": 1769506555914.7544,
+            "name": "Dr. Mallika Nadda",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@DrMallikaNadda",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@DrMallikaNadda",
+                    "link": "https://www.facebook.com/DrMallikaNadda/"
+                },
+                "instagram": "@malikanadda",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769506555915.356,
+            "name": "Special Olympics Bharat",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@SOlympicsBharat",
+                "linkedin": {
+                    "val": "@Special Olympics Bharat",
+                    "link": "https://www.linkedin.com/company/special-olympics-bharat/?originalSubdomain=in"
+                },
+                "facebook": {
+                    "val": "@Specialolympicsbharat",
+                    "link": "https://www.facebook.com/Specialolympicsbharat"
+                },
+                "instagram": "@sobharat",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://specialolympicsbharat.org/"
+                }
+            }
+        },
+        {
+            "id": 1769506555915.0527,
+            "name": "Special Olympics",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@SpecialOlympics",
+                "linkedin": {
+                    "val": "@Special Olympics",
+                    "link": "https://www.linkedin.com/company/special-olympics/"
+                },
+                "facebook": {
+                    "val": "@SpecialOlympics",
+                    "link": "https://www.facebook.com/SpecialOlympics/"
+                },
+                "instagram": "@specialolympics",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.jointherevolution.org/"
+                }
+            }
+        },
+        {
+            "id": 1769506555915.8494,
+            "name": "Ministry of Skill Development and Entrepreneurship, Government of India",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@MSDESkillIndia",
+                "linkedin": {
+                    "val": "@Ministry of Skill Development and Entrepreneurship, India",
+                    "link": "https://www.linkedin.com/company/ministry-of-skill-development-and-entrepreneurship-india/"
+                },
+                "facebook": {
+                    "val": "@Govt-of-India-Ministry-of-Skill-Development-Entrepreneurship-100077865886994",
+                    "link": "https://www.facebook.com/p/Govt-of-India-Ministry-of-Skill-Development-Entrepreneurship-100077865886994/"
+                },
+                "instagram": "@skill_india_official",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.msde.gov.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506586140.0547,
+            "name": "Piyush Goyal",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@PiyushGoyal",
+                "linkedin": {
+                    "val": "@Piyush Goyal",
+                    "link": "https://www.linkedin.com/in/piyushgoyalofficial/"
+                },
+                "facebook": {
+                    "val": "@PiyushGoyalOfficial",
+                    "link": "https://www.facebook.com/PiyushGoyalOfficial/"
+                },
+                "instagram": "@piyushgoyalofficial",
+                "website": {
+                    "val": "",
+                    "link": ""
+                }
+            }
+        },
+        {
+            "id": 1769506586140.091,
+            "name": "Piyush Goyal Office",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@PiyushGoyalOffc",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "",
+                    "link": ""
+                }
+            }
+        },
+        {
+            "id": 1769506586140.8896,
+            "name": "Department for Promotion of Industry and Internal Trade",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@DPIITGoI",
+                "linkedin": {
+                    "val": "@Department for Promotion of Industry and Internal Trade",
+                    "link": "https://www.linkedin.com/company/department-for-promotion-of-industry-and-internal-trade/"
+                },
+                "facebook": {
+                    "val": "@DPIITIndia",
+                    "link": "https://www.facebook.com/DPIITIndia"
+                },
+                "instagram": "@dpiit_moci",
+                "website": {
+                    "val": "",
+                    "link": ""
+                }
+            }
+        },
+        {
+            "id": 1769506586140.1904,
+            "name": "PHD Chamber",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@phdchamber",
+                "linkedin": {
+                    "val": "@PHD Chamber of Commerce and Industry",
+                    "link": "https://www.linkedin.com/company/phd-chamber-of-commerce-and-industry/?originalSubdomain=in"
+                },
+                "facebook": {
+                    "val": "@phdcci1905",
+                    "link": "https://www.facebook.com/phdcci1905"
+                },
+                "instagram": "@phdcci",
+                "website": {
+                    "val": "",
+                    "link": ""
+                }
+            }
+        },
+        {
+            "id": 1769506586140.141,
+            "name": "ASSOCHAM",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ASSOCHAM4India",
+                "linkedin": {
+                    "val": "@ASSOCHAM (The Associated Chambers of Commerce and Industry of India)",
+                    "link": "https://www.linkedin.com/company/assochamforindia/"
+                },
+                "facebook": {
+                    "val": "@ASSOCHAM4Ind",
+                    "link": "https://www.facebook.com/ASSOCHAM4Ind"
+                },
+                "instagram": "@assocham",
+                "website": {
+                    "val": "",
+                    "link": ""
+                }
+            }
+        },
+        {
+            "id": 1769506608811.4575,
+            "name": "Defence Research Development Organisation",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@DRDO_India",
+                "linkedin": {
+                    "val": "@DRDO, Ministry of Defence, Govt. of India",
+                    "link": "https://www.linkedin.com/company/drdo-ministry-of-defence-govt-of-india/"
+                },
+                "facebook": {
+                    "val": "@DPIDRDO",
+                    "link": "https://www.facebook.com/DPIDRDO/"
+                },
+                "instagram": "@dpi.drdo",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.drdo.gov.in/drdo/"
+                }
+            }
+        },
+        {
+            "id": 1769506608811.1597,
+            "name": "Asian Paralympic Committee",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@asianparalympic",
+                "linkedin": {
+                    "val": "@Asian Paralympic Committee",
+                    "link": "https://www.linkedin.com/company/asian-paralympic-committee/"
+                },
+                "facebook": {
+                    "val": "@asianparalympic",
+                    "link": "https://www.facebook.com/asianparalympic"
+                },
+                "instagram": "@asianparalympic",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://asianparalympic.org/"
+                }
+            }
+        },
+        {
+            "id": 1769506637820.7427,
+            "name": "Niramai",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@niramaianalytix",
+                "linkedin": {
+                    "val": "@Niramai Health Analytix",
+                    "link": "https://www.linkedin.com/company/niramai-health-analytix/"
+                },
+                "facebook": {
+                    "val": "@niramaihealthanalytix",
+                    "link": "https://www.facebook.com/niramaihealthanalytix/"
+                },
+                "instagram": "@niramaihealthanalytix",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://niramai.com/"
+                }
+            }
+        },
+        {
+            "id": 1769506637820.0073,
+            "name": "Raj Shirumalla",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@Shirumalla",
+                "linkedin": {
+                    "val": "@dr-raj-k-shirumalla-25289415",
+                    "link": ""
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769506637820.43,
+            "name": "Venture Center",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@venture_center",
+                "linkedin": {
+                    "val": "@Venture Center (Official Account)",
+                    "link": "https://www.linkedin.com/company/venture-center-pune/"
+                },
+                "facebook": {
+                    "val": "@venturecenterpune",
+                    "link": "https://www.facebook.com/venturecenterpune"
+                },
+                "instagram": "@venturecenterpune",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.venturecenter.co.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506637820.3984,
+            "name": "J Mitra & Co Pvt Ltd",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@Jmitraworld",
+                "linkedin": {
+                    "val": "@J Mitra & Co Pvt Ltd",
+                    "link": "https://www.linkedin.com/company/jmitraworld/"
+                },
+                "facebook": {
+                    "val": "@jmitraworld",
+                    "link": "https://www.facebook.com/jmitraworld/"
+                },
+                "instagram": "@jmitraworld",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://jmitra.co.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506637820.866,
+            "name": "Molbio Diagnostics",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@MolbioDx",
+                "linkedin": {
+                    "val": "@Molbio Diagnostics",
+                    "link": "https://www.linkedin.com/company/molbio-diagnostics/"
+                },
+                "facebook": {
+                    "val": "@molbiodx",
+                    "link": "https://www.facebook.com/molbiodx/"
+                },
+                "instagram": "@molbiodx",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.molbiodiagnostics.com/"
+                }
+            }
+        },
+        {
+            "id": 1769506637820.466,
+            "name": "Transasia Bio-Medicals",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@Transasia_1",
+                "linkedin": {
+                    "val": "@Transasia Bio-Medicals Ltd.",
+                    "link": "https://www.linkedin.com/company/transasia-bio-medicals-ltd//"
+                },
+                "facebook": {
+                    "val": "@TransasiaBioMedicalsIndia",
+                    "link": "https://www.facebook.com/TransasiaBioMedicalsIndia/"
+                },
+                "instagram": "@transasia_biomedicals",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://transasia.co.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506637820.34,
+            "name": "Accurex Biomedical",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@AccurexB",
+                "linkedin": {
+                    "val": "@Accurex Biomedical",
+                    "link": "https://www.linkedin.com/company/accurexbiomedical/"
+                },
+                "facebook": {
+                    "val": "@Accurex Biomedical",
+                    "link": "https://www.facebook.com/accurex.biomedical/"
+                },
+                "instagram": "@accurexb",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://accurex.net/"
+                }
+            }
+        },
+        {
+            "id": 1769506637820.1262,
+            "name": "3i Infotech",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@3iInfotech",
+                "linkedin": {
+                    "val": "@3i Infotech Ltd.",
+                    "link": "https://www.linkedin.com/company/3i-infotech/"
+                },
+                "facebook": {
+                    "val": "@3iInfotechPage",
+                    "link": "https://www.facebook.com/3iInfotechPage/"
+                },
+                "instagram": "@3iinfotechofficial",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.3i-infotech.com/"
+                }
+            }
+        },
+        {
+            "id": 1769506662675.3843,
+            "name": "Rupa Publications",
+            "listIds": [
+                "master",
+                "1769506748086"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@Rupa_Books",
+                "linkedin": {
+                    "val": "@Rupa Publications India",
+                    "link": "https://www.linkedin.com/company/rupa-publications-india-pvt-ltd-/?originalSubdomain=in"
+                },
+                "facebook": {
+                    "val": "@rupapublications",
+                    "link": "https://www.facebook.com/rupapublications/"
+                },
+                "instagram": "@rupa_publications",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://rupapublications.co.in/"
+                }
+            }
+        },
+        {
+            "id": 1769506662675.2808,
+            "name": "Association of Healthcare Providers (India) - AHPI",
+            "listIds": [
+                "master",
+                "1769506748086"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ahpi_india",
+                "linkedin": {
+                    "val": "@Association of Healthcare Providers - AHPI (India)",
+                    "link": "https://www.linkedin.com/company/association-of-healthcare-providers/"
+                },
+                "facebook": {
+                    "val": "@AHPI",
+                    "link": "https://www.facebook.com/AssociationofHealthcareProvidersIndiaAhpi/"
+                },
+                "instagram": "@ahpi_india",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.ahpi.in/"
                 }
             }
         }
