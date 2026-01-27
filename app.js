@@ -46,6 +46,10 @@ const defaultDB = {
         {
             "id": "1769152779600",
             "name": "MediValley"
+        },
+        {
+            "id": "1769505334073",
+            "name": "Para Kabaddi"
         }
     ],
     "cats": [],
@@ -1511,6 +1515,306 @@ const defaultDB = {
                 "website": {
                     "val": "Visit Site",
                     "link": "https://opai.org.in/"
+                }
+            }
+        },
+        {
+            "id": 1769505351991.885,
+            "name": "pro kabaddi",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@ProKabaddi",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@ProKabaddi",
+                    "link": "https://www.facebook.com/ProKabaddi"
+                },
+                "instagram": "@prokabaddi",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.prokabaddi.com/"
+                }
+            }
+        },
+        {
+            "id": 1769505351991.8594,
+            "name": "mallika nadda",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@DrMallikaNadda",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@DrMallikaNadda",
+                    "link": "https://www.facebook.com/DrMallikaNadda"
+                },
+                "instagram": "@malikanadda",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769505351991.3948,
+            "name": "wheeling happiness",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@wheelinghappiness",
+                    "link": "https://www.facebook.com/wheelinghappiness"
+                },
+                "instagram": "@wheelinghappiness",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://wheelinghappiness.org/?fbclid=IwZXh0bgNhZW0CMTAAYnJpZBExY3lBV0Q1ZGY5ZFNuUnUwV3NydGMGYXBwX2lkEDIyMjAzOTE3ODgyMDA4OTIAAR7RbAQHZ81EZshGtQsHhxnY6JVep5aFIIl2h1q_obTjginduXizqLkaE1RMLA_aem_nYjMdlOy6Z1C1KuqRfof-Q"
+                }
+            }
+        },
+        {
+            "id": 1769505351991.0256,
+            "name": "indian para kabaddi",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "",
+                    "link": "-"
+                },
+                "instagram": "@indianparakabaddi",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769505351991.317,
+            "name": "devi malik",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@devikamalik_394",
+                "linkedin": {
+                    "val": "@Devika Malik",
+                    "link": "https://www.linkedin.com/in/devika-malik-a4377345/"
+                },
+                "facebook": {
+                    "val": "@devika.malikQYL",
+                    "link": "https://www.facebook.com/devika.malikQYL"
+                },
+                "instagram": "@devikamalik394",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769505351991.9668,
+            "name": "deepa malik",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@DeepaAthlete",
+                "linkedin": {
+                    "val": "@Dr. Deepa Malik",
+                    "link": "https://www.linkedin.com/in/deepamalikofficial/"
+                },
+                "facebook": {
+                    "val": "@officialdeepamalik",
+                    "link": "https://www.facebook.com/officialdeepamalik"
+                },
+                "instagram": "@deepa_paralympian",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769505351991.378,
+            "name": "jagseer singh",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@jagseersingh19",
+                "linkedin": {
+                    "val": "",
+                    "link": "-"
+                },
+                "facebook": {
+                    "val": "@jagseersinghofficial",
+                    "link": "https://www.facebook.com/jagseersinghofficial"
+                },
+                "instagram": "",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "-"
+                }
+            }
+        },
+        {
+            "id": 1769505351991.7747,
+            "name": "khel now",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@KhelNow",
+                "linkedin": {
+                    "val": "@Khel Now",
+                    "link": "https://www.linkedin.com/company/khel-now/"
+                },
+                "facebook": {
+                    "val": "@khelnow",
+                    "link": "https://www.facebook.com/KhelNowFootball"
+                },
+                "instagram": "@khelnow",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://khelnow.com/"
+                }
+            }
+        },
+        {
+            "id": 1769505351991.6003,
+            "name": "gosport voices",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@GoSportsVoices",
+                "linkedin": {
+                    "val": "@GoSports Foundation",
+                    "link": "https://www.linkedin.com/company/gosports-foundation/"
+                },
+                "facebook": {
+                    "val": "@GoSportsFoundation",
+                    "link": "https://www.facebook.com/GoSportsFoundation"
+                },
+                "instagram": "@gosportsvoices",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://gosports.in/"
+                }
+            }
+        },
+        {
+            "id": 1769505351991.4558,
+            "name": "Department of Empowerment of Persons with Disabilities",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@socialpwds",
+                "linkedin": {
+                    "val": "@Divyang Empowerment",
+                    "link": "https://www.linkedin.com/in/divyang-empowerment-291b21278/"
+                },
+                "facebook": {
+                    "val": "@DoEPWD",
+                    "link": "https://www.facebook.com/DoEPWD/"
+                },
+                "instagram": "@depwd_goi",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://depwd.gov.in/sitemap/"
+                }
+            }
+        },
+        {
+            "id": 1769505351992.4092,
+            "name": "Andhra Nexus",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@AndhraNexus",
+                "linkedin": {
+                    "val": "@Andhra Nexus",
+                    "link": "https://www.linkedin.com/in/andhra-nexus-175a33302/"
+                },
+                "facebook": {
+                    "val": "@Andhra Nexus",
+                    "link": "https://www.facebook.com/andhranexus/"
+                },
+                "instagram": "@andhranexus",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://andhranexus.in/category/amaravati-news/"
+                }
+            }
+        },
+        {
+            "id": 1769505351992.566,
+            "name": "Govenment of India",
+            "listIds": [
+                "master"
+            ],
+            "catIds": [],
+            "starredIn": {},
+            "tags": {
+                "twitter": "@mygovindia",
+                "linkedin": {
+                    "val": "@MyGov India",
+                    "link": "https://www.linkedin.com/company/mygov-india/"
+                },
+                "facebook": {
+                    "val": "@MyGovIndia",
+                    "link": "https://www.facebook.com/MyGovIndia/"
+                },
+                "instagram": "@mygovindia",
+                "website": {
+                    "val": "Visit Site",
+                    "link": "https://www.mygov.in/"
                 }
             }
         }
