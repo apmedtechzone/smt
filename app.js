@@ -120,15 +120,25 @@ function detectConflict(newOrgObj, skipId, arrayToCheck = db.orgs) {
     for (let org of arrayToCheck) {
         if (skipId && org.id === skipId) continue;
 
+        // 1. Check Name
+        const nA = (newOrgObj.name || '').toString().trim().toLowerCase();
+        const nB = (org.name || '').toString().trim().toLowerCase();
+        if (nA && nA === nB) return org;
+
+        // 2. Check Deep Tags (Bulletproof Matcher)
         const match = (a, b) => {
             if (!a || !b) return false;
-            return a.toString().trim().toLowerCase() === b.toString().trim().toLowerCase();
+            const strA = a.toString().trim().toLowerCase();
+            const strB = b.toString().trim().toLowerCase();
+            
+            // Aggressively ignore blanks, stray @ symbols, or generic placeholders
+            if (strA.length < 2 || strB.length < 2) return false; 
+            if (strA === 'visit site' || strA === 'https://') return false; 
+            if (strB === 'visit site' || strB === 'https://') return false; 
+
+            return strA === strB;
         };
 
-        // 1. Check Name
-        if (match(newOrgObj.name, org.name)) return org;
-
-        // 2. Check Deep Tags
         const nt = typeof newOrgObj.tags === 'string' ? JSON.parse(newOrgObj.tags) : newOrgObj.tags;
         const ot = typeof org.tags === 'string' ? JSON.parse(org.tags) : org.tags;
         
@@ -200,10 +210,11 @@ async function saveOrg(){
     const l = Array.from(document.querySelectorAll('#check-lists input:checked')).map(c=>c.value); if(!l.includes('master'))l.push('master'); 
     const c = Array.from(document.querySelectorAll('#check-cats input:checked')).map(x=>x.value); 
     const tags = {
-        twitter: ensureHandle(document.getElementById('tag-twitter').value), instagram: ensureHandle(document.getElementById('tag-instagram').value), 
+        twitter: ensureHandle(document.getElementById('tag-twitter').value), 
+        instagram: ensureHandle(document.getElementById('tag-instagram').value), 
         linkedin:{val:ensureHandle(document.getElementById('tag-linkedin-val').value), link:document.getElementById('tag-linkedin-link').value.trim()}, 
         facebook:{val:ensureHandle(document.getElementById('tag-facebook-val').value), link:document.getElementById('tag-facebook-link').value.trim()}, 
-        website:{val:document.getElementById('tag-website-val').value.trim(), link:document.getElementById('tag-website-link').value.trim()}
+        website:{val:document.getElementById('tag-website-val').value.trim() || (document.getElementById('tag-website-link').value.trim() ? "Visit Site" : ""), link:document.getElementById('tag-website-link').value.trim()}
     }; 
     
     const dataObj = { name: n, listIds: l, catIds: c, tags: JSON.stringify(tags) };
@@ -374,8 +385,11 @@ function renderTable() {
 function renderLink(d, t) {
     if(!d) return '<span class="empty-cell">&minus;</span>';
     const text = (typeof d === 'string') ? d : d.val;
-    if(!text) return '<span class="empty-cell">&minus;</span>';
-    let url = (typeof d === 'string') ? (t === 'twitter' ? `https://x.com/${d.replace('@','')}` : `https://instagram.com/${d.replace('@','')}`) : (d.link || '#');
+    
+    // Aggressively prevent empty "@" from rendering
+    if(!text || text === '@' || text.trim() === '') return '<span class="empty-cell">&minus;</span>';
+    
+    let url = (typeof d === 'string') ? (t === 'twitter' ? `https://x.com/${text.replace('@','')}` : `https://instagram.com/${text.replace('@','')}`) : (d.link || '#');
     const icon = t === 'website' ? 'fa-solid fa-globe' : `fa-brands fa-${t}`;
     return `<a href="${url}" target="_blank" class="tag-link" title="${text}"><i class="${icon}"></i> <span class="tag-truncate">${text.substring(0, 12)}${text.length>12?'...':''}</span></a>`;
 }
@@ -390,7 +404,10 @@ function copyColumn(t) {
         if (searchGroups.length > 0) { let txt = org.name.toLowerCase(); Object.values(org.tags).forEach(t => { if(typeof t === 'string') txt += " " + t.toLowerCase(); else if(t && t.val) txt += " " + t.val.toLowerCase(); }); return searchGroups.some(group => group.split(' ').filter(t=>t).every(term => txt.includes(term))); } return true;
     });
     visibleOrgs = sortTableData(visibleOrgs, listId);
-    const allTags = visibleOrgs.map(o => (typeof o.tags[t] === 'string') ? o.tags[t] : (o.tags[t]?.val || "")).filter(k => k);
+    
+    // Make sure we only copy valid tags, not empty @'s
+    const allTags = visibleOrgs.map(o => (typeof o.tags[t] === 'string') ? o.tags[t] : (o.tags[t]?.val || "")).filter(k => k && k !== '@');
+    
     if (allTags.length === 0) return showToast("No tags found", "error");
     if (!copyClickState[t]) copyClickState[t] = 'first';
     let tagsToCopy = allTags, msg = "";
@@ -416,4 +433,12 @@ function initBulkRows(count) { document.getElementById('bulk-tbody').innerHTML =
 function addBulkRows(count) { const tbody = document.getElementById('bulk-tbody'); for(let i=0; i<count; i++) { tbody.innerHTML += `<tr class="bulk-row"><td><input type="text" class="input-cell" placeholder="Name"></td><td><input type="text" class="input-cell" placeholder="@handle"></td><td><input type="text" class="input-cell" placeholder="@handle"></td><td><input type="text" class="input-cell" placeholder="Full Link"></td><td><input type="text" class="input-cell" placeholder="@handle"></td><td><input type="text" class="input-cell" placeholder="Full Link"></td><td><input type="text" class="input-cell" placeholder="@handle"></td><td><input type="text" class="input-cell" placeholder="Full Link"></td></tr>`; } }
 function handleGridPaste(e) { e.preventDefault(); const cb = (e.clipboardData || window.clipboardData).getData('text'); const rows = cb.split(/\r\n|\n|\r/).filter(r => r.length > 0); let tgt = e.target; if (tgt.tagName !== 'INPUT') return; let tr = tgt.closest('tr'); let srIdx = Array.from(tr.parentElement.children).indexOf(tr); let scIdx = Array.from(tr.children).indexOf(tgt.parentElement); const tb = document.getElementById('bulk-tbody'); rows.forEach((rData, rIdx) => { const cells = rData.split('\t'); if (srIdx + rIdx >= tb.children.length) addBulkRows(1); const tRow = tb.children[srIdx + rIdx]; cells.forEach((cData, cIdx) => { const tcIdx = scIdx + cIdx; if (tcIdx < tRow.children.length) { const inp = tRow.children[tcIdx].querySelector('input'); if (inp) { let cd = cData.trim(); if(cd.startsWith('"') && cd.endsWith('"')) cd = cd.substring(1, cd.length - 1); inp.value = cd; } } }); }); }
 function resetBulkGrid() { if(confirm("Discard grid data?")) initBulkRows(20); }
-function ensureHandle(val) { val = val.trim(); if (!val) return ''; return val.startsWith('@') ? val : '@' + val; }
+
+// The Bulletproof Handle Formatter
+function ensureHandle(val) { 
+    if (!val) return ''; 
+    // Strip all leading @ symbols to clean it up first
+    let clean = val.toString().replace(/^@+/, '').trim(); 
+    if (!clean) return ''; // If it was totally blank or just "@@", save as absolutely empty string
+    return '@' + clean; 
+}
