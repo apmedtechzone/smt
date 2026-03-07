@@ -114,34 +114,49 @@ function updateUIForAdmin() {
 async function logout(){ try { await account.deleteSession('current'); } catch(e){} location.reload(); }
 
 // ==========================================
-// 5. DEEP CONFLICT DETECTION ENGINE
+// 5. DEEP CONFLICT DETECTION ENGINE (BULLETPROOF)
 // ==========================================
 function detectConflict(newOrgObj, skipId, arrayToCheck = db.orgs) {
+    const parseTags = (t) => {
+        if (!t) return {};
+        if (typeof t === 'object') return t;
+        try { return JSON.parse(t); } catch(e) { return {}; }
+    };
+
+    const nt = parseTags(newOrgObj.tags);
+    const nName = (newOrgObj.name || '').toString().trim().toLowerCase();
+
     for (let org of arrayToCheck) {
-        if (skipId && org.id === skipId) continue;
+        if (skipId && (org.id === skipId || org.$id === skipId)) continue;
 
-        // 1. Check Name
-        const nA = (newOrgObj.name || '').toString().trim().toLowerCase();
-        const nB = (org.name || '').toString().trim().toLowerCase();
-        if (nA && nA === nB) return org;
+        const oName = (org.name || '').toString().trim().toLowerCase();
 
-        // 2. Check Deep Tags (Bulletproof Matcher)
+        // 1. Exact Name Match
+        if (nName && nName === oName) return org;
+
+        // 2. Deep Tags Match (Aggressively strips formatting to prevent false positives)
+        const ot = parseTags(org.tags);
+
         const match = (a, b) => {
             if (!a || !b) return false;
-            const strA = a.toString().trim().toLowerCase();
-            const strB = b.toString().trim().toLowerCase();
-            
-            // Aggressively ignore blanks, stray @ symbols, or generic placeholders
-            if (strA.length < 2 || strB.length < 2) return false; 
-            if (strA === 'visit site' || strA === 'https://') return false; 
-            if (strB === 'visit site' || strB === 'https://') return false; 
+            let strA = a.toString().toLowerCase();
+            let strB = b.toString().toLowerCase();
+
+            // Strip prefixes, spaces, and special characters to extract ONLY the core handle/domain
+            const cleanStr = (s) => s.replace(/^(https?:\/\/)?(www\.)?/,'').replace(/[@\/\-\s]/g, '').trim();
+            strA = cleanStr(strA);
+            strB = cleanStr(strB);
+
+            // Ignore if the remaining string is completely empty or just 1 letter
+            if (strA.length < 2 || strB.length < 2) return false;
+
+            // Ignore common meaningless placeholders people type when they don't know the link
+            const ignore = ['na', 'none', 'null', 'nil', 'blank', 'visitsite', 'visit', 'http', 'https', 'undefined'];
+            if (ignore.includes(strA) || ignore.includes(strB)) return false;
 
             return strA === strB;
         };
 
-        const nt = typeof newOrgObj.tags === 'string' ? JSON.parse(newOrgObj.tags) : newOrgObj.tags;
-        const ot = typeof org.tags === 'string' ? JSON.parse(org.tags) : org.tags;
-        
         if (match(nt.twitter, ot.twitter)) return org;
         if (match(nt.instagram, ot.instagram)) return org;
         if (match(nt.linkedin?.link, ot.linkedin?.link)) return org;
@@ -170,17 +185,15 @@ function processConflictQueue() {
 }
 
 async function resolveConflict(action) {
-    const current = pendingConflicts.shift(); // Pop first item off queue
+    const current = pendingConflicts.shift(); 
     const existingId = current.existingOrg.id || current.existingOrg.$id;
     const existingListIds = current.existingOrg.listIds || [];
     const newListIds = current.newObj.listIds || [];
 
-    // Merge Lists uniquely so it exists in all previous lists AND the newly requested lists
     const combinedLists = [...new Set([...existingListIds, ...newListIds])];
 
     showToast("Resolving...");
     try {
-        // If this conflict happened while editing, delete the old duplicate document to finalize the merge
         if (current.isEdit && current.editOldId) {
             try { await databases.deleteDocument(DB_ID, 'organizations', current.editOldId); } catch(e){}
         }
@@ -219,7 +232,6 @@ async function saveOrg(){
     
     const dataObj = { name: n, listIds: l, catIds: c, tags: JSON.stringify(tags) };
 
-    // Check for Conflicts before saving
     const conflictOrg = detectConflict(dataObj, editingId, db.orgs);
     if (conflictOrg) {
         pendingConflicts = [{ newObj: dataObj, existingOrg: conflictOrg, isEdit: !!editingId, editOldId: editingId }];
@@ -263,15 +275,12 @@ async function analyzeBulkUpload() {
         
         const dataObj = { name: name, listIds: [...targetListIds], catIds: [], tags: JSON.stringify(tags), starredIn: JSON.stringify({}) };
         
-        // 1. Check against Cloud DB
         let conflictOrg = detectConflict(dataObj, null, db.orgs);
-        // 2. Check against the batch we are currently uploading
         if (!conflictOrg) conflictOrg = detectConflict(dataObj, null, cleanOrgs);
 
         if (conflictOrg) {
             pendingConflicts.push({ newObj: dataObj, existingOrg: conflictOrg, isEdit: false });
         } else {
-            // Need a temporary ID for local cross-checking
             dataObj.id = "temp_" + i; 
             cleanOrgs.push(dataObj);
         }
@@ -280,18 +289,15 @@ async function analyzeBulkUpload() {
     closeModal('bulk-modal');
     if (cleanOrgs.length > 0) showToast(`Uploading ${cleanOrgs.length} clean records... please wait.`);
 
-    // Upload clean orgs silently
     for(let org of cleanOrgs) {
         try { 
-            delete org.id; // Remove the temp ID before sending to Appwrite
+            delete org.id; 
             const created = await databases.createDocument(DB_ID, 'organizations', ID.unique(), org); 
-            // Add to local state instantly so the conflict queue knows it exists
             db.orgs.push({ id: created.$id, name: created.name, listIds: created.listIds, tags: JSON.parse(created.tags) });
         } 
         catch(e) { console.error("Failed to upload row: " + org.name); }
     }
 
-    // Trigger Popups for the rest
     if (pendingConflicts.length > 0) {
         processConflictQueue();
     } else {
@@ -385,8 +391,6 @@ function renderTable() {
 function renderLink(d, t) {
     if(!d) return '<span class="empty-cell">&minus;</span>';
     const text = (typeof d === 'string') ? d : d.val;
-    
-    // Aggressively prevent empty "@" from rendering
     if(!text || text === '@' || text.trim() === '') return '<span class="empty-cell">&minus;</span>';
     
     let url = (typeof d === 'string') ? (t === 'twitter' ? `https://x.com/${text.replace('@','')}` : `https://instagram.com/${text.replace('@','')}`) : (d.link || '#');
@@ -405,7 +409,6 @@ function copyColumn(t) {
     });
     visibleOrgs = sortTableData(visibleOrgs, listId);
     
-    // Make sure we only copy valid tags, not empty @'s
     const allTags = visibleOrgs.map(o => (typeof o.tags[t] === 'string') ? o.tags[t] : (o.tags[t]?.val || "")).filter(k => k && k !== '@');
     
     if (allTags.length === 0) return showToast("No tags found", "error");
@@ -434,11 +437,13 @@ function addBulkRows(count) { const tbody = document.getElementById('bulk-tbody'
 function handleGridPaste(e) { e.preventDefault(); const cb = (e.clipboardData || window.clipboardData).getData('text'); const rows = cb.split(/\r\n|\n|\r/).filter(r => r.length > 0); let tgt = e.target; if (tgt.tagName !== 'INPUT') return; let tr = tgt.closest('tr'); let srIdx = Array.from(tr.parentElement.children).indexOf(tr); let scIdx = Array.from(tr.children).indexOf(tgt.parentElement); const tb = document.getElementById('bulk-tbody'); rows.forEach((rData, rIdx) => { const cells = rData.split('\t'); if (srIdx + rIdx >= tb.children.length) addBulkRows(1); const tRow = tb.children[srIdx + rIdx]; cells.forEach((cData, cIdx) => { const tcIdx = scIdx + cIdx; if (tcIdx < tRow.children.length) { const inp = tRow.children[tcIdx].querySelector('input'); if (inp) { let cd = cData.trim(); if(cd.startsWith('"') && cd.endsWith('"')) cd = cd.substring(1, cd.length - 1); inp.value = cd; } } }); }); }
 function resetBulkGrid() { if(confirm("Discard grid data?")) initBulkRows(20); }
 
-// The Bulletproof Handle Formatter
+// Bulletproof Handle Formatter
 function ensureHandle(val) { 
     if (!val) return ''; 
-    // Strip all leading @ symbols to clean it up first
-    let clean = val.toString().replace(/^@+/, '').trim(); 
-    if (!clean) return ''; // If it was totally blank or just "@@", save as absolutely empty string
+    let str = val.toString().trim();
+    let clean = str.replace(/^@+/, '').trim();
+    
+    // If it's empty, or meaningless placeholder text, ensure it saves as an absolute blank
+    if (clean.length === 0 || clean.toLowerCase() === 'na' || clean.toLowerCase() === 'none') return ''; 
     return '@' + clean; 
 }
