@@ -113,13 +113,12 @@ function updateUIForAdmin() {
 async function logout(){ try { await account.deleteSession('current'); } catch(e){} location.reload(); }
 
 // ==========================================
-// 5. MASTER DATA SCRUBBERS (The Fix for "-" and "@")
+// 5. MASTER DATA SCRUBBERS 
 // ==========================================
 function ensureHandle(val) { 
     if (!val) return ''; 
     let str = val.toString().trim();
-    // Vigorously wipe out pure dashes, NA, and empty spaces
-    if (str === '-' || str.toLowerCase() === 'na' || str.toLowerCase() === 'none' || str === '@') return ''; 
+    if (str === '-' || str === '@-' || str === '@' || str.toLowerCase() === 'na' || str.toLowerCase() === 'none') return ''; 
     
     let clean = str.replace(/^@+/, '').trim();
     if (clean.length === 0 || clean === '-') return ''; 
@@ -129,13 +128,12 @@ function ensureHandle(val) {
 function ensureLink(val) {
     if (!val) return '';
     let str = val.toString().trim();
-    // Wipe out dashes and empty placeholders for links
     if (str === '-' || str.toLowerCase() === 'na' || str.toLowerCase() === 'none') return '';
     return str;
 }
 
 // ==========================================
-// 6. DEEP CONFLICT DETECTION ENGINE
+// 6. DEEP CONFLICT DETECTION ENGINE 
 // ==========================================
 function detectConflict(newOrgObj, skipId, arrayToCheck = db.orgs) {
     const parseTags = (t) => {
@@ -145,30 +143,24 @@ function detectConflict(newOrgObj, skipId, arrayToCheck = db.orgs) {
     };
 
     const nt = parseTags(newOrgObj.tags);
-    const nName = (newOrgObj.name || '').toString().trim().toLowerCase();
 
     for (let org of arrayToCheck) {
         if (skipId && (org.id === skipId || org.$id === skipId)) continue;
 
-        const oName = (org.name || '').toString().trim().toLowerCase();
-
-        // 1. Exact Name Match
-        if (nName && nName === oName) return org;
-
-        // 2. Deep Tags Match
         const ot = parseTags(org.tags);
 
-        const match = (a, b) => {
-            if (!a || !b) return false;
+        // LOGIC 3: Compare tags one by one. If EITHER is empty, skip to next.
+        const isConflict = (a, b) => {
+            if (!a || !b) return false; // If either is empty/blank, no conflict here.
+
             let strA = a.toString().toLowerCase();
             let strB = b.toString().toLowerCase();
 
-            // Strip out formatting
+            // Strip formatting to find the core handle/URL
             const cleanStr = (s) => s.replace(/^(https?:\/\/)?(www\.)?/,'').replace(/[@\/\-\s]/g, '').trim();
             strA = cleanStr(strA);
             strB = cleanStr(strB);
 
-            // CRITICAL: If the cleaned string is empty or just 1 character, NEVER trigger a conflict
             if (strA.length < 2 || strB.length < 2) return false;
 
             const ignore = ['na', 'none', 'null', 'nil', 'blank', 'visitsite', 'visit', 'http', 'https', 'undefined'];
@@ -177,13 +169,14 @@ function detectConflict(newOrgObj, skipId, arrayToCheck = db.orgs) {
             return strA === strB;
         };
 
-        if (match(nt.twitter, ot.twitter)) return org;
-        if (match(nt.instagram, ot.instagram)) return org;
-        if (match(nt.linkedin?.link, ot.linkedin?.link)) return org;
-        if (match(nt.linkedin?.val, ot.linkedin?.val)) return org;
-        if (match(nt.facebook?.link, ot.facebook?.link)) return org;
-        if (match(nt.facebook?.val, ot.facebook?.val)) return org;
-        if (match(nt.website?.link, ot.website?.link)) return org;
+        // LOGIC 2: Name is completely ignored. Only checks tags & links.
+        if (isConflict(nt.twitter, ot.twitter)) return org;
+        if (isConflict(nt.instagram, ot.instagram)) return org;
+        if (isConflict(nt.linkedin?.link, ot.linkedin?.link)) return org;
+        if (isConflict(nt.linkedin?.val, ot.linkedin?.val)) return org;
+        if (isConflict(nt.facebook?.link, ot.facebook?.link)) return org;
+        if (isConflict(nt.facebook?.val, ot.facebook?.val)) return org;
+        if (isConflict(nt.website?.link, ot.website?.link)) return org;
     }
     return null;
 }
@@ -218,6 +211,8 @@ async function resolveConflict(action) {
             try { await databases.deleteDocument(DB_ID, 'organizations', current.editOldId); } catch(e){}
         }
 
+        // LOGIC 1: If Overwrite is clicked, the new object ENTIRELY replaces the old tags.
+        // If a tag in newObj is empty (because it was "-"), it will overwrite the old tag with an empty string.
         if (action === 'overwrite') {
             await databases.updateDocument(DB_ID, 'organizations', existingId, {
                 name: current.newObj.name,
@@ -243,7 +238,6 @@ async function saveOrg(){
     const l = Array.from(document.querySelectorAll('#check-lists input:checked')).map(c=>c.value); if(!l.includes('master'))l.push('master'); 
     const c = Array.from(document.querySelectorAll('#check-cats input:checked')).map(x=>x.value); 
     
-    // Utilize the Master Scrubbers
     const tags = {
         twitter: ensureHandle(document.getElementById('tag-twitter').value), 
         instagram: ensureHandle(document.getElementById('tag-instagram').value), 
@@ -287,7 +281,6 @@ async function analyzeBulkUpload() {
         const name = inputs[0].value.trim();
         if(!name) continue;
         
-        // Utilize the Master Scrubbers for Bulk Uploads
         const tags = {
             twitter: ensureHandle(inputs[1].value), 
             linkedin: { val: ensureHandle(inputs[2].value), link: ensureLink(inputs[3].value) },
@@ -415,7 +408,6 @@ function renderLink(d, t) {
     if(!d) return '<span class="empty-cell">&minus;</span>';
     const text = (typeof d === 'string') ? d : d.val;
     
-    // Aggressively prevent empty, "-", "@", or "@-" from rendering on screen
     if(!text || text === '@' || text === '-' || text === '@-' || text.trim() === '') {
         return '<span class="empty-cell">&minus;</span>';
     }
@@ -436,7 +428,6 @@ function copyColumn(t) {
     });
     visibleOrgs = sortTableData(visibleOrgs, listId);
     
-    // Completely ignore blanks, "@", "-", and "@-" so they don't get copied to the clipboard
     const allTags = visibleOrgs.map(o => (typeof o.tags[t] === 'string') ? o.tags[t] : (o.tags[t]?.val || "")).filter(k => {
         if (!k) return false;
         let clean = k.toString().trim();
@@ -451,7 +442,7 @@ function copyColumn(t) {
     navigator.clipboard.writeText(tagsToCopy.join('\n')); showToast(msg);
 }
 
-function exportToCSV() { /* Code remains identical */ }
+function exportToCSV() { /* Export Logic */ }
 function resetFilters() { document.getElementById('filter-list').value = 'all'; document.getElementById('filter-cat').value = 'all'; document.getElementById('search-bar').value = ''; renderTable(); }
 
 // ==========================================
