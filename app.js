@@ -148,15 +148,14 @@ function detectConflict(newOrgObj, skipId, arrayToCheck = db.orgs) {
         if (skipId && (org.id === skipId || org.$id === skipId)) continue;
 
         const ot = parseTags(org.tags);
+        let matchedFields = []; // Array to track which tags matched
 
-        // LOGIC 3: Compare tags one by one. If EITHER is empty, skip to next.
         const isConflict = (a, b) => {
-            if (!a || !b) return false; // If either is empty/blank, no conflict here.
+            if (!a || !b) return false;
 
             let strA = a.toString().toLowerCase();
             let strB = b.toString().toLowerCase();
 
-            // Strip formatting to find the core handle/URL
             const cleanStr = (s) => s.replace(/^(https?:\/\/)?(www\.)?/,'').replace(/[@\/\-\s]/g, '').trim();
             strA = cleanStr(strA);
             strB = cleanStr(strB);
@@ -169,16 +168,18 @@ function detectConflict(newOrgObj, skipId, arrayToCheck = db.orgs) {
             return strA === strB;
         };
 
-        // LOGIC 2: Name is completely ignored. Only checks tags & links.
-        if (isConflict(nt.twitter, ot.twitter)) return org;
-        if (isConflict(nt.instagram, ot.instagram)) return org;
-        if (isConflict(nt.linkedin?.link, ot.linkedin?.link)) return org;
-        if (isConflict(nt.linkedin?.val, ot.linkedin?.val)) return org;
-        if (isConflict(nt.facebook?.link, ot.facebook?.link)) return org;
-        if (isConflict(nt.facebook?.val, ot.facebook?.val)) return org;
-        if (isConflict(nt.website?.link, ot.website?.link)) return org;
+        // Check socials and push to array if matched. Website is explicitly ignored.
+        if (isConflict(nt.twitter, ot.twitter)) matchedFields.push('Twitter');
+        if (isConflict(nt.instagram, ot.instagram)) matchedFields.push('Instagram');
+        if (isConflict(nt.linkedin?.link, ot.linkedin?.link) || isConflict(nt.linkedin?.val, ot.linkedin?.val)) matchedFields.push('LinkedIn');
+        if (isConflict(nt.facebook?.link, ot.facebook?.link) || isConflict(nt.facebook?.val, ot.facebook?.val)) matchedFields.push('Facebook');
+
+        // If any matched fields exist, return both the org and the matched fields list
+        if (matchedFields.length > 0) {
+            return { org: org, matchedOn: matchedFields };
+        }
     }
-    return null;
+    return null; // No conflict
 }
 
 function processConflictQueue() {
@@ -189,10 +190,15 @@ function processConflictQueue() {
     }
     
     const current = pendingConflicts[0];
+    const matchText = current.matchedOn.join(", "); // Formats the matched fields nicely
+    
     document.getElementById('conflict-details').innerHTML = `
         <div style="margin-bottom:8px;"><strong>Attempting to save:</strong> <span style="color:var(--primary-color)">${current.newObj.name}</span></div>
-        <div><strong>Matches Existing Org:</strong> <span style="color:var(--danger-color)">${current.existingOrg.name}</span> 
+        <div style="margin-bottom:8px;"><strong>Matches Existing Org:</strong> <span style="color:var(--danger-color)">${current.existingOrg.name}</span> 
         <br><small style="color:#666;">(Admin ID: ${current.existingOrg.id || current.existingOrg.$id})</small></div>
+        <div style="padding-top:8px; border-top:1px solid var(--border-color);">
+            <strong><i class="fa-solid fa-link"></i> Conflict Found In:</strong> <span style="color:var(--danger-color); font-weight:bold;">${matchText}</span>
+        </div>
     `;
     openModal('conflict-modal');
 }
@@ -211,8 +217,6 @@ async function resolveConflict(action) {
             try { await databases.deleteDocument(DB_ID, 'organizations', current.editOldId); } catch(e){}
         }
 
-        // LOGIC 1: If Overwrite is clicked, the new object ENTIRELY replaces the old tags.
-        // If a tag in newObj is empty (because it was "-"), it will overwrite the old tag with an empty string.
         if (action === 'overwrite') {
             await databases.updateDocument(DB_ID, 'organizations', existingId, {
                 name: current.newObj.name,
@@ -248,9 +252,9 @@ async function saveOrg(){
     
     const dataObj = { name: n, listIds: l, catIds: c, tags: JSON.stringify(tags) };
 
-    const conflictOrg = detectConflict(dataObj, editingId, db.orgs);
-    if (conflictOrg) {
-        pendingConflicts = [{ newObj: dataObj, existingOrg: conflictOrg, isEdit: !!editingId, editOldId: editingId }];
+    const conflictData = detectConflict(dataObj, editingId, db.orgs);
+    if (conflictData) {
+        pendingConflicts = [{ newObj: dataObj, existingOrg: conflictData.org, matchedOn: conflictData.matchedOn, isEdit: !!editingId, editOldId: editingId }];
         closeModal('org-modal');
         processConflictQueue();
         return;
@@ -291,11 +295,11 @@ async function analyzeBulkUpload() {
         
         const dataObj = { name: name, listIds: [...targetListIds], catIds: [], tags: JSON.stringify(tags), starredIn: JSON.stringify({}) };
         
-        let conflictOrg = detectConflict(dataObj, null, db.orgs);
-        if (!conflictOrg) conflictOrg = detectConflict(dataObj, null, cleanOrgs);
+        let conflictData = detectConflict(dataObj, null, db.orgs);
+        if (!conflictData) conflictData = detectConflict(dataObj, null, cleanOrgs);
 
-        if (conflictOrg) {
-            pendingConflicts.push({ newObj: dataObj, existingOrg: conflictOrg, isEdit: false });
+        if (conflictData) {
+            pendingConflicts.push({ newObj: dataObj, existingOrg: conflictData.org, matchedOn: conflictData.matchedOn, isEdit: false });
         } else {
             dataObj.id = "temp_" + i; 
             cleanOrgs.push(dataObj);
