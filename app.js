@@ -23,6 +23,7 @@ let searchTimer = null;
 let copyClickState = {}; 
 
 let pendingConflicts = [];
+let draggedRow = null; // Used for Drag & Drop Reordering
 
 // ==========================================
 // 3. STARTUP & CLOUD FETCHING
@@ -71,7 +72,9 @@ async function fetchCloudData() {
             listIds: d.listIds || [],
             catIds: d.catIds || [],
             tags: JSON.parse(d.tags || '{}'),
-            starredIn: JSON.parse(d.starredIn || '{}')
+            // We repurposed starredIn to purely hold order indexes!
+            orderData: JSON.parse(d.starredIn || '{}'),
+            createdAt: new Date(d.$createdAt).getTime() // Fallback sorting base
         }));
 
         initDropdowns();
@@ -105,8 +108,7 @@ function updateUIForAdmin() {
     document.getElementById('admin-panel').classList.remove('hidden'); 
     document.getElementById('login-trigger').classList.add('hidden'); 
     document.getElementById('add-btn').classList.remove('hidden'); 
-    document.querySelectorAll('.col-action').forEach(el=>el.classList.remove('hidden')); 
-    document.querySelectorAll('.col-admin').forEach(el=>el.classList.remove('hidden')); 
+    document.querySelectorAll('.admin-only').forEach(el=>el.classList.remove('hidden')); 
     renderTable(); 
 }
 
@@ -148,7 +150,7 @@ function detectConflict(newOrgObj, skipId, arrayToCheck = db.orgs) {
         if (skipId && (org.id === skipId || org.$id === skipId)) continue;
 
         const ot = parseTags(org.tags);
-        let matchedFields = []; // Array to track which tags matched
+        let matchedFields = []; 
 
         const isConflict = (a, b) => {
             if (!a || !b) return false;
@@ -168,18 +170,14 @@ function detectConflict(newOrgObj, skipId, arrayToCheck = db.orgs) {
             return strA === strB;
         };
 
-        // Check socials and push to array if matched. Website is explicitly ignored.
         if (isConflict(nt.twitter, ot.twitter)) matchedFields.push('Twitter');
         if (isConflict(nt.instagram, ot.instagram)) matchedFields.push('Instagram');
         if (isConflict(nt.linkedin?.link, ot.linkedin?.link) || isConflict(nt.linkedin?.val, ot.linkedin?.val)) matchedFields.push('LinkedIn');
         if (isConflict(nt.facebook?.link, ot.facebook?.link) || isConflict(nt.facebook?.val, ot.facebook?.val)) matchedFields.push('Facebook');
 
-        // If any matched fields exist, return both the org and the matched fields list
-        if (matchedFields.length > 0) {
-            return { org: org, matchedOn: matchedFields };
-        }
+        if (matchedFields.length > 0) return { org: org, matchedOn: matchedFields };
     }
-    return null; // No conflict
+    return null; 
 }
 
 function processConflictQueue() {
@@ -190,7 +188,7 @@ function processConflictQueue() {
     }
     
     const current = pendingConflicts[0];
-    const matchText = current.matchedOn.join(", "); // Formats the matched fields nicely
+    const matchText = current.matchedOn.join(", "); 
     
     document.getElementById('conflict-details').innerHTML = `
         <div style="margin-bottom:8px;"><strong>Attempting to save:</strong> <span style="color:var(--primary-color)">${current.newObj.name}</span></div>
@@ -250,7 +248,10 @@ async function saveOrg(){
         website:{val:ensureLink(document.getElementById('tag-website-link').value) ? "Visit Site" : "", link:ensureLink(document.getElementById('tag-website-link').value)}
     }; 
     
-    const dataObj = { name: n, listIds: l, catIds: c, tags: JSON.stringify(tags) };
+    // Preserve order Data if editing, or default to empty so it gets placed at bottom automatically.
+    const oldOrderData = editingId ? db.orgs.find(o=>o.id === editingId).orderData : {};
+    
+    const dataObj = { name: n, listIds: l, catIds: c, tags: JSON.stringify(tags), starredIn: JSON.stringify(oldOrderData) };
 
     const conflictData = detectConflict(dataObj, editingId, db.orgs);
     if (conflictData) {
@@ -265,7 +266,6 @@ async function saveOrg(){
         if(editingId){
             await databases.updateDocument(DB_ID, 'organizations', editingId, dataObj);
         } else {
-            dataObj.starredIn = JSON.stringify({});
             await databases.createDocument(DB_ID, 'organizations', ID.unique(), dataObj);
         } 
         closeModal('org-modal'); 
@@ -279,6 +279,7 @@ async function analyzeBulkUpload() {
     
     pendingConflicts = []; 
     let cleanOrgs = [];
+    let baseUploadTime = Date.now();
 
     for(let i=0; i<rows.length; i++) {
         const inputs = rows[i].querySelectorAll('input');
@@ -293,7 +294,11 @@ async function analyzeBulkUpload() {
             website: { val: ensureLink(inputs[7].value) ? "Visit Site" : "", link: ensureLink(inputs[7].value) }
         };
         
-        const dataObj = { name: name, listIds: [...targetListIds], catIds: [], tags: JSON.stringify(tags), starredIn: JSON.stringify({}) };
+        // Provide explicit initial numerical order so Excel lists retain their strict sequence
+        let initialOrder = {};
+        targetListIds.forEach(l => initialOrder[l] = baseUploadTime + i);
+        
+        const dataObj = { name: name, listIds: [...targetListIds], catIds: [], tags: JSON.stringify(tags), starredIn: JSON.stringify(initialOrder) };
         
         let conflictData = detectConflict(dataObj, null, db.orgs);
         if (!conflictData) conflictData = detectConflict(dataObj, null, cleanOrgs);
@@ -313,7 +318,7 @@ async function analyzeBulkUpload() {
         try { 
             delete org.id; 
             const created = await databases.createDocument(DB_ID, 'organizations', ID.unique(), org); 
-            db.orgs.push({ id: created.$id, name: created.name, listIds: created.listIds, tags: JSON.parse(created.tags) });
+            db.orgs.push({ id: created.$id, name: created.name, listIds: created.listIds, tags: JSON.parse(created.tags), orderData: JSON.parse(created.starredIn) });
         } 
         catch(e) { console.error("Failed to upload row: " + org.name); }
     }
@@ -342,21 +347,106 @@ async function removeMeta(t, id){
     if(!confirm("Delete this list/category?")) return;
     try { await databases.deleteDocument(DB_ID, t, id); } catch(e) { showToast("Error deleting", "error"); }
 }
-async function toggleStar(orgId, listId) {
-    if (!isAdmin) return;
-    const org = db.orgs.find(o => o.id === orgId); if (!org) return;
-    if (org.starredIn[listId]) delete org.starredIn[listId]; else org.starredIn[listId] = Date.now();
-    try { await databases.updateDocument(DB_ID, 'organizations', orgId, { starredIn: JSON.stringify(org.starredIn) }); } 
-    catch(e) { showToast("Failed to star", "error"); }
-}
 
 // ==========================================
-// 8. UI & RENDERING LOGIC
+// 8. DRAG AND DROP REORDERING ENGINE
+// ==========================================
+function handleDragStart(e) {
+    if (!isAdmin || document.getElementById('search-bar').value.trim() !== '') return e.preventDefault();
+    draggedRow = e.target.closest('tr');
+    draggedRow.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', draggedRow.dataset.id);
+}
+
+function handleDragOver(e) {
+    if (!isAdmin || !draggedRow) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    const tbody = document.getElementById('table-body');
+    const afterElement = getDragAfterElement(tbody, e.clientY);
+    if (afterElement == null) {
+        tbody.appendChild(draggedRow);
+    } else {
+        tbody.insertBefore(draggedRow, afterElement);
+    }
+}
+
+function handleDragEnd(e) {
+    if (!isAdmin || !draggedRow) return;
+    draggedRow.classList.remove('dragging');
+    updateOrderAfterDrop(draggedRow);
+    draggedRow = null;
+}
+
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('tr.draggable-row:not(.dragging)')];
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function getOrgOrderVal(org, listId) {
+    if (org.orderData && org.orderData[listId] !== undefined) return Number(org.orderData[listId]);
+    return org.createdAt || 0; // Stable fallback base
+}
+
+async function updateOrderAfterDrop(row) {
+    const listId = document.getElementById('filter-list').value;
+    const orgId = row.dataset.id;
+    
+    const prevRow = row.previousElementSibling;
+    const nextRow = row.nextElementSibling;
+
+    const prevOrg = prevRow ? db.orgs.find(o => o.id === prevRow.dataset.id) : null;
+    const nextOrg = nextRow ? db.orgs.find(o => o.id === nextRow.dataset.id) : null;
+
+    let prevOrder = prevOrg ? getOrgOrderVal(prevOrg, listId) : null;
+    let nextOrder = nextOrg ? getOrgOrderVal(nextOrg, listId) : null;
+
+    let newOrder;
+    if (prevOrder === null && nextOrder === null) newOrder = Date.now();
+    else if (prevOrder === null) newOrder = nextOrder - 10000;
+    else if (nextOrder === null) newOrder = prevOrder + 10000;
+    else newOrder = (prevOrder + nextOrder) / 2; // Exact Fractional calculation!
+
+    const org = db.orgs.find(o => o.id === orgId);
+    if (!org.orderData) org.orderData = {};
+    org.orderData[listId] = newOrder;
+
+    showToast("Saving new order...");
+    try {
+        await databases.updateDocument(DB_ID, 'organizations', orgId, {
+            starredIn: JSON.stringify(org.orderData) // Stored invisibly in old DB field
+        });
+    } catch(e) { showToast("Failed to save order", "error"); }
+}
+
+
+// ==========================================
+// 9. UI & RENDERING LOGIC
 // ==========================================
 function initTheme() { const savedTheme = localStorage.getItem('amtz_theme') || 'light'; if (savedTheme === 'dark') { document.body.classList.add('dark-theme'); document.getElementById('theme-toggle').innerHTML = '<i class="fa-solid fa-sun"></i>'; } }
 function toggleTheme() { const isDark = document.body.classList.toggle('dark-theme'); localStorage.setItem('amtz_theme', isDark ? 'dark' : 'light'); document.getElementById('theme-toggle').innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>'; }
 function sortDataAlphabetically(data) { return data.sort((a, b) => { if (a.id === 'master') return -1; if (b.id === 'master') return 1; return a.name.localeCompare(b.name); }); }
-function sortTableData(data, currentListId) { return data.sort((a, b) => { if (currentListId !== 'all') { const aStarTime = (a.starredIn && a.starredIn[currentListId]) ? a.starredIn[currentListId] : 0; const bStarTime = (b.starredIn && b.starredIn[currentListId]) ? b.starredIn[currentListId] : 0; if (aStarTime !== bStarTime) return bStarTime - aStarTime; } return a.name.localeCompare(b.name); }); }
+
+// Updated to sort by the new drag-and-drop order fractional indexes
+function sortTableData(data, currentListId) { 
+    return data.sort((a, b) => { 
+        let orderA = getOrgOrderVal(a, currentListId);
+        let orderB = getOrgOrderVal(b, currentListId);
+        if (orderA !== orderB) return orderA - orderB;
+        return a.name.localeCompare(b.name); 
+    }); 
+}
+
 function showToast(msg, type = "success") { const container = document.getElementById('toast-container'); if(!container) return alert(msg); const toast = document.createElement('div'); toast.className = `toast ${type}`; toast.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'circle-exclamation'}"></i> ${msg}`; container.appendChild(toast); setTimeout(() => toast.remove(), 3000); }
 function debouncedRender() { clearTimeout(searchTimer); searchTimer = setTimeout(renderTable, 300); }
 
@@ -380,6 +470,9 @@ function renderTable() {
     const tbody = document.getElementById('table-body');
     const empty = document.getElementById('empty-state');
     
+    // Disable drag if searching, to prevent index destruction
+    const canDrag = isAdmin && rawSearch === '';
+    
     let results = db.orgs.filter(org => {
         if (listId!=='all' && !org.listIds.includes(listId)) return false;
         if (catId!=='all' && !org.catIds.includes(catId)) return false;
@@ -389,21 +482,26 @@ function renderTable() {
             return searchGroups.some(group => group.split(' ').filter(t => t).every(term => txt.includes(term)));
         } return true;
     });
+    
     results = sortTableData(results, listId);
+    
     if(document.getElementById('stats-count')) { document.getElementById('stats-count').innerText = `${results.length} Organizations`; }
     if (results.length === 0) { tbody.innerHTML = ''; empty.classList.remove('hidden'); return; }
     empty.classList.add('hidden');
     
     tbody.innerHTML = results.map(org => {
-        const isStarred = (listId !== 'all') && org.starredIn && org.starredIn[listId];
-        const starHTML = (isAdmin && listId !== 'all') ? `<button class="btn-star ${isStarred ? 'starred' : ''}" onclick="toggleStar('${org.id}', '${listId}')"><i class="fa-solid fa-star"></i></button>` : '';
-        return `<tr>
-            <td class="col-admin ${isAdmin?'':'hidden'}"><code style="font-size:0.75rem; color:#888;">${org.id}</code></td>
-            <td class="col-fixed-name"><div style="display:flex; align-items:center; gap:8px;">${starHTML}<span>${org.name}</span></div></td>
+        return `<tr class="${canDrag ? 'draggable-row' : ''}" data-id="${org.id}" 
+                    draggable="${canDrag ? 'true' : 'false'}" 
+                    ondragstart="handleDragStart(event)" 
+                    ondragover="handleDragOver(event)" 
+                    ondragend="handleDragEnd(event)">
+            <td class="col-drag ${isAdmin?'':'hidden'} admin-only"><i class="fa-solid fa-grip-vertical drag-handle" title="Drag to reorder"></i></td>
+            <td class="col-admin ${isAdmin?'':'hidden'} admin-only"><code style="font-size:0.75rem; color:#888;">${org.id}</code></td>
+            <td class="col-fixed-name"><span>${org.name}</span></td>
             <td>${renderLink(org.tags.twitter, 'twitter')}</td><td>${renderLink(org.tags.linkedin, 'linkedin')}</td>
             <td>${renderLink(org.tags.facebook, 'facebook')}</td><td>${renderLink(org.tags.instagram, 'instagram')}</td>
             <td>${renderLink(org.tags.website, 'website')}</td>
-            <td class="col-action ${isAdmin?'':'hidden'}"><button class="btn-primary-action btn-sm" onclick="editOrg('${org.id}')">Edit</button></td>
+            <td class="col-action ${isAdmin?'':'hidden'} admin-only"><button class="btn-primary-action btn-sm" onclick="editOrg('${org.id}')">Edit</button></td>
         </tr>`;
     }).join('');
 }
@@ -450,7 +548,7 @@ function exportToCSV() { /* Export Logic */ }
 function resetFilters() { document.getElementById('filter-list').value = 'all'; document.getElementById('filter-cat').value = 'all'; document.getElementById('search-bar').value = ''; renderTable(); }
 
 // ==========================================
-// 9. MODALS & BULK UPLOAD GRIDS
+// 10. MODALS & BULK UPLOAD GRIDS
 // ==========================================
 function openOrgModal(){editingId=null; document.getElementById('edit-name').value=''; ['twitter','instagram'].forEach(k=>document.getElementById(`tag-${k}`).value=''); ['linkedin','facebook','website'].forEach(k=>{document.getElementById(`tag-${k}-val`).value='';document.getElementById(`tag-${k}-link`).value=''}); renderCheckboxes(['master'],[]); openModal('org-modal');}
 function editOrg(id){editingId=id; const o=db.orgs.find(i=>i.id===id); document.getElementById('edit-name').value=o.name; document.getElementById('tag-twitter').value=o.tags.twitter||''; document.getElementById('tag-instagram').value=o.tags.instagram||''; ['linkedin','facebook','website'].forEach(k=>{const t=o.tags[k]||{}; document.getElementById(`tag-${k}-val`).value=t.val||''; document.getElementById(`tag-${k}-link`).value=t.link||''}); renderCheckboxes(o.listIds,o.catIds); openModal('org-modal');}
