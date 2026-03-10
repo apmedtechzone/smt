@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Social Media Directory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=2">
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
+</head>
+<body>
+    <div class="container">
+        <header style="position: relative;">
+            <h1>Company Social Media Directory</h1>
+            <p class="subtitle">Official social media handles and website links for our departments and partner organizations.</p>
+            
+            <button id="login-trigger" class="btn-admin" onclick="openModal('login-modal')"><i class="fa-solid fa-lock"></i> Admin</button>
+            
+            <div id="admin-panel" class="hidden" style="margin-top: 20px;">
+                <span style="font-weight: bold; color: #10b981; margin-right: 15px;"><i class="fa-solid fa-shield-halved"></i> Admin Mode</span>
+                <button class="btn-primary" onclick="openDeptModal()"><i class="fa-solid fa-plus"></i> Add Department</button>
+                <button class="btn-danger" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            </div>
+        </header>
+        
+        <div id="loading-state" style="text-align: center; padding: 40px; color: #7f8c8d;">Syncing with Cloud Database...</div>
+        
+        <div id="companies-grid" class="companies-grid"></div>
+        
+        <footer>
+            <p>All social media links are official company profiles</p>
+        </footer>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 400px;">
+            <h2>Admin Login</h2>
+            <input type="email" id="login-email" placeholder="Admin Email" class="input-field" style="margin-bottom: 10px;">
+            <input type="password" id="login-pass" placeholder="Password" class="input-field" onkeyup="if(event.key === 'Enter') login()">
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+                <button class="btn-secondary" onclick="closeModal('login-modal')">Cancel</button>
+                <button class="btn-primary" onclick="login()">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dept-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 id="modal-title">Department Details</h2>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; margin-bottom:5px; font-weight:bold; font-size: 0.9rem;">Department Name *</label>
+                <input type="text" id="edit-name" placeholder="e.g. AMTZ" class="input-field">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; margin-bottom:5px; font-weight:bold; font-size: 0.9rem;">Upload Logo (Image)</label>
+                <input type="file" id="edit-logo" accept="image/*" class="input-field" style="padding: 6px; background: #f8f9fa;">
+                <small id="current-logo-text" style="color:#888; display:none; margin-top: 5px;">A logo is already saved. Upload a new one to replace it.</small>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display:block; margin-bottom:5px; font-weight:bold; font-size: 0.9rem;">Website URL</label>
+                <input type="text" id="edit-website" placeholder="https://..." class="input-field">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold; font-size: 0.9rem;">Twitter/X URL</label>
+                    <input type="text" id="edit-twitter" placeholder="https://x.com/..." class="input-field">
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold; font-size: 0.9rem;">LinkedIn URL</label>
+                    <input type="text" id="edit-linkedin" placeholder="https://linkedin.com/..." class="input-field">
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold; font-size: 0.9rem;">Facebook URL</label>
+                    <input type="text" id="edit-facebook" placeholder="https://facebook.com/..." class="input-field">
+                </div>
+                <div>
+                    <label style="display:block; margin-bottom:5px; font-weight:bold; font-size: 0.9rem;">Instagram URL</label>
+                    <input type="text" id="edit-instagram" placeholder="https://instagram.com/..." class="input-field">
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:25px;">
+                <button id="btn-delete-dept" class="btn-danger hidden" style="margin-right:auto;" onclick="deleteDept()"><i class="fa-solid fa-trash"></i> Delete</button>
+                <button class="btn-secondary" onclick="closeModal('dept-modal')">Cancel</button>
+                <button class="btn-primary" id="btn-save" onclick="saveDept()">Save to Cloud</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=2"></script>
+</body>
+</html>
