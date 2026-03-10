@@ -1,0 +1,32 @@
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+body { background: linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%); min-height: 100vh; padding: 20px; color: #333; }
+.container { max-width: 900px; margin: 0 auto; position: relative; }
+header { text-align: center; padding: 40px 20px; }
+h1 { font-size: 2.8rem; color: #2c3e50; margin-bottom: 10px; }
+.subtitle { font-size: 1.2rem; color: #7f8c8d; }
+
+.btn-admin { position: absolute; top: 10px; right: 10px; background: white; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.btn-admin:hover { background: #e2e8f0; }
+.hidden { display: none !important; }
+
+.apps-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; padding: 20px 0; }
+.app-card { background: white; border-radius: 16px; padding: 30px 20px; text-align: center; text-decoration: none; color: inherit; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.3s, box-shadow 0.3s; position: relative; display: block; }
+.app-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+.app-card.dragging { opacity: 0.5; box-shadow: none; transform: scale(0.95); }
+.app-card.hidden-card { opacity: 0.5; filter: grayscale(1); }
+.app-icon { font-size: 3rem; color: #3b82f6; margin-bottom: 15px; }
+.app-title { font-size: 1.3rem; font-weight: bold; }
+
+.admin-tools { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; }
+.admin-tools button { padding: 4px 8px; font-size: 0.8rem; z-index: 10; cursor: pointer; border-radius: 4px; border: none; }
+.btn-edit { background: #e2e8f0; color: #333; }
+.btn-toggle { background: #10b981; color: white; }
+.btn-toggle.off { background: #ef4444; }
+
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.modal-content { background: white; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; }
+.input-field { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
+button { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+.btn-primary { background: #3b82f6; color: white; }
+.btn-secondary { background: #e2e8f0; color: #475569; }
+.btn-danger { background: #ef4444; color: white; }
