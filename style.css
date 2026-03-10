@@ -14,7 +14,8 @@ h1 { font-size: 2.8rem; color: #2c3e50; margin-bottom: 10px; }
 .app-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
 .app-card.dragging { opacity: 0.5; box-shadow: none; transform: scale(0.95); }
 .app-card.hidden-card { opacity: 0.5; filter: grayscale(1); }
-.app-icon { font-size: 3rem; color: #3b82f6; margin-bottom: 15px; }
+
+.app-image { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; border-radius: 12px; background: #f8f9fa; padding: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 .app-title { font-size: 1.3rem; font-weight: bold; }
 
 .admin-tools { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; }
@@ -30,3 +31,7 @@ button { border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; f
 .btn-primary { background: #3b82f6; color: white; }
 .btn-secondary { background: #e2e8f0; color: #475569; }
 .btn-danger { background: #ef4444; color: white; }
+
+#toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+.toast { background: #1e293b; color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.toast.success { border-left: 4px solid #10b981; } .toast.error { border-left: 4px solid #ef4444; }
