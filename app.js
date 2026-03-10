@@ -1,11 +1,14 @@
-const { Client, Account, Databases, ID, Query } = Appwrite;
+const { Client, Account, Databases, Storage, ID, Query } = Appwrite;
 const client = new Client().setEndpoint('https://sgp.cloud.appwrite.io/v1').setProject('69abc18f00304e23f121');
 const account = new Account(client);
 const databases = new Databases(client);
+const storage = new Storage(client);
 
 const DB_ID = '69abd4a8000d0b820e8b';
 const TABLE_ID = 'apps';
-let isAdmin = false; let apps = []; let editingId = null; let draggedId = null;
+const BUCKET_ID = '69afc921002bc8f541d7'; // Reusing your Logos bucket!
+
+let isAdmin = false; let apps = []; let editingId = null; let currentImageId = null; let draggedId = null;
 
 async function initApp() {
     try { await account.get(); isAdmin = true; updateUIForAdmin(); } catch (e) { isAdmin = false; }
@@ -13,10 +16,12 @@ async function initApp() {
     client.subscribe(`databases.${DB_ID}.collections.${TABLE_ID}.documents`, response => fetchApps());
 }
 
+const getSortVal = (a) => (a.order !== undefined && a.order !== null) ? a.order : new Date(a.$createdAt).getTime();
+
 async function fetchApps() {
     try {
         const res = await databases.listDocuments(DB_ID, TABLE_ID, [Query.limit(100)]);
-        apps = res.documents.sort((a,b) => (a.order||0) - (b.order||0));
+        apps = res.documents.sort((a,b) => getSortVal(a) - getSortVal(b));
         document.getElementById('loading-state').classList.add('hidden');
         renderApps();
     } catch(e) {}
@@ -27,6 +32,8 @@ function renderApps() {
     const visibleApps = isAdmin ? apps : apps.filter(a => a.visible);
     
     visibleApps.forEach(app => {
+        let imageUrl = app.imageId ? storage.getFileView(BUCKET_ID, app.imageId).href : 'https://via.placeholder.com/150?text=No+Image';
+
         const adminTools = isAdmin ? `
             <div class="admin-tools">
                 <button class="btn-toggle ${app.visible?'':'off'}" onclick="event.preventDefault(); toggleVisibility('${app.$id}', ${app.visible})"><i class="fa-solid ${app.visible?'fa-eye':'fa-eye-slash'}"></i></button>
@@ -38,32 +45,43 @@ function renderApps() {
         grid.innerHTML += `
             <a href="${app.url}" class="app-card ${!app.visible?'hidden-card':''}" ${dragAttrs}>
                 ${adminTools}
-                <div class="app-icon"><i class="fa-solid ${app.icon}"></i></div>
+                <img src="${imageUrl}" class="app-image" alt="${app.title}">
                 <div class="app-title">${app.title}</div>
             </a>`;
     });
 }
 
-// Drag & Drop
+// FLAWLESS ARRAY-SPLICE DRAG & DROP
 function dragStart(e, id) { if(!isAdmin) return; draggedId = id; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => e.target.classList.add('dragging'), 0); }
 async function dropTarget(e, targetId) {
     if(!isAdmin || !draggedId || draggedId === targetId) return;
     e.preventDefault();
-    const sorted = [...apps].sort((a,b) => (a.order||0) - (b.order||0));
+    
+    let sorted = [...apps].sort((a,b) => getSortVal(a) - getSortVal(b));
+    const draggedIdx = sorted.findIndex(a => a.$id === draggedId);
     const targetIdx = sorted.findIndex(a => a.$id === targetId);
-    const prev = targetIdx > 0 ? sorted[targetIdx - 1] : null;
-    const next = sorted[targetIdx];
 
-    let pOrd = prev ? (prev.order||0) : null;
-    let nOrd = next.order||0;
-    let newOrder = pOrd === null ? nOrd - 10000 : (pOrd + nOrd) / 2;
+    // Swap positions in array purely logically
+    const [draggedItem] = sorted.splice(draggedIdx, 1);
+    sorted.splice(targetIdx, 0, draggedItem);
+
+    // Calculate new order based on new neighbors
+    const prev = targetIdx > 0 ? sorted[targetIdx - 1] : null;
+    const next = targetIdx < sorted.length - 1 ? sorted[targetIdx + 1] : null;
+
+    let pOrd = prev ? getSortVal(prev) : null;
+    let nOrd = next ? getSortVal(next) : null;
+
+    let newOrder;
+    if (pOrd === null) newOrder = nOrd - 10000;
+    else if (nOrd === null) newOrder = pOrd + 10000;
+    else newOrder = (pOrd + nOrd) / 2;
 
     apps.find(a => a.$id === draggedId).order = newOrder;
     renderApps();
     try { await databases.updateDocument(DB_ID, TABLE_ID, draggedId, { order: newOrder }); } catch(err){}
 }
 
-// Admin Logic
 async function login() { 
     try { await account.createEmailPasswordSession(document.getElementById('login-email').value, document.getElementById('login-pass').value); isAdmin = true; updateUIForAdmin(); closeModal('login-modal'); } catch(e){ alert("Login Failed"); } 
 }
@@ -71,16 +89,60 @@ function updateUIForAdmin() { document.getElementById('admin-panel').classList.r
 async function logout(){ try { await account.deleteSession('current'); } catch(e){} location.reload(); }
 
 async function toggleVisibility(id, curr) { await databases.updateDocument(DB_ID, TABLE_ID, id, { visible: !curr }); }
-function openAppModal(){ editingId=null; document.getElementById('edit-title').value=''; document.getElementById('edit-url').value=''; document.getElementById('edit-icon').value=''; document.getElementById('btn-delete').classList.add('hidden'); openModal('app-modal'); }
-function editApp(id){ const a = apps.find(x=>x.$id===id); editingId=id; document.getElementById('edit-title').value=a.title; document.getElementById('edit-url').value=a.url; document.getElementById('edit-icon').value=a.icon; document.getElementById('btn-delete').classList.remove('hidden'); openModal('app-modal'); }
+
+function openAppModal(){ 
+    editingId=null; currentImageId=null; 
+    document.getElementById('edit-title').value=''; 
+    document.getElementById('edit-url').value=''; 
+    document.getElementById('edit-image').value=''; 
+    document.getElementById('current-image-text').style.display='none';
+    document.getElementById('btn-delete').classList.add('hidden'); 
+    openModal('app-modal'); 
+}
+
+function editApp(id){ 
+    const a = apps.find(x=>x.$id===id); 
+    editingId=id; 
+    currentImageId = a.imageId || null;
+    document.getElementById('edit-title').value=a.title; 
+    document.getElementById('edit-url').value=a.url; 
+    document.getElementById('edit-image').value=''; 
+    document.getElementById('current-image-text').style.display = currentImageId ? 'block' : 'none';
+    document.getElementById('btn-delete').classList.remove('hidden'); 
+    openModal('app-modal'); 
+}
 
 async function saveApp() {
-    const data = { title: document.getElementById('edit-title').value, url: document.getElementById('edit-url').value, icon: document.getElementById('edit-icon').value, visible: true };
-    if(!editingId) data.order = Date.now(); // Put new apps at the end
-    try { if(editingId) await databases.updateDocument(DB_ID, TABLE_ID, editingId, data); else await databases.createDocument(DB_ID, TABLE_ID, ID.unique(), data); closeModal('app-modal'); } catch(e){}
+    const btn = document.getElementById('btn-save'); btn.innerText = "Saving..."; btn.disabled = true;
+    try {
+        let newImageId = currentImageId;
+        const fileInput = document.getElementById('edit-image');
+        if (fileInput.files.length > 0) {
+            const uploadedFile = await storage.createFile(BUCKET_ID, ID.unique(), fileInput.files[0]);
+            newImageId = uploadedFile.$id;
+            if (currentImageId) { try { await storage.deleteFile(BUCKET_ID, currentImageId); } catch(e){} }
+        }
+        
+        const data = { title: document.getElementById('edit-title').value, url: document.getElementById('edit-url').value, imageId: newImageId, visible: true };
+        if(!editingId) data.order = Date.now(); 
+        
+        if(editingId) await databases.updateDocument(DB_ID, TABLE_ID, editingId, data); 
+        else await databases.createDocument(DB_ID, TABLE_ID, ID.unique(), data); 
+        
+        closeModal('app-modal'); 
+    } catch(e){} finally { btn.innerText = "Save App"; btn.disabled = false; }
 }
-async function deleteApp() { if(confirm("Delete App?")) { await databases.deleteDocument(DB_ID, TABLE_ID, editingId); closeModal('app-modal'); } }
+
+async function deleteApp() { 
+    if(confirm("Delete App?")) { 
+        if (currentImageId) { try { await storage.deleteFile(BUCKET_ID, currentImageId); } catch(e){} }
+        await databases.deleteDocument(DB_ID, TABLE_ID, editingId); 
+        closeModal('app-modal'); 
+    } 
+}
 
 function openModal(id){ document.getElementById(id).classList.remove('hidden'); }
 function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+function showToast(msg, type = "success") { const container = document.getElementById('toast-container'); const toast = document.createElement('div'); toast.className = `toast ${type}`; toast.innerHTML = msg; container.appendChild(toast); setTimeout(() => toast.remove(), 3000); }
+
 initApp();
