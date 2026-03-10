@@ -62,7 +62,7 @@ h1 {
     padding: 20px 0; 
 }
 
-/* PERFECT SQUARE CARDS */
+/* PERFECT SQUARE CARDS - GRID FIX */
 .app-card { 
     background: white; 
     border-radius: 16px; 
@@ -72,9 +72,11 @@ h1 {
     box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
     transition: transform 0.3s, box-shadow 0.3s; 
     position: relative; 
-    display: flex; 
-    flex-direction: column;
     aspect-ratio: 1 / 1; 
+    
+    /* The Foolproof Layout */
+    display: grid; 
+    grid-template-rows: 1fr auto; 
 }
 
 .app-card:hover { 
@@ -96,13 +98,13 @@ h1 {
 /* LARGE IMAGE WRAPPER */
 .app-image-wrapper {
     width: 100%;
-    flex: 1 1 auto; /* Allows it to grow and shrink properly */
-    min-height: 0;  /* CRITICAL: Stops the wrapper from pushing the title out of the square */
+    height: 100%;
     background: #f8f9fa;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px; 
+    padding: 25px; 
+    overflow: hidden; /* Absolutely prevents the image from stretching the card */
 }
 
 .app-image { 
@@ -113,7 +115,6 @@ h1 {
 }
 
 .app-title { 
-    flex: 0 0 auto; /* CRITICAL: Prevents the title from being crushed */
     font-size: 1.2rem; 
     font-weight: bold; 
     padding: 15px; 
@@ -122,6 +123,7 @@ h1 {
     border-top: 1px solid #f1f5f9;
     z-index: 2;
     color: #2c3e50;
+    margin: 0;
 }
 
 /* ADMIN TOOLS ON CARDS */
