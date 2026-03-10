@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMTZ Tags Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.1"></script>
+    <style>
+        /* Drag & Drop Styles */
+        .drag-handle { cursor: grab; color: #aaa; padding: 0 10px; font-size: 1.2rem; }
+        .drag-handle:active { cursor: grabbing; }
+        .dragging { opacity: 0.6; background: var(--hover-color) !important; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .col-drag { width: 40px; text-align: center; }
+        tr.draggable-row { transition: background 0.2s; }
+    </style>
 </head>
 <body>
     <header>
@@ -49,14 +57,15 @@
             <table>
                 <thead>
                     <tr>
-                        <th class="col-admin hidden">ID (Admin)</th>
+                        <th class="col-drag hidden admin-only"></th>
+                        <th class="col-admin hidden admin-only">ID (Admin)</th>
                         <th class="col-fixed-name">Organization</th>
                         <th>Twitter <button class="btn-copy-col" onclick="copyColumn('twitter')"><i class="fa-regular fa-copy"></i></button></th>
                         <th>LinkedIn <button class="btn-copy-col" onclick="copyColumn('linkedin')"><i class="fa-regular fa-copy"></i></button></th>
                         <th>Facebook <button class="btn-copy-col" onclick="copyColumn('facebook')"><i class="fa-regular fa-copy"></i></button></th>
                         <th>Instagram <button class="btn-copy-col" onclick="copyColumn('instagram')"><i class="fa-regular fa-copy"></i></button></th>
                         <th>Website <button class="btn-copy-col" onclick="copyColumn('website')"><i class="fa-regular fa-copy"></i></button></th>
-                        <th class="col-action hidden">Action</th>
+                        <th class="col-action hidden admin-only">Action</th>
                     </tr>
                 </thead>
                 <tbody id="table-body"></tbody>
@@ -166,8 +175,7 @@
         <div class="modal-content" style="max-width:600px; border-top: 5px solid var(--danger-color);">
             <h2 style="margin-top:0; color:var(--danger-color);"><i class="fa-solid fa-triangle-exclamation"></i> Conflict Detected</h2>
             <p>The organization you are trying to add matches an existing record in the database!</p>
-            <div id="conflict-details" style="background:var(--bg-color); padding:15px; margin:15px 0; border-radius:5px; border: 1px solid var(--border-color);">
-                </div>
+            <div id="conflict-details" style="background:var(--bg-color); padding:15px; margin:15px 0; border-radius:5px; border: 1px solid var(--border-color);"></div>
             <p style="font-size:0.9rem; margin-bottom:15px;"><strong>Overwrite:</strong> Replaces old tags with new tags everywhere, and adds it to your current lists.<br><strong>Delete New:</strong> Discards your typed tags, but adds the <em>existing</em> organization to your current lists.</p>
             <div style="display:flex; gap:10px; justify-content:flex-end;">
                 <button class="btn-secondary" onclick="resolveConflict('delete')"><i class="fa-solid fa-xmark"></i> Delete New & Link Old</button>
@@ -176,6 +184,6 @@
         </div>
     </div>
 
-    <script src="app.js?v=7"></script>
+    <script src="app.js?v=8"></script>
 </body>
 </html>
