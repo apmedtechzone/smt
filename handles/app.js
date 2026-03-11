@@ -58,11 +58,12 @@ function renderGrid() {
         let logoUrl = dept.imageId ? storage.getFileView(BUCKET_ID, dept.imageId).href : 'https://via.placeholder.com/150?text=No+Logo';
         let socialsHtml = '';
         
-        // Correct fa-x-twitter class for FA 6.5.1
+        // Render Socials dynamically
         if (dept.twitter) socialsHtml += `<a href="${dept.twitter}" class="social-link twitter" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>`; 
         if (dept.linkedin) socialsHtml += `<a href="${dept.linkedin}" class="social-link linkedin" target="_blank"><i class="fab fa-linkedin-in"></i></a>`;
         if (dept.facebook) socialsHtml += `<a href="${dept.facebook}" class="social-link facebook" target="_blank"><i class="fab fa-facebook-f"></i></a>`;
         if (dept.instagram) socialsHtml += `<a href="${dept.instagram}" class="social-link instagram" target="_blank"><i class="fab fa-instagram"></i></a>`;
+        if (dept.youtube) socialsHtml += `<a href="${dept.youtube}" class="social-link youtube" target="_blank"><i class="fa-brands fa-youtube"></i></a>`; // NEW YOUTUBE BUTTON
         
         let websiteHtml = dept.website ? `<a href="${dept.website}" class="website-link" target="_blank"><i class="fas fa-globe"></i> Visit Website</a>` : '';
         let adminBtn = isAdmin ? `<button class="btn-edit-card" onclick="editDept('${dept.$id}')"><i class="fa-solid fa-pen"></i> Edit</button>` : '';
@@ -92,11 +93,9 @@ async function dropTarget(e, targetId) {
     const draggedIdx = sorted.findIndex(d => d.$id === draggedDeptId);
     const targetIdx = sorted.findIndex(d => d.$id === targetId);
 
-    // Logically pull the item out of the array and insert it at the target position
     const [draggedItem] = sorted.splice(draggedIdx, 1);
     sorted.splice(targetIdx, 0, draggedItem);
 
-    // Calculate the new numerical order based on the items newly neighboring it
     const prev = targetIdx > 0 ? sorted[targetIdx - 1] : null;
     const next = targetIdx < sorted.length - 1 ? sorted[targetIdx + 1] : null;
 
@@ -122,8 +121,36 @@ async function login() {
 function updateUIForAdmin() { document.getElementById('admin-panel').classList.remove('hidden'); document.getElementById('login-trigger').classList.add('hidden'); renderGrid(); }
 async function logout(){ try { await account.deleteSession('current'); } catch(e){} location.reload(); }
 
-function openDeptModal() { editingId = null; currentImageId = null; document.getElementById('modal-title').innerText = "Add Department"; document.getElementById('btn-delete-dept').classList.add('hidden'); document.getElementById('current-logo-text').style.display = 'none'; ['name', 'website', 'twitter', 'linkedin', 'facebook', 'instagram', 'logo'].forEach(id => document.getElementById(`edit-${id}`).value = ''); openModal('dept-modal'); }
-function editDept(id) { const dept = departments.find(d => d.$id === id); if (!dept) return; editingId = id; currentImageId = dept.imageId || null; document.getElementById('modal-title').innerText = "Edit Department"; document.getElementById('btn-delete-dept').classList.remove('hidden'); document.getElementById('edit-name').value = dept.name || ''; document.getElementById('edit-website').value = dept.website || ''; document.getElementById('edit-twitter').value = dept.twitter || ''; document.getElementById('edit-linkedin').value = dept.linkedin || ''; document.getElementById('edit-facebook').value = dept.facebook || ''; document.getElementById('edit-instagram').value = dept.instagram || ''; document.getElementById('edit-logo').value = ''; if (currentImageId) document.getElementById('current-logo-text').style.display = 'block'; openModal('dept-modal'); }
+function openDeptModal() { 
+    editingId = null; 
+    currentImageId = null; 
+    document.getElementById('modal-title').innerText = "Add Department"; 
+    document.getElementById('btn-delete-dept').classList.add('hidden'); 
+    document.getElementById('current-logo-text').style.display = 'none'; 
+    ['name', 'website', 'twitter', 'linkedin', 'facebook', 'instagram', 'youtube', 'logo'].forEach(id => document.getElementById(`edit-${id}`).value = ''); 
+    openModal('dept-modal'); 
+}
+
+function editDept(id) { 
+    const dept = departments.find(d => d.$id === id); 
+    if (!dept) return; 
+    editingId = id; 
+    currentImageId = dept.imageId || null; 
+    document.getElementById('modal-title').innerText = "Edit Department"; 
+    document.getElementById('btn-delete-dept').classList.remove('hidden'); 
+    
+    document.getElementById('edit-name').value = dept.name || ''; 
+    document.getElementById('edit-website').value = dept.website || ''; 
+    document.getElementById('edit-twitter').value = dept.twitter || ''; 
+    document.getElementById('edit-linkedin').value = dept.linkedin || ''; 
+    document.getElementById('edit-facebook').value = dept.facebook || ''; 
+    document.getElementById('edit-instagram').value = dept.instagram || ''; 
+    document.getElementById('edit-youtube').value = dept.youtube || ''; 
+    document.getElementById('edit-logo').value = ''; 
+    
+    if (currentImageId) document.getElementById('current-logo-text').style.display = 'block'; 
+    openModal('dept-modal'); 
+}
 
 async function saveDept() {
     const btn = document.getElementById('btn-save'); const name = document.getElementById('edit-name').value.trim();
@@ -136,7 +163,17 @@ async function saveDept() {
             newImageId = uploadedFile.$id;
             if (currentImageId) { try { await storage.deleteFile(BUCKET_ID, currentImageId); } catch(e){} }
         }
-        const dataObj = { name: name, website: document.getElementById('edit-website').value.trim(), twitter: document.getElementById('edit-twitter').value.trim(), linkedin: document.getElementById('edit-linkedin').value.trim(), facebook: document.getElementById('edit-facebook').value.trim(), instagram: document.getElementById('edit-instagram').value.trim(), imageId: newImageId };
+        
+        const dataObj = { 
+            name: name, 
+            website: document.getElementById('edit-website').value.trim(), 
+            twitter: document.getElementById('edit-twitter').value.trim(), 
+            linkedin: document.getElementById('edit-linkedin').value.trim(), 
+            facebook: document.getElementById('edit-facebook').value.trim(), 
+            instagram: document.getElementById('edit-instagram').value.trim(), 
+            youtube: document.getElementById('edit-youtube').value.trim(), 
+            imageId: newImageId 
+        };
         
         if (!editingId) dataObj.order = Date.now(); 
 
